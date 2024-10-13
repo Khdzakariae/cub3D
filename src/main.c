@@ -1,4 +1,5 @@
-#include "cub3d.h"
+#include "../Includes/cub3d.h"
+
 
 void	init_game(t_data *data)
 {
@@ -42,9 +43,9 @@ void render_background(t_data *data, int color, int x, int y)
     if (data->win == NULL)
         return;
 
-    for (int i = 0; i < 40; ++i)
+    for (int i = 0; i < width_pixel; ++i)
     {
-        for (int j = 0; j < 40; ++j)
+        for (int j = 0; j < height_pixel; ++j)
         {
             mlx_pixel_put(data->mlx, data->win, x + j, y + i, color);
         }
@@ -57,8 +58,8 @@ void draw_player(t_data *data)
     {
         for (int j = 0; data->map[i][j] != '\0'; ++j)
         {
-            int x = j * 40; 
-            int y = i * 40; 
+            int x = j * width_pixel; 
+            int y = i * height_pixel; 
 
             if (data->map[i][j] == '0')
                 render_background(data, 0x00FF00, x, y);
@@ -68,7 +69,7 @@ void draw_player(t_data *data)
                 render_background(data, 0x0000FF, x, y);
         }
     }
-    render_background(data, 0x0000FF, data->player_x * 40, data->player_y * 40);
+    render_background(data, 0x0000FF, data->player_x * height_pixel, data->player_y * height_pixel);
 }
 
 void draw_game(t_data *data)
@@ -97,7 +98,6 @@ int main(int ac, char **av)
                 }
             }
         }
-
         init_game(&data);
         mlx_key_hook(data.win, ButtonRelease, &data);
         mlx_hook(data.win, 17, 0, handle_destroy_notify, &data);
@@ -106,21 +106,3 @@ int main(int ac, char **av)
     }
     return (0);
 }
-
-// int main(int ac, char **av)
-// {
-//     t_data	data;
-
-//     if (ac > 1)
-//     {
-//         if (read_map(&data, av[1]) == 0)
-//                 return (0);
-//         init_game(&data);
-// 		mlx_key_hook(data.win, key_hook, &data);
-// 		mlx_hook(data.win, 17, 0, handle_destroy_notify, &data);
-// 		draw_player(&data);
-//         mlx_loop(data.mlx);
-
-//     }
-//     return (0);
-// }
