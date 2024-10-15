@@ -25,10 +25,7 @@ int main(int ac, char **av)
 			}
 		}
 		init_game(&data);
-		mlx_key_hook(data.win, ButtonRelease, &data);
-		mlx_hook(data.win, 17, 0, handle_destroy_notify, &data);
-		draw_game(&data);
-		mlx_loop(data.mlx);
+		mlx_hooks_loop(&data);
 	}
 	return (0);
 }
