@@ -24,6 +24,7 @@ int main(int ac, char **av)
 				}
 			}
 		}
+		get_map_resolution(&data);
 		init_game(&data);
 		mlx_hooks_loop(&data);
 	}
@@ -35,8 +36,8 @@ void	init_game(t_data *data)
 	data->mlx = mlx_init();
 	if (!data->mlx)
 		return ;
-	data->win = mlx_new_window(data->mlx, WIDTH,
-			HEIGHT, "CUB3D");
+	data->win = mlx_new_window(data->mlx, DISPLAY_W,
+			DISPLAY_H, "CUB3D");
 	if (!data->win)
 		return ;
 }
@@ -69,38 +70,44 @@ int	read_map(t_data *data, char *map)
 
 void render_background(t_data *data, int color, int x, int y)
 {
-	if (data->win == NULL)
-		return;
-	for (int i = 0; i < width_pixel; ++i)
+	int offset_x = (DISPLAY_W - (PIXEL_W * data->map_width)) / 2;
+	int offset_y = (DISPLAY_H - (PIXEL_H * data->map_height)) / 2;
+
+	for (int i = 0; i < PIXEL_H; ++i)
 	{
-		for (int j = 0; j < height_pixel; ++j)
+		for (int j = 0; j < PIXEL_W; ++j)
 		{
-			mlx_pixel_put(data->mlx, data->win, x + j, y + i, color);
+			mlx_pixel_put(data->mlx, data->win, x + j + offset_x, y + i + offset_y, color);
 		}
 	}
 }
 
 void draw_player(t_data *data)
 {
+	int	x;
+	int	y;
+
 	for (int i = 0; data->map[i] != NULL; ++i)
 	{
-		for (int j = 0; data->map[i][j] != '\0'; ++j)
+		for (int j = 0; data->map[i][j]; ++j)
 		{
-			int x = j * width_pixel; 
-			int y = i * height_pixel; 
+			x = j * PIXEL_H;
+			y = i * PIXEL_W; 
 			if (data->map[i][j] == '0')
-				render_background(data, 0x00FF00, x, y);
+				render_background(data, COLOR_GREEN, x, y);
 			else if (data->map[i][j] == '1')
-				render_background(data, 0xFF0000, x, y);
+				render_background(data, COLOR_RED, x, y);
 			else if (data->map[i][j] == 'P')
-				render_background(data, 0x0000FF, x, y);
+			{
+				data->map[i][j] = '0';
+				render_background(data, COLOR_BLUE, x, y);
+			}
 		}
 	}
-	render_background(data, 0x0000FF, data->player_x * height_pixel, data->player_y * height_pixel);
+	render_background(data, COLOR_BLUE, data->player_x * PIXEL_W, data->player_y * PIXEL_H);
 }
 
 void draw_game(t_data *data)
 {
-	render_background(data, 0xFFFFFF, data->player_x, data->player_y);
 	draw_player(data); 
 }

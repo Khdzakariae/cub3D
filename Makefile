@@ -4,7 +4,8 @@ NAME = cub3D
 
 INCLUDES = -I "Includes/"
 
-SRC	 =	src/main.c src/key_press.c
+SRC	 =	$(addprefix utils/, utils1.c) \
+		$(addprefix src/, key_press.c main.c) \
 
 LIBFT = lib/libft/libft.a
 
