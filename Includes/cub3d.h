@@ -25,7 +25,7 @@
 
 # define PIXEL_W 40
 # define PIXEL_H	40
-
+# define SIZE_PLAYER 0.20
 /* colors in hexa */
 # define COLOR_RED      0xFF0000
 # define COLOR_GREEN    0x00FF00
@@ -50,8 +50,8 @@ typedef struct s_data
 {
 	void	*mlx;
 	void	*win;
-	int		player_x;
-	int		player_y;
+	double		player_x;
+	double		player_y;
 	char	**map;
 	char	**tmp_map;
 	int		map_height;
