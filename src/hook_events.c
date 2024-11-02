@@ -7,7 +7,7 @@ int		ft_close(t_data *data);
 void	mlx_hooks_loop(t_data *data)
 {
 	mlx_key_hook(data->win, key_hook, data);
-	mlx_hook(data->win, DestroyNotify, StructureNotifyMask, &ft_close, data);
+	// mlx_hook(data->win, DestroyNotify, StructureNotifyMask, &ft_close, data);
 	mlx_loop(data->mlx);
 }
 
@@ -17,7 +17,7 @@ int	key_hook(int keysym, t_data *data)
 	if (keysym == KEY_ESC)
 	{
 		mlx_destroy_window(data->mlx, data->win);
-		mlx_destroy_display(data->mlx);
+		// mlx_destroy_display(data->mlx);
 		free(data->mlx);
 		exit(0);
 	}
@@ -48,7 +48,7 @@ int	key_hook(int keysym, t_data *data)
 int	ft_close(t_data *data)
 {
 	mlx_destroy_window(data->mlx, data->win);
-	mlx_destroy_display(data->mlx);
+	// mlx_destroy_display(data->mlx);
 	free(data->mlx);
 	exit(0);
 }
