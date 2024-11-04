@@ -11,20 +11,27 @@
 # include <sys/time.h>
 # include <time.h>
 # include <unistd.h>
+#include <stdbool.h>
 // # include <X11/Xlib.h>
 
 /* keysyms */
+#define PI 3.14
+#define FOV_ANGLE 60 * (PI / 180)
+#define NUM_RAYS 320;
+#define RAY_ANGLE += FOV_ANGLE / NUM_RAYS
+
+
 # define KEY_UP 126
 # define KEY_DOWN 125
 # define KEY_LEFT 123
 # define KEY_RIGHT 124
 # define KEY_ESC 65307
 
-# define DISPLAY_H 1000
-# define DISPLAY_W 1000
+# define DISPLAY_H 720
+# define DISPLAY_W 680
 
-# define PIXEL_W 40
-# define PIXEL_H	40
+# define PIXEL_W 32
+# define PIXEL_H	32
 # define SIZE_PLAYER 0.20
 /* colors in hexa */
 # define COLOR_RED      0xFF0000
@@ -40,16 +47,13 @@
 # define COLOR_GRAY     0x808080
 # define COLOR_PINK     0xFFC0CB
 
-typedef enum e_bool
-{
-	false,
-	true
-}	t_bool;
 
 typedef struct s_data
 {
 	void	*mlx;
 	void	*win;
+	double		old_player_x;
+	double		old_player_y;
 	double		player_x;
 	double		player_y;
 	char	**map;
@@ -58,7 +62,7 @@ typedef struct s_data
 	int		map_width;
 }	t_data;
 
-void	draw_player(t_data *data);
+void	draw_player(t_data *data, bool flag);
 void	draw_game(t_data *data);
 
 /* key hook events */
