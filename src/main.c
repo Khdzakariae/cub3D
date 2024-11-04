@@ -3,7 +3,7 @@
 void	init_game(t_data *data);
 int		read_map(t_data *data, char *map);
 void	render_background(t_data *data, int color, int x, int y);
-void	draw_player(t_data *data);
+void	draw_player(t_data *data, bool flage);
 void	draw_game(t_data *data);
 
 int main(int ac, char **av)
@@ -26,18 +26,23 @@ int main(int ac, char **av)
 		}
 		get_map_resolution(&data);
 		init_game(&data);
-		mlx_hooks_loop(&data);
+        draw_player(&data, false);
+	    mlx_key_hook(data.win, key_hook, &data);
+	    mlx_loop(data.mlx);
+
+
 	}
 	return (0);
 }
+
 
 void	init_game(t_data *data)
 {
 	data->mlx = mlx_init();
 	if (!data->mlx)
 		return ;
-	data->win = mlx_new_window(data->mlx, DISPLAY_W,
-			DISPLAY_H, "CUB3D");
+	data->win = mlx_new_window(data->mlx, data->map_width * PIXEL_W,
+			data->map_height * PIXEL_H, "CUB3D");
 	if (!data->win)
 		return ;
 }
@@ -70,8 +75,8 @@ int	read_map(t_data *data, char *map)
 
 void render_background(t_data *data, int color, int x, int y)
 {
-	int offset_x = (DISPLAY_W - (PIXEL_W * data->map_width)) / 2;
-	int offset_y = (DISPLAY_H - (PIXEL_H * data->map_height)) / 2;
+	int offset_x = 0;
+	int offset_y = 0;
 
 	for (int i = 0; i < PIXEL_H; ++i)
 	{
@@ -82,8 +87,16 @@ void render_background(t_data *data, int color, int x, int y)
 	}
 }
 
-void draw_player(t_data *data)
+void draw_player(t_data *data, bool flage)
 {
+    if (flage == true)
+    {
+        puts("ana dkhalt hna");
+		render_background(data, COLOR_GREEN, data->old_player_x *PIXEL_H , data->old_player_y * PIXEL_W);
+		render_background(data, COLOR_BLUE, data->player_x *PIXEL_H , data->player_y * PIXEL_W);
+        return;
+
+    }
 	int	x;
 	int	y;
 
@@ -107,7 +120,7 @@ void draw_player(t_data *data)
 	render_background(data, COLOR_BLUE, data->player_x * PIXEL_W, data->player_y * PIXEL_H);
 }
 
-void draw_game(t_data *data)
-{
-	draw_player(data); 
-}
+// void draw_game(t_data *data)
+// {
+// 	draw_player(data, ); 
+// }
