@@ -23,25 +23,37 @@ int	key_hook(int keysym, t_data *data)
 	}
 	if (keysym == KEY_UP)
 	{
-		if (data->map[(int)data->player_y - 1][(int)data->player_x] != '1')
+		if (data->map[(int)data->player_y - 1][(int)data->player_x] != '1'){
+			data->old_player_x = data->player_x;
+			data->old_player_y = data->player_y;
 			data->player_y -= SIZE_PLAYER;
+		}
 	}
 	else if (keysym == KEY_DOWN)
 	{
-		if (data->map[(int)data->player_y + 1][(int)data->player_x] != '1')
+		if (data->map[(int)data->player_y + 1][(int)data->player_x] != '1'){
+			data->old_player_x = data->player_x;
+			data->old_player_y = data->player_y;
 			data->player_y += SIZE_PLAYER;
+		}
 	}
 	else if (keysym == KEY_LEFT)
 	{
-		if (data->map[(int)data->player_y][(int)data->player_x - 1] != '1')
+		if (data->map[(int)data->player_y][(int)data->player_x - 1] != '1'){
+			data->old_player_x = data->player_x;
+			data->old_player_y = data->player_y;
 			data->player_x -= SIZE_PLAYER;
+		}
 	}
 	else if (keysym == KEY_RIGHT)
 	{
-		if (data->map[(int)data->player_y][(int)data->player_x + 1] != '1')
+		if (data->map[(int)data->player_y][(int)data->player_x + 1] != '1'){
+			data->old_player_x = data->player_x;
+			data->old_player_y = data->player_y;
 			data->player_x += SIZE_PLAYER ;
+		}
 	}
-	draw_game(data);
+	draw_player(data, true);
 	return (0);
 }
 
