@@ -1,5 +1,14 @@
 #include "../Includes/cub3d.h"
 
+double dog2rad(double dogress){
+	return(dogress * (PI / 180.0));
+}
+
+double rad2dog(double radians){
+	return(radians * (180.0 / PI));
+}
+
+
 void	get_map_resolution(t_data *data)
 {
 	data->map_height = 0;
