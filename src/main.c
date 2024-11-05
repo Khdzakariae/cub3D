@@ -24,6 +24,8 @@ int main(int ac, char **av)
 				}
 			}
 		}
+
+
 		get_map_resolution(&data);
 		init_game(&data);
         draw_player(&data, false);
@@ -77,14 +79,17 @@ void render_background(t_data *data, int color, int x, int y)
 {
 	int offset_x = 0;
 	int offset_y = 0;
-
-	for (int i = 0; i < PIXEL_H; ++i)
+	int tmp = 0;
+	if (color == COLOR_BLUE)
+		tmp = 20;
+	for (int i = 0; i < PIXEL_H -tmp; ++i)
 	{
-		for (int j = 0; j < PIXEL_W; ++j)
+		for (int j = 0; j < PIXEL_W - tmp; ++j)
 		{
 			mlx_pixel_put(data->mlx, data->win, x + j + offset_x, y + i + offset_y, color);
 		}
 	}
+	tmp =0;
 }
 
 void draw_player(t_data *data, bool flage)
@@ -92,7 +97,7 @@ void draw_player(t_data *data, bool flage)
     if (flage == true)
     {
         puts("ana dkhalt hna");
-		render_background(data, COLOR_GREEN, data->old_player_x *PIXEL_H , data->old_player_y * PIXEL_W);
+		render_background(data, COLOR_BLACK, data->old_player_x *PIXEL_H , data->old_player_y * PIXEL_W);
 		render_background(data, COLOR_BLUE, data->player_x *PIXEL_H , data->player_y * PIXEL_W);
         return;
 
@@ -107,7 +112,7 @@ void draw_player(t_data *data, bool flage)
 			x = j * PIXEL_H;
 			y = i * PIXEL_W; 
 			if (data->map[i][j] == '0')
-				render_background(data, COLOR_GREEN, x, y);
+				render_background(data, COLOR_BLACK, x, y);
 			else if (data->map[i][j] == '1')
 				render_background(data, COLOR_RED, x, y);
 			else if (data->map[i][j] == 'P')
