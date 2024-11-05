@@ -89,7 +89,7 @@ void render_background(t_data *data, int color, int x, int y)
 			mlx_pixel_put(data->mlx, data->win, x + j + offset_x, y + i + offset_y, color);
 		}
 	}
-	tmp =0;
+	tmp = 0;
 }
 
 void draw_player(t_data *data, bool flage)

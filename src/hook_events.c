@@ -11,6 +11,28 @@ void	mlx_hooks_loop(t_data *data)
 	mlx_loop(data->mlx);
 }
 
+// int	key_hook(int keysym, t_data *data)
+// {
+// 	if (keysym == KEY_ESC)
+// 	{
+// 		mlx_destroy_window(data->mlx, data->win);
+// 		// mlx_destroy_display(data->mlx);
+// 		free(data->mlx);
+// 		exit(0);
+// 	}
+// 	if (keysym == KEY_UP){
+// 		data.walk
+// 	}
+// 	else if (keysym == KEY_DOWN){
+
+// 	}
+// 	else if (keysym == KEY_LEFT){
+// 	}
+// 	else if (keysym == KEY_RIGHT){
+// 	}
+
+// }
+
 int	key_hook(int keysym, t_data *data)
 {
 	printf("the key  is %d \n", keysym);

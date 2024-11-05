@@ -32,7 +32,7 @@
 
 # define PIXEL_W 32
 # define PIXEL_H	32
-# define SIZE_PLAYER 0.20
+# define SIZE_PLAYER 0.1
 /* colors in hexa */
 # define COLOR_RED      0xFF0000
 # define COLOR_GREEN    0x00FF00
