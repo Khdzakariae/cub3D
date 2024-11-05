@@ -6,7 +6,7 @@ mlx = mlx/libmlx.a
 INCLUDES = -I "Includes/"
 
 SRC	 =	$(addprefix utils/, utils1.c) \
-		$(addprefix src/, hook_events.c main.c) \
+		$(addprefix src/, main.c) \
 
 LIBFT = lib/libft/libft.a
 
