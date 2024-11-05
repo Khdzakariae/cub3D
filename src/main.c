@@ -1,106 +1,180 @@
 #include "../Includes/cub3d.h"
 
-void	init_game(t_data *data);
-int		read_map(t_data *data, char *map);
-void	render_background(t_data *data, int color, int x, int y);
-void	draw_player(t_data *data, bool flage);
-void	draw_game(t_data *data);
+// #include <mlx.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-int	key_hook(int keysym, t_data *data)
+#define TILE_SIZE 32
+#define MAP_NUM_ROWS 11
+#define MAP_NUM_COLS 15
+#define WINDOW_WIDTH (MAP_NUM_COLS * TILE_SIZE)
+#define WINDOW_HEIGHT (MAP_NUM_ROWS * TILE_SIZE)
+
+#define KEY_UP 126
+#define KEY_DOWN 125
+#define KEY_LEFT 123
+#define KEY_RIGHT 124
+#define KEY_ESC 53
+
+typedef struct s_map {
+	int		map_height;
+	int 	map_width;
+    char **grid;
+} t_map;
+
+typedef struct s_player {
+    double x;
+    double y;
+    double radius;
+    double turnDirection;
+    double walkDirection;
+    double rotationAngle;
+    double moveSpeed;
+    double rotationSpeed;
+} t_player;
+
+typedef struct s_data {
+    void *mlx;
+    void *win;
+    t_map *map;
+    t_player *player;
+} t_data;
+
+
+void	get_map_resolution(t_map *map)
 {
-	printf("the key  is %d \n", keysym);
-	if (keysym == KEY_ESC)
+	map->map_height = 0;
+	map->map_width = 0;
+	for (int i = 0; map->grid[i] != NULL; i++)
 	{
-		mlx_destroy_window(data->mlx, data->win);
-		// mlx_destroy_display(data->mlx);
-		free(data->mlx);
-		exit(0);
+		map->map_height++;
+		int row_length = ft_strlen(map->grid[i]);
+		if (row_length > map->map_width)
+			map->map_width = row_length;
 	}
-	if (keysym == KEY_UP)
-	{
-		if (data->map[(int)data->player_y - 1][(int)data->player_x] != '1'){
-			data->old_player_x = data->player_x;
-			data->old_player_y = data->player_y;
-			data->player_y -= SIZE_PLAYER;
-		}
-	}
-	else if (keysym == KEY_DOWN)
-	{
-		if (data->map[(int)data->player_y + 1][(int)data->player_x] != '1'){
-			data->old_player_x = data->player_x;
-			data->old_player_y = data->player_y;
-			data->player_y += SIZE_PLAYER;
-		}
-	}
-	else if (keysym == KEY_LEFT)
-	{
-		if (data->map[(int)data->player_y][(int)data->player_x - 1] != '1'){
-			data->old_player_x = data->player_x;
-			data->old_player_y = data->player_y;
-			data->player_x -= SIZE_PLAYER;
-		}
-	}
-	else if (keysym == KEY_RIGHT)
-	{
-		if (data->map[(int)data->player_y][(int)data->player_x + 1] != '1'){
-			data->old_player_x = data->player_x;
-			data->old_player_y = data->player_y;
-			data->player_x += SIZE_PLAYER ;
-		}
-	}
-	draw_player(data, true);
-	return (0);
 }
 
-void ft_draw_line(t_data *data, int x1, int y1, int x2, int y2, int color)
-{
-	printf("the cordonner of x :%d\n", x1);
-	printf("the cordonner of y : %d\n", x2);
+void draw_line(t_data *data, int x1, int y1, int x2, int y2, int color) {
+    int dx = abs(x2 - x1);
+    int dy = abs(y2 - y1);
+    int sx = (x1 < x2) ? 1 : -1;
+    int sy = (y1 < y2) ? 1 : -1;
+    int err = dx - dy;
 
-    int step;
-    int x;
-    int y;
-    int i;
-    int delta_x;
-    int delta_y;
-    
-    delta_x = x2 - x1;
-    delta_y = y2 - y1;
-    if (abs(delta_x) >= abs(delta_y))
-        step = abs(delta_x);
-    else
-        step = abs(delta_y);
-    delta_x = delta_x / step;
-    delta_y = delta_y / step;
-    x = x1;
-    y = x2;
-    i = 0;
-    while (i < step)
-    {
-        mlx_pixel_put(data->mlx,data->win, x, y, color);
-        x += delta_x;
-        y += delta_y;
-        i++;
+    while (1) {
+        mlx_pixel_put(data->mlx, data->win, x1, y1, color);
+
+        if (x1 == x2 && y1 == y2) break;
+        int e2 = err * 2;
+        if (e2 > -dy) { err -= dy; x1 += sx; }
+        if (e2 < dx) { err += dx; y1 += sy; }
+    }
+}
+
+void put_tile(t_data *data, int x, int y, int color) {
+    int i, j;
+    for (i = 0; i < TILE_SIZE; i++) {
+        for (j = 0; j < TILE_SIZE; j++) {
+            mlx_pixel_put(data->mlx, data->win, x + j, y + i, color);
+        }
     }
 }
 
 
-
-void	init_game(t_data *data)
+int has_wall_at(t_map *map, double x, double y)
 {
-	data->turnderection = 0;
-	data->walkderiction = 0;
-	data->rotationangle = PI / 2;
-	data->movespeed = 3.0;
-	data->retationspeed = 3 * (PI / 180);
+    if (x < 0 || x >= map->map_width * TILE_SIZE || y < 0 || y >= map->map_height * TILE_SIZE )
+        return 1;
+    int mapX = (int)(x / TILE_SIZE);
+    int mapY = (int)(y / TILE_SIZE);
+    if (map->grid[mapY][mapX] == '1')
+        return 1;
+    return 0;
+}
 
-	data->mlx = mlx_init();
-	if (!data->mlx)
-		return ;
-	data->win = mlx_new_window(data->mlx, data->map_width * PIXEL_W,
-			data->map_height * PIXEL_H, "CUB3D");
-	if (!data->win)
-		return ;
+
+int update_player(t_player *player, t_map *map) {
+    player->rotationAngle += player->turnDirection * player->rotationSpeed;
+
+    double moveStep = player->walkDirection * player->moveSpeed;
+    double newPlayerX = player->x + cos(player->rotationAngle) * moveStep;
+    double newPlayerY = player->y + sin(player->rotationAngle) * moveStep;
+
+    if (!has_wall_at(map, newPlayerX, newPlayerY)) {
+        player->x = newPlayerX;
+        player->y = newPlayerY;
+    }
+
+    printf("Player position updated: x = %.2f, y = %.2f, angle = %.2f\n", player->x, player->y, player->rotationAngle);
+    return 0;
+}
+
+int render_map(t_data *data) {
+    int i, j;
+    for (i = 0; i < data->map->map_width; i++) {
+        for (j = 0; j < data->map->map_height; j++) {
+            int tileX = j * TILE_SIZE;
+            int tileY = i * TILE_SIZE;
+            int tileColor = (data->map->grid[i][j] == '1') ? 0x222222 : 0xFFFFFF;
+            put_tile(data, tileX, tileY, tileColor);
+        }
+    }
+    return 0;
+}
+
+
+int key_press(int keycode, t_data *data) {
+    if (keycode == KEY_UP) {
+        data->player->walkDirection = 1;
+    } else if (keycode == KEY_DOWN) {
+        data->player->walkDirection = -1;
+    } else if (keycode == KEY_LEFT) {
+        data->player->turnDirection = -1;
+    } else if (keycode == KEY_RIGHT) {
+        data->player->turnDirection = 1;
+    } else if (keycode == KEY_ESC) {
+        exit(0);
+    }
+    return 0;
+}
+
+int key_release(int keycode, t_data *data) {
+    if (keycode == KEY_UP || keycode == KEY_DOWN) {
+        data->player->walkDirection = 0;
+    } else if (keycode == KEY_LEFT || keycode == KEY_RIGHT) {
+        data->player->turnDirection = 0;
+    }
+    return 0;
+}
+
+int render_player(t_data *data) {
+    int px = (int)data->player->x;
+    int py = (int)data->player->y;
+    int radius = (int)data->player->radius;
+    int i, j;
+
+    for (i = -radius; i < radius; i++) {
+        for (j = -radius; j < radius; j++) {
+            if (i * i + j * j <= radius * radius) {
+                mlx_pixel_put(data->mlx, data->win, px + i, py + j, 0xFF0000);
+            }
+        }
+    }
+
+    int lineLength = 30;
+    int lineEndX = px + cos(data->player->rotationAngle) * lineLength;
+    int lineEndY = py + sin(data->player->rotationAngle) * lineLength;
+    draw_line(data, px, py, lineEndX, lineEndY, 0xFF0000);
+    return 0;
+}
+
+int game_loop(t_data *data) {
+    update_player(data->player, data->map);
+    mlx_clear_window(data->mlx, data->win);
+    render_map(data);
+    render_player(data);
+    return 0;
 }
 
 int	read_map(t_data *data, char *map)
@@ -122,123 +196,37 @@ int	read_map(t_data *data, char *map)
 		free(s);
 		s = get_next_line(k);
 	}
-	data->map = ft_split(ret, 10);
-	data->tmp_map = ft_split(ret, 10);
+	data->map->grid = ft_split(ret, 10);
 	free(ret);
-
+	get_map_resolution(data->map);
 	return (close(k), 1);
 }
 
-void render_background(t_data *data, int color, int x, int y)
-{
-	int offset_x = 0;
-	int offset_y = 0;
-	for (int i = 0; i < PIXEL_H ; ++i)
-	{
-		for (int j = 0; j < PIXEL_W ; ++j)
-		{
-			mlx_pixel_put(data->mlx, data->win, x + j + offset_x, y + i + offset_y, color);
-		}
-	}
-}
+int main(int ac, char **av) {
+	if (ac > 1){
+		t_data data;
+		t_player player;
 
-void draw_circle(t_data *data, int center_x, int center_y, int radius, int color)
-{
-    int x, y;
-    int r_squared = radius * radius;
-
-    for (y = center_y - radius; y <= center_y + radius; y++)
-    {
-        for (x = center_x - radius; x <= center_x + radius; x++)
-        {
-            if ((x - center_x) * (x - center_x) + (y - center_y) * (y - center_y) <= r_squared)
-            {
-                mlx_pixel_put(data->mlx, data->win, x, y, color);
-            }
-        }
-    }
-}
-
-void draw_player(t_data *data, bool flag)
-{
-    int player_center_x = data->player_x * PIXEL_W + PIXEL_W / 2;
-    int player_center_y = data->player_y * PIXEL_H + PIXEL_H / 2;
-    int radius = PIXEL_W / 4; 
-
-    if (flag == true)
-    {
-        draw_circle(data, data->old_player_x * PIXEL_W + PIXEL_W / 2, 
-                    data->old_player_y * PIXEL_H + PIXEL_H / 2, radius, COLOR_BLACK);
-        draw_circle(data, player_center_x, player_center_y, radius, COLOR_BLUE);
-
-    int line_start_x = data->player_x * PIXEL_W + PIXEL_W / 2;
-    int line_start_y = data->player_y * PIXEL_W + (PIXEL_W * 2); 
-        ft_draw_line(data, 
-                     line_start_x, line_start_y,
-                     player_center_x + cos(data->rotationangle) * 20,
-                     player_center_y + sin(data->rotationangle) * 20, 
-                     COLOR_YELLOW);
-        return;
-    }
-
-    int x, y;
-    for (int i = 0; data->map[i] != NULL; ++i)
-    {
-        for (int j = 0; data->map[i][j]; ++j)
-        {
-            x = j * PIXEL_W;
-            y = i * PIXEL_H;
-
-            if (data->map[i][j] == '0')
-                render_background(data, COLOR_BLACK, x, y);
-            else if (data->map[i][j] == '1')
-                render_background(data, COLOR_RED, x, y);
-            else if (data->map[i][j] == 'P')
-            {
-                data->map[i][j] = '0';
-                draw_circle(data, player_center_x, player_center_y, radius, COLOR_BLUE);
-            }
-        }
-    }
-
-    int line_start_x = data->player_x * PIXEL_W + PIXEL_W / 2;
-    int line_start_y = data->player_y * PIXEL_W + (PIXEL_W * 2); 
-
-    ft_draw_line(data, 
-                 line_start_x, line_start_y, 
-                 player_center_x + cos(data->rotationangle) * 20, 
-                 player_center_y + sin(data->rotationangle) * 20,
-                 COLOR_YELLOW);
-}
-
-int main(int ac, char **av)
-{
-	t_data data;
-	if (ac > 1)
-	{
 		if (read_map(&data, av[1]) == 0)
 			return (0);
-		for (int i = 0; data.map[i] != NULL; i++)
-		{
-			for (int j = 0; data.map[i][j] != '\0'; j++)
-			{
-				if (data.map[i][j] == 'P')
-				{
-					data.player_x = j;
-					data.player_y = i;
-				}
-			}
-		}
+		data.mlx = mlx_init();
+		data.win = mlx_new_window(data.mlx, (data.map->map_width * TILE_SIZE ), (data.map->map_height * TILE_SIZE), "2D Grid Map");
 
 
-		get_map_resolution(&data);
-		init_game(&data);
-        draw_player(&data, false);
-	    mlx_key_hook(data.win, key_hook, &data);
-		// mlx_hook(data.win, 3, 1L << 1, key_release, &data);
-	    mlx_loop(data.mlx);
+		data.player = &player;
 
-
+		player.x = data.map->map_width * TILE_SIZE  / 2;
+		player.y = data.map->map_height * TILE_SIZE / 2;
+		player.radius = 3;
+		player.turnDirection = 0;
+		player.walkDirection = 0;
+		player.rotationAngle = M_PI / 2;
+		player.moveSpeed = 10.0;
+		player.rotationSpeed = 10.0 * (M_PI / 180);
+		mlx_hook(data.win, 2, 1L << 0, key_press, &data);
+		mlx_hook(data.win, 3, 1L << 1, key_release, &data);
+		mlx_loop_hook(data.mlx, game_loop, &data);
+		mlx_loop(data.mlx);
 	}
-	return (0);
+    return 0;
 }
