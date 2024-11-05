@@ -15,7 +15,7 @@
 // # include <X11/Xlib.h>
 
 /* keysyms */
-#define PI 3.14
+#define PI 3.1415926535
 #define FOV_ANGLE 60 * (PI / 180)
 #define NUM_RAYS 320;
 #define RAY_ANGLE += FOV_ANGLE / NUM_RAYS
@@ -47,7 +47,7 @@
 # define COLOR_GRAY     0x808080
 # define COLOR_PINK     0xFFC0CB
 
-
+#include <math.h>
 typedef struct s_data
 {
 	void	*mlx;
@@ -56,6 +56,12 @@ typedef struct s_data
 	double		old_player_y;
 	double		player_x;
 	double		player_y;
+
+	double  turnderection;
+	double	walkderiction;
+	double  rotationangle;
+	double  movespeed;
+	double  retationspeed;
 	char	**map;
 	char	**tmp_map;
 	int		map_height;
@@ -66,6 +72,7 @@ void	draw_player(t_data *data, bool flag);
 void	draw_game(t_data *data);
 
 /* key hook events */
+int key_release(int keysym, t_data *data);
 int		ft_close(t_data *data);
 int		key_hook(int keysym, t_data *data);
 void	mlx_hooks_loop(t_data *data);
