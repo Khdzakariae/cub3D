@@ -5,8 +5,7 @@ mlx = mlx/libmlx.a
 
 INCLUDES = -I "Includes/"
 
-SRC	 =	$(addprefix utils/, utils1.c) \
-		$(addprefix src/, main.c) \
+SRC	 = $(addprefix src/, main.c) \
 
 LIBFT = lib/libft/libft.a
 
