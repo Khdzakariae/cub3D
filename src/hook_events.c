@@ -4,6 +4,7 @@ void	mlx_hooks_loop(t_data *data);
 int		key_hook(int keysym, t_data *data);
 int		ft_close(t_data *data);
 
+
 void	mlx_hooks_loop(t_data *data)
 {
 	mlx_key_hook(data->win, key_hook, data);
@@ -13,6 +14,7 @@ void	mlx_hooks_loop(t_data *data)
 
 // int	key_hook(int keysym, t_data *data)
 // {
+// 	printf("Key %d pressed\n", keysym);
 // 	if (keysym == KEY_ESC)
 // 	{
 // 		mlx_destroy_window(data->mlx, data->win);
@@ -21,17 +23,45 @@ void	mlx_hooks_loop(t_data *data)
 // 		exit(0);
 // 	}
 // 	if (keysym == KEY_UP){
-// 		data.walk
+// 		data->walkderiction += 1;
 // 	}
 // 	else if (keysym == KEY_DOWN){
-
+// 		data->walkderiction -= 1;
 // 	}
 // 	else if (keysym == KEY_LEFT){
+// 		data->turnderection -= 1;
 // 	}
 // 	else if (keysym == KEY_RIGHT){
+// 		data->turnderection += 1;
 // 	}
-
+// 	return (0);
 // }
+
+// int key_release(int keysym, t_data *data)
+// {
+//     printf("Key %d released\n", keysym);
+// 		if (keysym == KEY_ESC)
+// 	{
+// 		mlx_destroy_window(data->mlx, data->win);
+// 		// mlx_destroy_display(data->mlx);
+// 		free(data->mlx);
+// 		exit(0);
+// 	}
+// 	if (keysym == KEY_UP){
+// 		data->walkderiction = 0;
+// 	}
+// 	else if (keysym == KEY_DOWN){
+// 		data->walkderiction = 0;
+// 	}
+// 	else if (keysym == KEY_LEFT){
+// 		data->turnderection = 0;
+// 	}
+// 	else if (keysym == KEY_RIGHT){
+// 		data->turnderection = 0;
+// 	}
+//     return (0);
+// }
+
 
 int	key_hook(int keysym, t_data *data)
 {
