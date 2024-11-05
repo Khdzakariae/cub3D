@@ -1,4 +1,4 @@
-FLAGS = -Wall -Wextra -Werror 
+FLAGS = -Wall -Wextra -Werror -fsanitize=address -g3
 
 NAME = cub3D
 mlx = mlx/libmlx.a
@@ -25,7 +25,7 @@ $(LIBFT) :$(SRC)
 # 	@$(CC) -Wall -Wextra -Werror -I/usr/include -Imlx_linux -O3 -c $< -o $@
 
 $(NAME): $(OBJ)
-	@$(CC) $(mlx) $(OBJ) $(LIBFT) $(PRINTF) -Lmlx -lmlx -framework OpenGL -framework AppKit -o $(NAME)
+	@$(CC) $(FLAGS) $(mlx) $(OBJ) $(LIBFT) $(PRINTF) -Lmlx -lmlx -framework OpenGL -framework AppKit -o $(NAME)
 	@echo "SO_LONG DONE [🤡]"
 
 # $(NAME): $(OBJ)
