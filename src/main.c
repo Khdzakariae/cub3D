@@ -211,8 +211,6 @@ int main(int ac, char **av) {
 			return (0);
 		data.mlx = mlx_init();
 		data.win = mlx_new_window(data.mlx, (data.map->map_width * TILE_SIZE ), (data.map->map_height * TILE_SIZE), "2D Grid Map");
-
-
 		data.player = &player;
 
 		player.x = data.map->map_width * TILE_SIZE  / 2;
