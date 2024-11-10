@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define TILE_SIZE 70
+#define TILE_SIZE 32
 #define MAP_NUM_ROWS 11
 #define MAP_NUM_COLS 15
 #define WINDOW_WIDTH (MAP_NUM_COLS * TILE_SIZE)
@@ -63,6 +63,17 @@ struct Ray {
     int isRayFacingRight;
     int wallHitContent;
 } rays[NUM_RAYS];
+
+typedef struct {
+    float rayAngle;
+    int isRayFacingDown, isRayFacingUp, isRayFacingLeft, isRayFacingRight;
+    float xintercept, yintercept;
+    float xstep, ystep;
+    int foundHorzHit, foundVertHit;
+    float horzHitX, horzHitY, vertHitX, vertHitY;
+    int horzWallContent, vertWallContent;
+    float horzHitDistance, vertHitDistance;
+} RaycastData;
 
 typedef struct s_data {
     void *mlx;
