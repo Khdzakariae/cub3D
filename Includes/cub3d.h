@@ -16,11 +16,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define TILE_SIZE 32
+#define TILE_SIZE 70
 #define MAP_NUM_ROWS 11
 #define MAP_NUM_COLS 15
 #define WINDOW_WIDTH (MAP_NUM_COLS * TILE_SIZE)
 #define WINDOW_HEIGHT (MAP_NUM_ROWS * TILE_SIZE)
+#define FOV_ANGLE (60 * (M_PI / 180))
+#define NUM_RAYS WINDOW_WIDTH
 
 #define KEY_UP 126
 #define KEY_DOWN 125
@@ -28,9 +30,12 @@
 #define KEY_RIGHT 124
 #define KEY_ESC 53
 
+#define TRUE 1
+#define FALSE 0
+
 typedef struct s_map {
-	int		map_height;
-	int 	map_width;
+    int map_height;
+    int map_width;
     char **grid;
 } t_map;
 
@@ -45,11 +50,25 @@ typedef struct s_player {
     double rotationSpeed;
 } t_player;
 
+
+struct Ray {
+    float rayAngle;
+    float wallHitX;
+    float wallHitY;
+    float distance;
+    int wasHitVertical;
+    int isRayFacingUp;
+    int isRayFacingDown;
+    int isRayFacingLeft;
+    int isRayFacingRight;
+    int wallHitContent;
+} rays[NUM_RAYS];
+
 typedef struct s_data {
     void *mlx;
     void *win;
     t_map *map;
     t_player *player;
+    struct Ray rays[NUM_RAYS];
 } t_data;
-
-# endif /* CUB3D_H */
+# endif
