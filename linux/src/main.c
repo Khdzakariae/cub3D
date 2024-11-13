@@ -175,7 +175,7 @@ int render_player(t_data *data) {
     return 0;
 }
 
-void dda(t_data *data, float rayAngle) {
+void dda(t_data *data, float rayAngle, int stripId) {
     double posX = data->player->x, posY = data->player->y;
 
     double dirX = cos(rayAngle);
@@ -211,7 +211,23 @@ void dda(t_data *data, float rayAngle) {
             mapY += stepY;
         }
         if (has_wall_at(data->map, mapX, mapY)) {
-            mlx_pixel_put(data->mlx, data->win, mapX, mapY, 0xFF0000); // Rouge pour les murs
+            printf("wall position updated: x = %d, y = %d\n", mapX, mapY);
+            double wallDist;
+            if (sideDistX < sideDistY) {
+                wallDist = (sideDistX - deltaDistX);
+            } else {
+                wallDist = (sideDistY - deltaDistY);
+            }
+
+            int wallHeight = (int)(WINDOW_HEIGHT / wallDist);
+            int wallTop = (WINDOW_HEIGHT / 2) - (wallHeight / 2);
+            int wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);
+
+            // Draw vertical line
+            for (int y = wallTop; y < wallBottom; y++) {
+                mlx_pixel_put(data->mlx, data->win, stripId, y, 0xFFFFFF);
+            }
+            // mlx_pixel_put(data->mlx, data->win, mapX, mapY, 0xFF0000); // Rouge pour les murs
             hit = 1;
         }
     }
@@ -220,7 +236,7 @@ void dda(t_data *data, float rayAngle) {
 void castAllRays(t_data *data) {
     float rayAngle = data->player->rotationAngle - (FOV_ANGLE / 2);
     for (int stripId = 0; stripId < NUM_RAYS; stripId++) {
-        dda(data, rayAngle);
+        dda(data, rayAngle, stripId);
         rayAngle += FOV_ANGLE / NUM_RAYS;
     }
 }
@@ -236,7 +252,7 @@ int game_loop(t_data *data) {
 
 void init_game(t_data *data, t_player *player) {
     data->mlx = mlx_init();
-    data->win = mlx_new_window(data->mlx, (data->map->map_width * TILE_SIZE), (data->map->map_height * TILE_SIZE), "2D Grid Map");
+    data->win = mlx_new_window(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "2D Grid Map");
     data->player = player;
     player->x = data->map->map_width * TILE_SIZE / 2;
     player->y = data->map->map_height * TILE_SIZE / 2;
@@ -244,8 +260,8 @@ void init_game(t_data *data, t_player *player) {
     player->turnDirection = 0;
     player->walkDirection = 0;
     player->rotationAngle = M_PI / 2;
-    player->moveSpeed = 2;
-    player->rotationSpeed = 3 * (M_PI / 180);
+    player->moveSpeed = 0.09;
+    player->rotationSpeed = 0.09 * (M_PI / 180);
 }
 
 int main(int argc, char **argv) {
