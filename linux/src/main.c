@@ -39,61 +39,6 @@ void get_map_resolution(t_map *map) {
     }
 }
 
-void DDA(t_data *data,int stripId) {
-    double posX = data->player->x, posY = data->player->y;
-    double dirX = -1, dirY = 0;
-    double planeX = data->player->rotationAngle, planeY = data->player->rotationAngle;
-    double cameraX = (2 * stripId / (float)NUM_RAYS) - 1; 
-    double rayDirX = dirX + planeX * cameraX;
-    double rayDirY = dirY + planeY * cameraX;
-
-    int mapX = (int)posX, mapY = (int)posY;
-    double sideDistX, sideDistY;
-    double deltaDistX = (rayDirX == 0) ? 1e30 : fabs(1 / rayDirX);
-    double deltaDistY = (rayDirY == 0) ? 1e30 : fabs(1 / rayDirY);
-    int stepX, stepY;
-    int hit = 0;
-
-    if (rayDirX < 0) {
-        stepX = -1;
-        sideDistX = (posX - mapX) * deltaDistX;
-    } else {
-        stepX = 1;
-        sideDistX = (mapX + 1.0 - posX) * deltaDistX;
-    }
-
-    if (rayDirY < 0) {
-        stepY = -1;
-        sideDistY = (posY - mapY) * deltaDistY;
-    } else {
-        stepY = 1;
-        sideDistY = (mapY + 1.0 - posY) * deltaDistY;
-    }
-
-    while (hit == 0) {
-        if (sideDistX < sideDistY) {
-            sideDistX += deltaDistX;
-            mapX += stepX;
-        } 
-        else {
-            sideDistY += deltaDistY;
-            mapY += stepY;
-        }
-        if (has_wall_at(data->map, mapX, mapY)) {
-            printf("wall position updated: x = %d, y = %d\n", mapX, mapY);
-            mlx_pixel_put(data->mlx, data->win, mapX, mapY,0xFF0000 );
-
-            hit = 1;
-        }
-    }
-}
-
-
-void castAllRays(t_data *data) {
-    for (int stripId = 0; stripId < NUM_RAYS; stripId++) {
-        DDA(data, stripId);
-    }
-}
 
 void draw_line(t_data *data, int x0, int y0, int x1, int y1, int color)  
 {
@@ -189,35 +134,6 @@ int key_release(int keycode, t_data *data) {
     return 0;
 }
 
-int render_player(t_data *data) {
-    int px = (int)data->player->x;
-    int py = (int)data->player->y;
-    int radius = (int)data->player->radius;
-    for (int i = -radius; i < radius; i++) {
-        for (int j = -radius; j < radius; j++) {
-            if (i * i + j * j <= radius * radius) {
-                mlx_pixel_put(data->mlx, data->win, px + i, py + j, 0xFF0000);
-            }
-        }
-    }
-    int lineLength = 30;
-    int lineEndX = px + cos(data->player->rotationAngle) * lineLength;
-    int lineEndY = py + sin(data->player->rotationAngle) * lineLength;
-    draw_line(data, px, py, lineEndX, lineEndY, 0xFF0000);
-    return 0;
-}
-
-int game_loop(t_data *data) {
-    update_player(data->player, data->map);
-    mlx_clear_window(data->mlx, data->win);
-    // DDA(data);
-    // render_map(data);
-    castAllRays(data);
-    // render_walls(data);
-    render_player(data);
-    return 0;
-}
-
 int read_map(t_data *data, char *map) {
     int k = open(map, O_RDONLY);
     if (k == -1) {
@@ -241,6 +157,82 @@ int read_map(t_data *data, char *map) {
     close(k);
     return 1;
 }
+int render_player(t_data *data) {
+    int px = (int)data->player->x;
+    int py = (int)data->player->y;
+    int radius = (int)data->player->radius;
+    for (int i = -radius; i < radius; i++) {
+        for (int j = -radius; j < radius; j++) {
+            if (i * i + j * j <= radius * radius) {
+                mlx_pixel_put(data->mlx, data->win, px + i, py + j, 0xFF0000);
+            }
+        }
+    }
+    int lineLength = 30;
+    int lineEndX = px + cos(data->player->rotationAngle) * lineLength;
+    int lineEndY = py + sin(data->player->rotationAngle) * lineLength;
+    draw_line(data, px, py, lineEndX, lineEndY, 0xFF0000);
+    return 0;
+}
+
+void dda(t_data *data, float rayAngle) {
+    double posX = data->player->x, posY = data->player->y;
+
+    double dirX = cos(rayAngle);
+    double dirY = sin(rayAngle);
+
+    int mapX = (int)posX, mapY = (int)posY;
+    double sideDistX, sideDistY;
+    double deltaDistX = (dirX == 0) ? 1e30 : fabs(1 / dirX);
+    double deltaDistY = (dirY == 0) ? 1e30 : fabs(1 / dirY);
+    int stepX, stepY;
+    int hit = 0;
+
+    if (dirX < 0) {
+        stepX = -1;
+        sideDistX = (posX - mapX) * deltaDistX;
+    } else {
+        stepX = 1;
+        sideDistX = (mapX + 1.0 - posX) * deltaDistX;
+    }
+    if (dirY < 0) {
+        stepY = -1;
+        sideDistY = (posY - mapY) * deltaDistY;
+    } else {
+        stepY = 1;
+        sideDistY = (mapY + 1.0 - posY) * deltaDistY;
+    }
+    while (hit == 0) {
+        if (sideDistX < sideDistY) {
+            sideDistX += deltaDistX;
+            mapX += stepX;
+        } else {
+            sideDistY += deltaDistY;
+            mapY += stepY;
+        }
+        if (has_wall_at(data->map, mapX, mapY)) {
+            mlx_pixel_put(data->mlx, data->win, mapX, mapY, 0xFF0000); // Rouge pour les murs
+            hit = 1;
+        }
+    }
+}
+
+void castAllRays(t_data *data) {
+    float rayAngle = data->player->rotationAngle - (FOV_ANGLE / 2);
+    for (int stripId = 0; stripId < NUM_RAYS; stripId++) {
+        dda(data, rayAngle);
+        rayAngle += FOV_ANGLE / NUM_RAYS;
+    }
+}
+
+int game_loop(t_data *data) {
+    update_player(data->player, data->map);
+    mlx_clear_window(data->mlx, data->win);
+    castAllRays(data);
+    render_player(data);
+    return 0;
+}
+
 
 void init_game(t_data *data, t_player *player) {
     data->mlx = mlx_init();
@@ -252,8 +244,8 @@ void init_game(t_data *data, t_player *player) {
     player->turnDirection = 0;
     player->walkDirection = 0;
     player->rotationAngle = M_PI / 2;
-    player->moveSpeed = 0.02;
-    player->rotationSpeed = 0.05 * (M_PI / 180);
+    player->moveSpeed = 2;
+    player->rotationSpeed = 3 * (M_PI / 180);
 }
 
 int main(int argc, char **argv) {
