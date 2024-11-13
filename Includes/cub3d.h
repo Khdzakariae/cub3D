@@ -29,10 +29,16 @@ void draw_game(t_data *data);
 int	handle_destroy_notify(t_data *data);
 int	ButtonRelease(int keysym, t_data *data);
 
-#define KEY_UP 65362
-#define KEY_DOWN 65364
-#define KEY_LEFT 65361
-#define KEY_RIGHT 65363
+#define KEY_UP 126
+#define KEY_DOWN 125
+#define KEY_LEFT 123
+#define KEY_RIGHT 124
+#define KEY_ESC 53
+
+// #define KEY_UP 65362
+// #define KEY_DOWN 65364
+// #define KEY_LEFT 65361
+// #define KEY_RIGHT 65363
 
 #define HEIGHT 800
 #define WIDTH 800
