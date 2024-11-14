@@ -6,7 +6,7 @@ void render_walls(t_data *data) {
         int wallHeight = (int)(WINDOW_HEIGHT / distance);
         int wallTop = (WINDOW_HEIGHT / 2) - (wallHeight / 2);
         int wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);
-        int wallColor = (rays[i].wallHitContent == '1') ? 0x999999 : 0x333333;
+        int wallColor = (rays[i].wallHitContent == '1') ? COLOR_BLUE : COLOR_GREEN;
 
         for (int y = wallTop; y < wallBottom; y++) {
             mlx_pixel_put(data->mlx, data->win, i, y, wallColor);
@@ -215,22 +215,28 @@ void dda_bresenham(t_data *data, float rayAngle, int stripId) {
             mapY += stepY;
         }
         if (has_wall_at(data->map, mapX, mapY)) {
-            mlx_pixel_put(data->mlx, data->win, mapX, mapY, 0xFF0000);
-
-            double wallDist;
-            if (errorX < errorY) {
-                wallDist = (errorX - deltaDistX);
-            } else {
-                wallDist = (errorY - deltaDistY);
-            }
-            int wallHeight = (int)(WINDOW_HEIGHT / wallDist);
-            int wallTop = (WINDOW_HEIGHT / 2) - (wallHeight / 2);
-            int wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);
-            for (int y = wallTop; y < wallBottom; y++) {
-                mlx_pixel_put(data->mlx, data->win, stripId, y, 0xFFFFFF);
-            }
+            // mlx_pixel_put(data->mlx, data->win, mapX, mapY, 0xFF0000);
             hit = 1;
         }
+        float horzHitDistance = hit
+        ? distanceBetweenPoints(data->player->x, data->player->y, mapX, mapY)
+        : INT_MAX;
+    float vertHitDistance = hit
+        ? distanceBetweenPoints(data->player->x, data->player->y, mapX, mapY)
+        : INT_MAX;
+    if (vertHitDistance < horzHitDistance) {
+        rays[stripId].distance = vertHitDistance;
+        rays[stripId].wallHitX = mapX;
+        rays[stripId].wallHitY = mapY;
+        rays[stripId].wallHitContent = errorX;
+        rays[stripId].wasHitVertical = TRUE;
+    } else {
+        rays[stripId].distance = horzHitDistance;
+        rays[stripId].wallHitX = mapX;
+        rays[stripId].wallHitY = mapY;
+        rays[stripId].wallHitContent = errorY;
+        rays[stripId].wasHitVertical = FALSE;
+    }
     }
 }
 
@@ -304,10 +310,11 @@ void castAllRays(t_data *data) {
 }
 
 int game_loop(t_data *data) {
-    update_player(data->player, data->map);
     mlx_clear_window(data->mlx, data->win);
+    update_player(data->player, data->map);
     castAllRays(data);
-    render_player(data);
+    render_walls(data);
+    // render_player(data);
     return 0;
 }
 
