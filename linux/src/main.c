@@ -5,6 +5,7 @@ void my_pixel_put(t_img *img, int x, int y, int coler){
     offset = (img->line_len * y) + (x * (img->bits_per_pixel / 8));
     *((unsigned int *)(offset + img->image_pixel_ptr)) = coler;
 }
+
 void render_walls(t_data *data) {
     for (int i = 0; i < NUM_RAYS; i++) {
         float distance = rays[i].distance;
@@ -46,52 +47,6 @@ void get_map_resolution(t_map *map) {
     }
 }
 
-
-void draw_line(t_data *data, int x0, int y0, int x1, int y1, int color)  
-{
-    int dx, dy, p, x, y;  
-    dx = abs(x1 - x0);
-    dy = abs(y1 - y0);
-    x = x0;  
-    y = y0;  
-
-    int sx = (x1 > x0) ? 1 : -1; 
-    int sy = (y1 > y0) ? 1 : -1;
-    
-    if (dx > dy) {
-        p = 2 * dy - dx; 
-        while (x != x1) {
-            mlx_pixel_put(data->mlx, data->win, x, y, color); 
-            if (p >= 0) {
-                y += sy; 
-                p -= 2 * dx;
-            }
-            p += 2 * dy;
-            x += sx;
-        }
-    } else {
-        p = 2 * dx - dy; 
-        while (y != y1) { 
-            mlx_pixel_put(data->mlx, data->win, x, y, color);
-            if (p >= 0) {
-                x += sx;  
-                p -= 2 * dy; 
-            }
-            p += 2 * dx; 
-            y += sy;
-        }
-    }
-    mlx_pixel_put(data->mlx, data->win, x, y, color);
-}
-
-void put_tile(t_data *data, int x, int y, int color) {
-    for (int i = 0; i < TILE_SIZE; i++) {
-        for (int j = 0; j < TILE_SIZE; j++) {
-            mlx_pixel_put(data->mlx, data->win, x + j, y + i, color);
-        }
-    }
-}
-
 int update_player(t_player *player, t_map *map) {
     player->rotationAngle += player->turnDirection * player->rotationSpeed;
     double moveStep = player->walkDirection * player->moveSpeed;
@@ -105,17 +60,6 @@ int update_player(t_player *player, t_map *map) {
     return 0;
 }
 
-int render_map(t_data *data) {
-    for (int i = 0; i < data->map->map_width; i++) {
-        for (int j = 0; j < data->map->map_height; j++) {
-            int tileX = j * TILE_SIZE;
-            int tileY = i * TILE_SIZE;
-            int tileColor = (data->map->grid[i][j] == '1') ? 0x222222 : 0xFFFFFF;
-            put_tile(data, tileX, tileY, tileColor);
-        }
-    }
-    return 0;
-}
 
 int key_press(int keycode, t_data *data) {
     if (keycode == KEY_UP) {
@@ -164,23 +108,7 @@ int read_map(t_data *data, char *map) {
     close(k);
     return 1;
 }
-int render_player(t_data *data) {
-    int px = (int)data->player->x;
-    int py = (int)data->player->y;
-    int radius = (int)data->player->radius;
-    for (int i = -radius; i < radius; i++) {
-        for (int j = -radius; j < radius; j++) {
-            if (i * i + j * j <= radius * radius) {
-                mlx_pixel_put(data->mlx, data->win, px + i, py + j, 0xFF0000);
-            }
-        }
-    }
-    int lineLength = 30;
-    int lineEndX = px + cos(data->player->rotationAngle) * lineLength;
-    int lineEndY = py + sin(data->player->rotationAngle) * lineLength;
-    draw_line(data, px, py, lineEndX, lineEndY, 0xFF0000);
-    return 0;
-}
+
 
 void dda_bresenham(t_data *data, float rayAngle, int stripId) {
     double posX = data->player->x, posY = data->player->y;
@@ -241,7 +169,6 @@ void dda_bresenham(t_data *data, float rayAngle, int stripId) {
     }
 }
 
-
 void castAllRays(t_data *data) {
     float rayAngle = data->player->rotationAngle - (FOV_ANGLE / 2);
     for (int stripId = 0; stripId < NUM_RAYS; stripId++) {
@@ -253,7 +180,7 @@ void castAllRays(t_data *data) {
 }
 
 int game_loop(t_data *data) {
-    data->img.img_ptr = mlx_new_image(data->mlx , WINDOW_HEIGHT, WINDOW_HEIGHT);
+    data->img.img_ptr = mlx_new_image(data->mlx , WINDOW_WIDTH, WINDOW_HEIGHT);
     data->img.image_pixel_ptr = mlx_get_data_addr(data->img.img_ptr, &data->img.bits_per_pixel, &data->img.line_len, &data->img.endien);
 
     update_player(data->player, data->map);
@@ -277,8 +204,8 @@ void init_game(t_data *data, t_player *player) {
     player->turnDirection = 0;
     player->walkDirection = 0;
     player->rotationAngle = M_PI / 2;
-    player->moveSpeed = 0.009;
-    player->rotationSpeed = 0.009 * (M_PI / 180);
+    player->moveSpeed = 0.09;
+    player->rotationSpeed = 0.07 * (M_PI / 180);
 }
 
 int main(int argc, char **argv) {
@@ -286,23 +213,17 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Usage: %s <map_file>\n", argv[0]);
         return 1;
     }
-
     t_data data;
     t_player player;
     t_map map;
-
     data.map = &map;
-
     if (!read_map(&data, argv[1])) {
         return 1;
     }
-
     init_game(&data, &player);
-
     mlx_loop_hook(data.mlx, game_loop, &data);
     mlx_hook(data.win, 2, 1L<<0, key_press, &data);
     mlx_hook(data.win, 3, 1L<<1, key_release, &data);
     mlx_loop(data.mlx);
-
     return 0;
 }

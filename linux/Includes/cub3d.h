@@ -31,7 +31,7 @@
 # define COLOR_PINK     0xFFC0CB
 
 #define FOV_ANGLE (60 * (M_PI / 180))
-#define TILE_SIZE 30
+#define TILE_SIZE 64
 #define MAP_NUM_ROWS 20
 #define MAP_NUM_COLS 20
 #define WINDOW_WIDTH 780
