@@ -31,7 +31,7 @@
 # define COLOR_PINK     0xFFC0CB
 
 #define FOV_ANGLE (60 * (M_PI / 180))
-#define TILE_SIZE 64
+#define TILE_SIZE 30
 #define MAP_NUM_ROWS 20
 #define MAP_NUM_COLS 20
 #define WINDOW_WIDTH 780
@@ -53,6 +53,15 @@
 
 #define TRUE 1
 #define FALSE 0
+
+typedef struct s_img
+{
+   void *img_ptr;
+   char *image_pixel_ptr;
+   int bits_per_pixel;
+   int endien;
+   int line_len;
+}t_img;
 
 typedef struct s_map {
     int map_height;
@@ -99,6 +108,7 @@ typedef struct {
 typedef struct s_data {
     void *mlx;
     void *win;
+    t_img img;
     t_map *map;
     t_player *player;
     struct Ray rays[NUM_RAYS];

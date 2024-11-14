@@ -28,7 +28,7 @@ $(LIBFT) :$(SRC)
 	@$(CC) -Wall -Wextra -Werror -I/usr/include -Imlx_linux -O3 -c $< -o $@
 
 $(NAME): $(OBJ)
-	@$(CC)  $(INCLUDES) $(OBJ) $(LIBFT) -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME)
+	@$(CC)  $(INCLUDES) $(OBJ) $(LIBFT) -fsanitize=address  -g3 -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME)
 	@echo "CUB3D DONE [🤡]"
 clean:
 	@echo "CLEAN DONE [✅]"
