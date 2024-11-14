@@ -175,7 +175,66 @@ int render_player(t_data *data) {
     return 0;
 }
 
-void dda(t_data *data, float rayAngle, int stripId) {
+void dda_bresenham(t_data *data, float rayAngle, int stripId) {
+    double posX = data->player->x, posY = data->player->y;
+    
+    double dirX = cos(rayAngle);
+    double dirY = sin(rayAngle);
+
+    int mapX = (int)posX, mapY = (int)posY;
+    
+    double deltaDistX = fabs(1 / dirX);
+    double deltaDistY = fabs(1 / dirY);
+
+    double errorX, errorY;
+    
+    int stepX, stepY;
+
+    if (dirX < 0) {
+        stepX = -1;
+        errorX = (posX - mapX) * deltaDistX;
+    } else {
+        stepX = 1;
+        errorX = (mapX + 1.0 - posX) * deltaDistX;
+    }
+    if (dirY < 0) {
+        stepY = -1;
+        errorY = (posY - mapY) * deltaDistY;
+    } else {
+        stepY = 1;
+        errorY = (mapY + 1.0 - posY) * deltaDistY;
+    }
+
+    int hit = 0;
+    while (hit == 0) {
+        if (errorX < errorY) {
+            errorX += deltaDistX;
+            mapX += stepX;
+        } else {
+            errorY += deltaDistY;
+            mapY += stepY;
+        }
+        if (has_wall_at(data->map, mapX, mapY)) {
+            mlx_pixel_put(data->mlx, data->win, mapX, mapY, 0xFF0000);
+
+            double wallDist;
+            if (errorX < errorY) {
+                wallDist = (errorX - deltaDistX);
+            } else {
+                wallDist = (errorY - deltaDistY);
+            }
+            int wallHeight = (int)(WINDOW_HEIGHT / wallDist);
+            int wallTop = (WINDOW_HEIGHT / 2) - (wallHeight / 2);
+            int wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);
+            for (int y = wallTop; y < wallBottom; y++) {
+                mlx_pixel_put(data->mlx, data->win, stripId, y, 0xFFFFFF);
+            }
+            hit = 1;
+        }
+    }
+}
+
+void dda(t_data *data, float rayAngle) {
     double posX = data->player->x, posY = data->player->y;
 
     double dirX = cos(rayAngle);
@@ -183,8 +242,9 @@ void dda(t_data *data, float rayAngle, int stripId) {
 
     int mapX = (int)posX, mapY = (int)posY;
     double sideDistX, sideDistY;
-    double deltaDistX = (dirX == 0) ? 1e30 : fabs(1 / dirX);
-    double deltaDistY = (dirY == 0) ? 1e30 : fabs(1 / dirY);
+    double deltaDistX = fabs(1 / dirX);
+    double deltaDistY = fabs(1 / dirY);
+
     int stepX, stepY;
     int hit = 0;
 
@@ -211,23 +271,23 @@ void dda(t_data *data, float rayAngle, int stripId) {
             mapY += stepY;
         }
         if (has_wall_at(data->map, mapX, mapY)) {
-            printf("wall position updated: x = %d, y = %d\n", mapX, mapY);
-            double wallDist;
-            if (sideDistX < sideDistY) {
-                wallDist = (sideDistX - deltaDistX);
-            } else {
-                wallDist = (sideDistY - deltaDistY);
-            }
+            // printf("wall position updated: x = %d, y = %d\n", mapX, mapY);
+            // double wallDist;
+            // if (sideDistX < sideDistY) {
+            //     wallDist = (sideDistX - deltaDistX);
+            // } else {
+            //     wallDist = (sideDistY - deltaDistY);
+            // }
 
-            int wallHeight = (int)(WINDOW_HEIGHT / wallDist);
-            int wallTop = (WINDOW_HEIGHT / 2) - (wallHeight / 2);
-            int wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);
+            // int wallHeight = (int)(WINDOW_HEIGHT / wallDist);
+            // int wallTop = (WINDOW_HEIGHT / 2) - (wallHeight / 2);
+            // int wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);
 
-            // Draw vertical line
-            for (int y = wallTop; y < wallBottom; y++) {
-                mlx_pixel_put(data->mlx, data->win, stripId, y, 0xFFFFFF);
-            }
-            // mlx_pixel_put(data->mlx, data->win, mapX, mapY, 0xFF0000); // Rouge pour les murs
+            // // Draw vertical line
+            // for (int y = wallTop; y < wallBottom; y++) {
+            //     mlx_pixel_put(data->mlx, data->win, stripId, y, 0xFFFFFF);
+            // }
+            mlx_pixel_put(data->mlx, data->win, mapX, mapY, 0xFF0000); // Rouge pour les murs
             hit = 1;
         }
     }
@@ -236,7 +296,9 @@ void dda(t_data *data, float rayAngle, int stripId) {
 void castAllRays(t_data *data) {
     float rayAngle = data->player->rotationAngle - (FOV_ANGLE / 2);
     for (int stripId = 0; stripId < NUM_RAYS; stripId++) {
-        dda(data, rayAngle, stripId);
+        dda_bresenham(data, rayAngle, stripId);
+        // dda(data, rayAngle);
+
         rayAngle += FOV_ANGLE / NUM_RAYS;
     }
 }

@@ -16,13 +16,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define FOV_ANGLE (60 * (M_PI / 180))
 
+# define COLOR_RED      0xFF0000
+# define COLOR_GREEN    0x00FF00
+# define COLOR_BLUE     0x0000FF
+# define COLOR_YELLOW   0xFFFF00
+# define COLOR_CYAN     0x00FFFF
+# define COLOR_MAGENTA  0xFF00FF
+# define COLOR_ORANGE   0xFFA500
+# define COLOR_PURPLE   0x800080
+# define COLOR_WHITE    0xFFFFFF
+# define COLOR_BLACK    0x000000
+# define COLOR_GRAY     0x808080
+# define COLOR_PINK     0xFFC0CB
+
+#define FOV_ANGLE (60 * (M_PI / 180))
 #define TILE_SIZE 64
 #define MAP_NUM_ROWS 20
 #define MAP_NUM_COLS 20
-#define WINDOW_WIDTH 640
-#define WINDOW_HEIGHT 480
+#define WINDOW_WIDTH 780
+#define WINDOW_HEIGHT 680
 #define NUM_RAYS WINDOW_WIDTH
 
 // #define KEY_UP 126
