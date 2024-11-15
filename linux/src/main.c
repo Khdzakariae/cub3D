@@ -10,10 +10,25 @@ void my_pixel_put(t_img *img, int x, int y, int color) {
 }
 
 int create_trgb(int t, int r, int g, int b) {
-    return (t << 16) | (r << 8) | (g << 4) | b;
+    return (t << 24) | (r << 16) | (g << 4) | b;
+}
+int create_trgb1(int t, int r, int g, int b) {
+    return (t << 16) | (r << 26) | (g << 4) | b;
+}
+void render_ard(t_data *data) {
+    for (int i = 0; i < NUM_RAYS; i++) {
+        int baseColor = 150 - i / 8;
+        int adjustedColor = (int)(baseColor );
+        int ardColor = create_trgb1(0, adjustedColor, 0, adjustedColor);
+        for (int y = 0; y < WINDOW_HEIGHT / 2; y++) {
+            my_pixel_put(&data->img, i , y, ardColor);
+        }
+    }
+    mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
 }
 
 void render_walls(t_data *data) {
+
     for (int i = 0; i < NUM_RAYS; i++) {
         float distance = data->rays[i].distance;  
         int wallHeight = (int)(WINDOW_HEIGHT / distance);  
@@ -21,7 +36,7 @@ void render_walls(t_data *data) {
         int wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);  
 
 
-        float darknessFactor = 1.0f + (distance / 8.0f);
+        float darknessFactor = 1.0f + (distance / 16.0f);
 
         int dither = data->rays[i].wallHitContent;
         int baseColor = 180 + dither;
@@ -30,28 +45,12 @@ void render_walls(t_data *data) {
         if (adjustedColor > 255) adjustedColor = 255;
         int wallColor = create_trgb(0, adjustedColor, 0, adjustedColor);
 
-
         for (int y = wallTop; y < wallBottom; y++) {
             my_pixel_put(&data->img, i , y, wallColor);
         }
     }
     mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
 }
-// void render_walls(t_data *data) {
-//     for (int i = 0; i < NUM_RAYS; i++) {
-//         float distance = data->rays[i].distance;  
-//         int wallHeight = (int)(WINDOW_HEIGHT / distance);  
-//         int wallTop = (WINDOW_HEIGHT / 2) - (wallHeight / 2);  
-//         int wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);  
-
-//         int wallColor = (data->rays[i].wallHitContent == '1') ? COLOR_BLUE : COLOR_GREEN;
-
-//         for (int y = wallTop; y < wallBottom; y++) {
-//             my_pixel_put(&data->img, i, y, wallColor);
-//         }
-//     }
-//     mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
-// }
 
 double distanceBetweenPoints(double x1, double y1, double x2, double y2) {
     return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
@@ -102,7 +101,9 @@ int key_press(int keycode, t_data *data) {
     } else if (keycode == KEY_RIGHT) {
         data->player->turnDirection = 1;
     } else if (keycode == KEY_ESC) {
-        exit(0);
+        mlx_clear_window(data->mlx, data->win);
+        mlx_destroy_window(data->mlx, data->win);
+        exit (0);
     }
     return 0;
 }
@@ -206,10 +207,11 @@ int game_loop(t_data *data) {
         data->img.img_ptr = mlx_new_image(data->mlx , WINDOW_WIDTH, WINDOW_HEIGHT);
         data->img.image_pixel_ptr = mlx_get_data_addr(data->img.img_ptr, &data->img.bits_per_pixel, &data->img.line_len, &data->img.endien);
     }
-
+    
     update_player(data->player, data->map); 
     castAllRays(data);
-    mlx_clear_window(data->mlx, data->win); 
+    mlx_clear_window(data->mlx, data->win);
+    render_ard(data); 
     render_walls(data); 
 
     if (data->img.img_ptr) {
@@ -231,7 +233,7 @@ void init_game(t_data *data, t_player *player) {
     player->walkDirection = 0;
     player->rotationAngle = M_PI / 2;
     player->moveSpeed = 0.03;
-    player->rotationSpeed = 0.02 * (M_PI / 180);
+    player->rotationSpeed = 0.9 * (M_PI / 180);
 }
 
 int main(int argc, char **argv) {
