@@ -9,6 +9,10 @@ void my_pixel_put(t_img *img, int x, int y, int color) {
     }
 }
 
+int create_trgb(int t, int r, int g, int b) {
+    return (t << 16) | (r << 8) | (g << 4) | b;
+}
+
 void render_walls(t_data *data) {
     for (int i = 0; i < NUM_RAYS; i++) {
         float distance = data->rays[i].distance;  
@@ -16,15 +20,38 @@ void render_walls(t_data *data) {
         int wallTop = (WINDOW_HEIGHT / 2) - (wallHeight / 2);  
         int wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);  
 
-        int wallColor = (data->rays[i].wallHitContent == '1') ? COLOR_BLUE : COLOR_GREEN;
+
+        float darknessFactor = 1.0f + (distance / 8.0f);
+
+        int dither = data->rays[i].wallHitContent;
+        int baseColor = 180 + dither;
+        int adjustedColor = (int)(baseColor / darknessFactor);
+        if (adjustedColor < 0) adjustedColor = 0;
+        if (adjustedColor > 255) adjustedColor = 255;
+        int wallColor = create_trgb(0, adjustedColor, 0, adjustedColor);
+
 
         for (int y = wallTop; y < wallBottom; y++) {
-            my_pixel_put(&data->img, i, y, wallColor);
+            my_pixel_put(&data->img, i , y, wallColor);
         }
     }
-
     mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
 }
+// void render_walls(t_data *data) {
+//     for (int i = 0; i < NUM_RAYS; i++) {
+//         float distance = data->rays[i].distance;  
+//         int wallHeight = (int)(WINDOW_HEIGHT / distance);  
+//         int wallTop = (WINDOW_HEIGHT / 2) - (wallHeight / 2);  
+//         int wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);  
+
+//         int wallColor = (data->rays[i].wallHitContent == '1') ? COLOR_BLUE : COLOR_GREEN;
+
+//         for (int y = wallTop; y < wallBottom; y++) {
+//             my_pixel_put(&data->img, i, y, wallColor);
+//         }
+//     }
+//     mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
+// }
 
 double distanceBetweenPoints(double x1, double y1, double x2, double y2) {
     return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
@@ -40,7 +67,6 @@ int has_wall_at(t_map *map, double x, double y) {
     return 0;
 }
 
-
 void get_map_resolution(t_map *map) {
     map->map_height = 0;
     map->map_width = 0;
@@ -53,8 +79,8 @@ void get_map_resolution(t_map *map) {
 }
 
 int update_player(t_player *player, t_map *map) {
-    player->rotationAngle += player->turnDirection * player->rotationSpeed;  // Mise à jour de l'angle de rotation
-    double moveStep = player->walkDirection * player->moveSpeed;  // Distance à parcourir
+    player->rotationAngle += player->turnDirection * player->rotationSpeed;
+    double moveStep = player->walkDirection * player->moveSpeed;
 
     double newPlayerX = player->x + cos(player->rotationAngle) * moveStep;
     double newPlayerY = player->y + sin(player->rotationAngle) * moveStep;
@@ -204,8 +230,8 @@ void init_game(t_data *data, t_player *player) {
     player->turnDirection = 0;
     player->walkDirection = 0;
     player->rotationAngle = M_PI / 2;
-    player->moveSpeed = 3;
-    player->rotationSpeed = 2 * (M_PI / 180);
+    player->moveSpeed = 0.03;
+    player->rotationSpeed = 0.02 * (M_PI / 180);
 }
 
 int main(int argc, char **argv) {

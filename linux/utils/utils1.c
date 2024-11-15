@@ -72,3 +72,101 @@ int render_player(t_data *data) {
     draw_line(data, px, py, lineEndX, lineEndY, 0xFF0000);
     return 0;
 }
+
+int create_trgb(int t, int r, int g, int b) {
+    return (t << 24) | (r << 16) | (g << 8) | b;
+}
+
+void render_walls(t_data *data) {
+    for (int i = 0; i < NUM_RAYS; i++) {
+        float distance = data->rays[i].distance;  
+        int wallHeight = (int)(WINDOW_HEIGHT / distance);  
+        int wallTop = (WINDOW_HEIGHT / 2) - (wallHeight / 2);  
+        int wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);  
+
+
+        float darknessFactor = 1.0f + (distance / 4.0f);
+
+        int dither = data->rays[i].wallHitContent;
+        int baseColor = 180 + dither;
+        int adjustedColor = (int)(baseColor / darknessFactor);
+        if (adjustedColor < 0) adjustedColor = 0;
+        if (adjustedColor > 255) adjustedColor = 255;
+        int wallColor = create_trgb(0, adjustedColor, 0, adjustedColor);
+
+
+        for (int y = wallTop; y < wallBottom; y++) {
+            my_pixel_put(&data->img, i , y, wallColor);
+        }
+    }
+    mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
+}
+
+raycast() {
+    const rays = 200;
+    const screenWidth = 800; 
+    const sliceWidth = screenWidth / rays;
+    const angleStep = this.player.fov / rays;
+    const ditherPatternSize = 8;  
+
+    this.ctx.fillStyle = 'rgb(20, 0, 20)';
+    this.ctx.fillRect(0, 0, 800, 300);  
+
+    // Ground
+    this.ctx.fillStyle = 'rgb(60, 0, 60)';
+    this.ctx.fillRect(0, 300, 800, 300); 
+
+    // Walls
+    for (let i = 0; i < rays; i++) {
+        const rayAngle = this.player.angle - (this.player.fov / 2) + i * angleStep;
+        const { distance, wallHeight } = this.castRay(rayAngle);
+        this.drawWallSlice(i, distance, wallHeight, ditherPatternSize, sliceWidth);
+    }
+
+
+
+void  castRay(double angle, t_mlx *mlx)
+{
+    double rayX = mlx->player.x;
+    double rayY = mlx->player.y;
+    double dist = 0.0;
+    double stepSize = 0.1;
+    t_rayResult result;
+
+    // Loop to simulate raymarching (check for intersections with walls)
+    while (dist < 1000) { // Max distance for ray casting
+        rayX += cos(angle) * stepSize;
+        rayY += sin(angle) * stepSize;
+        dist += stepSize;
+
+        // Check if the ray hits a wall (for simplicity, just a boundary check)
+        if (/* condition to check if we hit a wall */) {
+            result.distance = dist;
+            result.wallHeight = (int)(HEIGHT / dist); // Height of the wall
+            return result;
+        }
+    }
+
+    result.distance = dist;
+    result.wallHeight = 0;
+    return result;
+}
+
+void drawWallSlice(t_mlx *mlx, int x, int distance, int wallHeight)
+{
+    int yStart = (HEIGHT - wallHeight) / 2;
+    int yEnd = yStart + wallHeight;
+    int color = 0x00FF00; // Green for walls (change color based on distance)
+
+    for (int y = yStart; y < yEnd; y++) {
+        if (y >= 0 && y < HEIGHT) {
+            my_mlx_pixel_put(mlx, x, y, color);
+        }
+    }
+}
+
+void my_mlx_pixel_put(t_mlx *mlx, int x, int y, int color)
+{
+    int pixel_pos = (y * mlx->size_line) + (x * (mlx->bpp / 8));
+    *(unsigned int *)(mlx->data + pixel_pos) = color;
+}

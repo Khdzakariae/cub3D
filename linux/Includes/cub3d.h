@@ -38,17 +38,17 @@
 #define WINDOW_HEIGHT 680
 #define NUM_RAYS WINDOW_WIDTH
 
-#define KEY_UP 126
-#define KEY_DOWN 125
-#define KEY_LEFT 123
-#define KEY_RIGHT 124
-#define KEY_ESC 53
+// #define KEY_UP 126
+// #define KEY_DOWN 125
+// #define KEY_LEFT 123
+// #define KEY_RIGHT 124
+// #define KEY_ESC 53
 
-// #define KEY_UP 65362
-// #define KEY_DOWN 65364
-// #define KEY_LEFT 65361
-// #define KEY_RIGHT 65363
-// #define KEY_ESC 65363
+#define KEY_UP 65362
+#define KEY_DOWN 65364
+#define KEY_LEFT 65361
+#define KEY_RIGHT 65363
+#define KEY_ESC 65363
 
 
 #define TRUE 1
@@ -81,29 +81,10 @@ typedef struct s_player {
 } t_player;
 
 
-struct Ray {
-    float rayAngle;
-    float wallHitX;
-    float wallHitY;
+typedef struct Ray {
     float distance;
-    int wasHitVertical;
-    int isRayFacingUp;
-    int isRayFacingDown;
-    int isRayFacingLeft;
-    int isRayFacingRight;
     int wallHitContent;
-} rays[NUM_RAYS];
-
-typedef struct {
-    float rayAngle;
-    int isRayFacingDown, isRayFacingUp, isRayFacingLeft, isRayFacingRight;
-    float xintercept, yintercept;
-    float xstep, ystep;
-    int foundHorzHit, foundVertHit;
-    float horzHitX, horzHitY, vertHitX, vertHitY;
-    int horzWallContent, vertWallContent;
-    float horzHitDistance, vertHitDistance;
-} RaycastData;
+} t_rays;
 
 typedef struct s_data {
     void *mlx;
@@ -111,6 +92,6 @@ typedef struct s_data {
     t_img img;
     t_map *map;
     t_player *player;
-    struct Ray rays[NUM_RAYS];
+    t_rays rays[NUM_RAYS];
 } t_data;
 # endif
