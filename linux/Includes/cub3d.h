@@ -31,7 +31,7 @@
 # define COLOR_PINK     0xFFC0CB
 
 #define FOV_ANGLE (60 * (M_PI / 180))
-#define TILE_SIZE 64
+#define TILE_SIZE 400
 #define MAP_NUM_ROWS 20
 #define MAP_NUM_COLS 20
 #define WINDOW_WIDTH 780
@@ -48,7 +48,7 @@
 #define KEY_DOWN 65364
 #define KEY_LEFT 65361
 #define KEY_RIGHT 65363
-#define KEY_ESC 65363
+#define KEY_ESC 65307
 
 
 #define TRUE 1
