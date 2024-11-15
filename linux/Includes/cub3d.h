@@ -38,17 +38,17 @@
 #define WINDOW_HEIGHT 680
 #define NUM_RAYS WINDOW_WIDTH
 
-// #define KEY_UP 126
-// #define KEY_DOWN 125
-// #define KEY_LEFT 123
-// #define KEY_RIGHT 124
-// #define KEY_ESC 53
+#define KEY_UP 126
+#define KEY_DOWN 125
+#define KEY_LEFT 123
+#define KEY_RIGHT 124
+#define KEY_ESC 53
 
-#define KEY_UP 65362
-#define KEY_DOWN 65364
-#define KEY_LEFT 65361
-#define KEY_RIGHT 65363
-#define KEY_ESC 65363
+// #define KEY_UP 65362
+// #define KEY_DOWN 65364
+// #define KEY_LEFT 65361
+// #define KEY_RIGHT 65363
+// #define KEY_ESC 65363
 
 
 #define TRUE 1
