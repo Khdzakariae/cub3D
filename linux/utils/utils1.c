@@ -170,3 +170,19 @@ void my_mlx_pixel_put(t_mlx *mlx, int x, int y, int color)
     int pixel_pos = (y * mlx->size_line) + (x * (mlx->bpp / 8));
     *(unsigned int *)(mlx->data + pixel_pos) = color;
 }
+
+// void render_walls(t_data *data) {
+//     for (int i = 0; i < NUM_RAYS; i++) {
+//         float distance = data->rays[i].distance;  
+//         int wallHeight = (int)(WINDOW_HEIGHT / distance);  
+//         int wallTop = (WINDOW_HEIGHT / 2) - (wallHeight / 2);  
+//         int wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);  
+
+//         int wallColor = (data->rays[i].wallHitContent == '1') ? COLOR_BLUE : COLOR_GREEN;
+
+//         for (int y = wallTop; y < wallBottom; y++) {
+//             my_pixel_put(&data->img, i, y, wallColor);
+//         }
+//     }
+//     mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
+// }
