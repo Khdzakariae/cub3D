@@ -1,11 +1,5 @@
 #include "../Includes/cub3d.h"
 
-int create_trgb(int t, int r, int g, int b) {
-    return (t << 24) | (r << 16) | (g << 4) | b;
-}
-int create_trgb1(int t, int r, int g, int b) {
-    return (t << 16) | (r << 26) | (g << 4) | b;
-}
 void my_pixel_put(t_img *img, int x, int y, int color) {
     if (x >= 0 && x < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT)
     {
@@ -15,11 +9,25 @@ void my_pixel_put(t_img *img, int x, int y, int color) {
     }
 }
 
-double normalizeAngle(double angle) {
-    while (angle < 0) angle += 2 * M_PI;
-    while (angle >= 2 * M_PI) angle -= 2 * M_PI;
-    return angle;
+int create_trgb(int t, int r, int g, int b) {
+    return (t << 24) | (r << 16) | (g << 4) | b;
 }
+int create_trgb1(int t, int r, int g, int b) {
+    return (t << 16) | (r << 26) | (g << 4) | b;
+}
+void render_ard(t_data *data) {
+    for (int i = 0; i < NUM_RAYS; i++) {
+        int baseColor = 150 - i / 8;
+        int adjustedColor = (int)(baseColor );
+        int ardColor = create_trgb1(0, adjustedColor, 0, adjustedColor);
+        for (int y = 0; y < WINDOW_HEIGHT / 2; y++) {
+            my_pixel_put(&data->img, i , y, ardColor);
+        }
+    }
+    mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
+}
+
+
 
 double distanceBetweenPoints(double x1, double y1, double x2, double y2) {
     return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
@@ -27,7 +35,7 @@ double distanceBetweenPoints(double x1, double y1, double x2, double y2) {
 
 int has_wall_at(t_map *map, double x, double y) {
     if (x < 0 || x >= map->map_width * TILE_SIZE || y < 0 || y >= map->map_height * TILE_SIZE)
-        return 1;  // Retourne vrai si le rayon sort de la carte
+        return 1;  
     int mapX = (int)(x / TILE_SIZE);
     int mapY = (int)(y / TILE_SIZE);
     if (map->grid[mapY][mapX] == '1') 
@@ -35,20 +43,96 @@ int has_wall_at(t_map *map, double x, double y) {
     return 0;
 }
 
-void castRay(t_data *data, float rayAngle, int stripId) {
-    rayAngle = normalizeAngle(rayAngle);  // Normalisation de l'angle du rayon
+void get_map_resolution(t_map *map) {
+    map->map_height = 0;
+    map->map_width = 0;
+    for (int i = 0; map->grid[i] != NULL; i++) {
+        map->map_height++;
+        int row_length = ft_strlen(map->grid[i]);
+        if (row_length > map->map_width)
+            map->map_width = row_length;
+    }
+}
 
-    // Calculer si le rayon est dirigé vers le haut/bas, gauche/droite
+int update_player(t_player *player, t_map *map) {
+    player->rotationAngle += player->turnDirection * player->rotationSpeed;
+    double moveStep = player->walkDirection * player->moveSpeed;
+
+    double newPlayerX = player->x + cos(player->rotationAngle) * moveStep;
+    double newPlayerY = player->y + sin(player->rotationAngle) * moveStep;
+
+    if (!has_wall_at(map, newPlayerX, newPlayerY)) {
+        player->x = newPlayerX;
+        player->y = newPlayerY;
+    }
+    return 0;
+}
+
+int key_press(int keycode, t_data *data) {
+    if (keycode == KEY_UP) {
+        data->player->walkDirection = 1;
+    } else if (keycode == KEY_DOWN) {
+        data->player->walkDirection = -1;
+    } else if (keycode == KEY_LEFT) {
+        data->player->turnDirection = -1;
+    } else if (keycode == KEY_RIGHT) {
+        data->player->turnDirection = 1;
+    } else if (keycode == KEY_ESC) {
+        mlx_clear_window(data->mlx, data->win);
+        mlx_destroy_window(data->mlx, data->win);
+        exit (0);
+    }
+    return 0;
+}
+
+int key_release(int keycode, t_data *data) {
+    if (keycode == KEY_UP || keycode == KEY_DOWN) {
+        data->player->walkDirection = 0;
+    } else if (keycode == KEY_LEFT || keycode == KEY_RIGHT) {
+        data->player->turnDirection = 0;
+    }
+    return 0;
+}
+
+int read_map(t_data *data, char *map) {
+    int k = open(map, O_RDONLY);
+    if (k == -1) {
+        // write(1, "ENTRER MAP VALID !", 18);
+        return 0;
+    }
+    char *s = get_next_line(k);
+    if (!s) {
+        // write(1, "FILLE VIDE !!", 12);
+        return 0;
+    }
+    char *ret = NULL;
+    while (s) {
+        ret = ft_strjoin(ret, s);
+        free(s);
+        s = get_next_line(k);
+    }
+    data->map->grid = ft_split(ret, 10);
+    free(ret);
+    get_map_resolution(data->map);
+    close(k);
+    return 1;
+}
+double normalizeAngle(double angle) {
+    while (angle < 0) angle += 2 * M_PI;
+    while (angle >= 2 * M_PI) angle -= 2 * M_PI;
+    return angle;
+} 
+void castRay(t_data *data, float rayAngle, int stripId) {
+    rayAngle = normalizeAngle(rayAngle);  
+
     int isRayFacingDown = rayAngle > 0 && rayAngle < M_PI;
     int isRayFacingUp = !isRayFacingDown;
     int isRayFacingRight = rayAngle < 0.5 * M_PI || rayAngle > 1.5 * M_PI;
     int isRayFacingLeft = !isRayFacingRight;
 
-    // Calculs pour le raycast horizontal
     float xintercept, yintercept;
     float xstep, ystep;
 
-    // Initialiser les variables de hit pour les rayons horizontaux
     int foundHorzWallHit = FALSE;
     float horzWallHitX = 0;
     float horzWallHitY = 0;
@@ -78,7 +162,6 @@ void castRay(t_data *data, float rayAngle, int stripId) {
         nextHorzTouchY += ystep;
     }
 
-    // Calculs pour le raycast vertical
     int foundVertWallHit = FALSE;
     float vertWallHitX = 0;
     float vertWallHitY = 0;
@@ -108,11 +191,9 @@ void castRay(t_data *data, float rayAngle, int stripId) {
         nextVertTouchY += ystep;
     }
     
-    // Calculer la distance du rayon à la paroi la plus proche
     double horzDistance = foundHorzWallHit ? distanceBetweenPoints(data->player->x, data->player->y, horzWallHitX, horzWallHitY) : INT_MAX;
     double vertDistance = foundVertWallHit ? distanceBetweenPoints(data->player->x, data->player->y, vertWallHitX, vertWallHitY) : INT_MAX;
 
-    // Choisir la plus proche collision
     if (horzDistance < vertDistance) {
         data->rays[stripId].distance = horzDistance;
         data->rays[stripId].wallHitX = horzWallHitX;
@@ -133,122 +214,50 @@ void render_walls(t_data *data) {
     int i = 0;
     while (i < NUM_RAYS) {
         castRay(data, data->player->rotationAngle + (FOV_ANGLE / 2) - (i * (FOV_ANGLE / NUM_RAYS)), i);
+        float distance = data->rays[i].distance;  
+        int wallHeight = (int)(WINDOW_HEIGHT / distance);  
+        int wallTop = (WINDOW_HEIGHT / 2) - (wallHeight / 2);  
+        int wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);  
 
-        // Calcul de la hauteur du mur en fonction de la distance
-        int wallHeight = (int)(WINDOW_HEIGHT / data->rays[i].distance);
-        int wallStart = (WINDOW_HEIGHT - wallHeight) / 2;
-        int wallEnd = (WINDOW_HEIGHT + wallHeight) / 2;
 
-        // Choisir une couleur pour le mur
-        int color = create_trgb(0, 255, 0, 0); // exemple avec une couleur rouge
+        float darknessFactor = 1.0f + (distance / 16.0f);
 
-        // Dessiner le mur
-        for (int y = wallStart; y < wallEnd; y++) {
-            mlx_pixel_put(data->mlx, data->win, i, y, color);
+        int dither = data->rays[i].wallHitContent;
+        int baseColor = 200 + dither;
+        int adjustedColor = (int)(baseColor / darknessFactor);
+        if (adjustedColor < 0) adjustedColor = 0;
+        if (adjustedColor > 255) adjustedColor = 255;
+        int wallColor = create_trgb(0, adjustedColor, 0, adjustedColor);
+
+        for (int y = wallTop; y < wallBottom; y++) {
+            my_pixel_put(&data->img, i , y, wallColor);
         }
-
         i++;
     }
 }
-void castAllRays(t_data *data) {
-    float rayAngle = data->player->rotationAngle - (FOV_ANGLE / 2);
-    for (int stripId = 0; stripId < NUM_RAYS; stripId++) {
-        castRay(data, rayAngle, stripId);
-        rayAngle += FOV_ANGLE / NUM_RAYS;
-    }
-}
-
-void get_map_resolution(t_map *map) {
-    map->map_height = 0;
-    map->map_width = 0;
-    for (int i = 0; map->grid[i] != NULL; i++) {
-        map->map_height++;
-        int row_length = ft_strlen(map->grid[i]);
-        if (row_length > map->map_width)
-            map->map_width = row_length;
-    }
-}
-
-int update_player(t_player *player, t_map *map) {
-    player->rotationAngle += player->turnDirection * player->rotationSpeed;
-    double moveStep = player->walkDirection * player->moveSpeed;
-    double newPlayerX = player->x + cos(player->rotationAngle) * moveStep;
-    double newPlayerY = player->y + sin(player->rotationAngle) * moveStep;
-    if (!has_wall_at(map, newPlayerX, newPlayerY)) {
-        player->x = newPlayerX;
-        player->y = newPlayerY;
-    }
-    // printf("Player position updated: x = %.2f, y = %.2f, angle = %.2f\n", player->x, player->y, player->rotationAngle);
-    return 0;
-}
-
-
-int key_press(int keycode, t_data *data) {
-    if (data->player == NULL) {
-        fprintf(stderr, "Error: Player not initialized!\n");
-        return 1;
-    }
-
-    if (keycode == KEY_UP) {
-        data->player->walkDirection = 1;
-    } else if (keycode == KEY_DOWN) {
-        data->player->walkDirection = -1;
-    } else if (keycode == KEY_LEFT) {
-        data->player->turnDirection = -1;
-    } else if (keycode == KEY_RIGHT) {
-        data->player->turnDirection = 1;
-    } else if (keycode == KEY_ESC) {
-        mlx_clear_window(data->mlx, data->win);
-        mlx_destroy_window(data->mlx, data->win);
-        exit(0);
-    }
-
-    return 0;
-}
-
-int key_release(int keycode, t_data *data) {
-    if (keycode == KEY_UP || keycode == KEY_DOWN) {
-        data->player->walkDirection = 0;
-    } else if (keycode == KEY_LEFT || keycode == KEY_RIGHT) {
-        data->player->turnDirection = 0;
-    }
-    return 0;
-}
 
 int game_loop(t_data *data) {
+    if (data->img.img_ptr == NULL) {
+        data->img.img_ptr = mlx_new_image(data->mlx , WINDOW_WIDTH, WINDOW_HEIGHT);
+        data->img.image_pixel_ptr = mlx_get_data_addr(data->img.img_ptr, &data->img.bits_per_pixel, &data->img.line_len, &data->img.endien);
+    }
+    
     update_player(data->player, data->map);
     mlx_clear_window(data->mlx, data->win);
+    render_ard(data); 
     render_walls(data);
+    mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
+    
+    if (data->img.img_ptr) {
+        mlx_destroy_image(data->mlx, data->img.img_ptr); 
+        data->img.img_ptr = NULL;  
+    }
     return 0;
-}
-
-int read_map(t_data *data, char *map) {
-    int k = open(map, O_RDONLY);
-    if (k == -1) {
-        // write(1, "ENTRER MAP VALID !", 18);
-        return 0;
-    }
-    char *s = get_next_line(k);
-    if (!s) {
-        // write(1, "FILLE VIDE !!", 12);
-        return 0;
-    }
-    char *ret = NULL;
-    while (s) {
-        ret = ft_strjoin(ret, s);
-        free(s);
-        s = get_next_line(k);
-    }
-    data->map->grid = ft_split(ret, 10);
-    free(ret);
-    get_map_resolution(data->map);
-    close(k);
-    return 1;
 }
 
 void init_game(t_data *data, t_player *player) {
     data->mlx = mlx_init();
-    data->win = mlx_new_window(data->mlx,WINDOW_WIDTH , WINDOW_HEIGHT, "2D Grid Map");
+    data->win = mlx_new_window(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "2D Grid Map");
     data->player = player;
     player->x = 300;
     player->y = 300;
@@ -256,29 +265,30 @@ void init_game(t_data *data, t_player *player) {
     player->turnDirection = 0;
     player->walkDirection = 0;
     player->rotationAngle = M_PI / 2;
-    player->moveSpeed = 4;
-    player->rotationSpeed = 2 * (M_PI / 180);
+    player->moveSpeed = 0.03;
+    player->rotationSpeed = 0.9 * (M_PI / 180);
 }
 
 int main(int argc, char **argv) {
     if (argc != 2) {
-        printf("Usage: ./raycasting <map_file>\n");
+        fprintf(stderr, "Usage: %s <map_file>\n", argv[0]);
         return 1;
     }
 
     t_data data;
-    data.player = (t_player *)malloc(sizeof(t_player));
-    init_game(&data, data.player);
-    data.map = (t_map *)malloc(sizeof(t_map));
+    t_player player;
+    t_map map;
+    data.map = &map;
 
     if (!read_map(&data, argv[1])) {
-        fprintf(stderr, "Error loading map\n");
         return 1;
     }
-    mlx_hook(data.win, 2, 1L << 0, key_press, &data);
-    mlx_hook(data.win, 3, 1L << 1, key_release, &data);
-    mlx_loop_hook(data.mlx, game_loop, &data);
-    mlx_loop(data.mlx);
+    // exit(0);
 
+    init_game(&data, &player);
+    mlx_loop_hook(data.mlx, game_loop, &data); 
+    mlx_hook(data.win, 2, 1L<<0, key_press, &data);  
+    mlx_hook(data.win, 3, 1L<<1, key_release, &data);
+    mlx_loop(data.mlx); 
     return 0;
 }
