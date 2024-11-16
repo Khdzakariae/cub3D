@@ -16,19 +16,39 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
+// #define NUM_RAYS 320
+// #define FOV_ANGLE (M_PI / 3)
+#define TILE_SIZE 64
+#define KEY_UP 126
+#define KEY_DOWN 125
+#define KEY_LEFT 123
+#define KEY_RIGHT 124
+#define KEY_ESC 53
+#define TRUE 1
+#define FALSE 0
+
 #define FOV_ANGLE (60 * (M_PI / 180))
-#define TILE_SIZE 400
-#define MAP_NUM_ROWS 20
-#define MAP_NUM_COLS 20
-#define WINDOW_WIDTH 780
-#define WINDOW_HEIGHT 680
+// #define TILE_SIZE 400
+// #define MAP_NUM_ROWS 20
+// #define MAP_NUM_COLS 20
+// #define WINDOW_WIDTH 780
+// #define WINDOW_HEIGHT 680
 #define NUM_RAYS WINDOW_WIDTH
 
-#define KEY_UP 65362
-#define KEY_DOWN 65364
-#define KEY_LEFT 65361
-#define KEY_RIGHT 65363
-#define KEY_ESC 65363
+#define KEY_UP 126
+#define KEY_DOWN 125
+#define KEY_LEFT 123
+#define KEY_RIGHT 124
+#define KEY_ESC 53
+
+// #define KEY_UP 65362
+// #define KEY_DOWN 65364
+// #define KEY_LEFT 65361
+// #define KEY_RIGHT 65363
+// #define KEY_ESC 65363
 
 
 #define TRUE 1
