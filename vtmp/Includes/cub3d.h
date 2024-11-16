@@ -17,38 +17,38 @@
 #include <stdlib.h>
 
 
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
-// #define NUM_RAYS 320
-// #define FOV_ANGLE (M_PI / 3)
-#define TILE_SIZE 64
-#define KEY_UP 126
-#define KEY_DOWN 125
-#define KEY_LEFT 123
-#define KEY_RIGHT 124
-#define KEY_ESC 53
-#define TRUE 1
-#define FALSE 0
+# define COLOR_RED      0xFF0000
+# define COLOR_GREEN    0x00FF00
+# define COLOR_BLUE     0x0000FF
+# define COLOR_YELLOW   0xFFFF00
+# define COLOR_CYAN     0x00FFFF
+# define COLOR_MAGENTA  0xFF00FF
+# define COLOR_ORANGE   0xFFA500
+# define COLOR_PURPLE   0x800080
+# define COLOR_WHITE    0xFFFFFF
+# define COLOR_BLACK    0x000000
+# define COLOR_GRAY     0x808080
+# define COLOR_PINK     0xFFC0CB
 
 #define FOV_ANGLE (60 * (M_PI / 180))
-// #define TILE_SIZE 400
-// #define MAP_NUM_ROWS 20
-// #define MAP_NUM_COLS 20
-// #define WINDOW_WIDTH 780
-// #define WINDOW_HEIGHT 680
+#define TILE_SIZE 128
+#define MAP_NUM_ROWS 20
+#define MAP_NUM_COLS 20
+#define WINDOW_WIDTH 780
+#define WINDOW_HEIGHT 680
 #define NUM_RAYS WINDOW_WIDTH
 
-#define KEY_UP 126
-#define KEY_DOWN 125
-#define KEY_LEFT 123
-#define KEY_RIGHT 124
-#define KEY_ESC 53
+// #define KEY_UP 126
+// #define KEY_DOWN 125
+// #define KEY_LEFT 123
+// #define KEY_RIGHT 124
+// #define KEY_ESC 53
 
-// #define KEY_UP 65362
-// #define KEY_DOWN 65364
-// #define KEY_LEFT 65361
-// #define KEY_RIGHT 65363
-// #define KEY_ESC 65363
+#define KEY_UP 65362
+#define KEY_DOWN 65364
+#define KEY_LEFT 65363
+#define KEY_RIGHT 65361
+#define KEY_ESC 65307
 
 
 #define TRUE 1
@@ -94,24 +94,14 @@ struct Ray {
     int wallHitContent;
 } rays[NUM_RAYS];
 
-typedef struct {
-    float rayAngle;
-    int isRayFacingDown, isRayFacingUp, isRayFacingLeft, isRayFacingRight;
-    float xintercept, yintercept;
-    float xstep, ystep;
-    int foundHorzHit, foundVertHit;
-    float horzHitX, horzHitY, vertHitX, vertHitY;
-    int horzWallContent, vertWallContent;
-    float horzHitDistance, vertHitDistance;
-} RaycastData;
-
 typedef struct s_data {
     void *mlx;
     void *win;
+    t_img img;
     t_map *map;
-        t_img img;
-
     t_player *player;
-    struct Ray rays[NUM_RAYS];
+        struct Ray rays[NUM_RAYS];
+
+
 } t_data;
 # endif
