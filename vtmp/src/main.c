@@ -14,22 +14,6 @@ void my_pixel_put(t_img *img, int x, int y, int color) {
 
     }
 }
-void render_walls(t_data *data) {
-    for (int i = 0; i < NUM_RAYS; i++) {
-        float distance = data->rays[i].distance;
-        int wallHeight = (int)(WINDOW_HEIGHT / distance);
-        int wallTop = (WINDOW_HEIGHT / 2) - (wallHeight / 2);
-        int wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);
-        int wallColor = (data->rays[i].wallHitContent == '1') ? 0x999999 : 0x333333;
-
-
-        for (int y = wallTop; y < wallBottom; y++) {
-            my_pixel_put(&data->img, i , y, wallColor);
-        }
-    }
-    mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
-
-}
 
 double normalizeAngle(double angle) {
     while (angle < 0) angle += 2 * M_PI;
@@ -43,59 +27,63 @@ double distanceBetweenPoints(double x1, double y1, double x2, double y2) {
 
 int has_wall_at(t_map *map, double x, double y) {
     if (x < 0 || x >= map->map_width * TILE_SIZE || y < 0 || y >= map->map_height * TILE_SIZE)
-        return 1;
+        return 1;  // Retourne vrai si le rayon sort de la carte
     int mapX = (int)(x / TILE_SIZE);
     int mapY = (int)(y / TILE_SIZE);
-    if (map->grid[mapY][mapX] == '1')
+    if (map->grid[mapY][mapX] == '1') 
         return 1;
     return 0;
 }
 
 void castRay(t_data *data, float rayAngle, int stripId) {
-    rayAngle = normalizeAngle(rayAngle);
+    rayAngle = normalizeAngle(rayAngle);  // Normalisation de l'angle du rayon
 
+    // Calculer si le rayon est dirigé vers le haut/bas, gauche/droite
     int isRayFacingDown = rayAngle > 0 && rayAngle < M_PI;
     int isRayFacingUp = !isRayFacingDown;
-
     int isRayFacingRight = rayAngle < 0.5 * M_PI || rayAngle > 1.5 * M_PI;
     int isRayFacingLeft = !isRayFacingRight;
 
+    // Calculs pour le raycast horizontal
     float xintercept, yintercept;
     float xstep, ystep;
 
+    // Initialiser les variables de hit pour les rayons horizontaux
     int foundHorzWallHit = FALSE;
     float horzWallHitX = 0;
     float horzWallHitY = 0;
     int horzWallContent = 0;
+
     yintercept = floor(data->player->y / TILE_SIZE) * TILE_SIZE;
     yintercept += isRayFacingDown ? TILE_SIZE : 0;
     xintercept = data->player->x + (yintercept - data->player->y) / tan(rayAngle);
     ystep = TILE_SIZE;
     ystep *= isRayFacingUp ? -1 : 1;
-
     xstep = TILE_SIZE / tan(rayAngle);
     xstep *= (isRayFacingLeft && xstep > 0) ? -1 : 1;
     xstep *= (isRayFacingRight && xstep < 0) ? -1 : 1;
+
     float nextHorzTouchX = xintercept;
     float nextHorzTouchY = yintercept;
+
     while (nextHorzTouchX >= 0 && nextHorzTouchX <= WINDOW_WIDTH && nextHorzTouchY >= 0 && nextHorzTouchY <= WINDOW_HEIGHT) {
-        float xToCheck = nextHorzTouchX;
-        float yToCheck = nextHorzTouchY + (isRayFacingUp ? -1 : 0);
-        if (has_wall_at(data->map, xToCheck, yToCheck)) {
+        if (has_wall_at(data->map, nextHorzTouchX, nextHorzTouchY)) {
             horzWallHitX = nextHorzTouchX;
             horzWallHitY = nextHorzTouchY;
-            horzWallContent = data->map->grid[(int)floor(yToCheck / TILE_SIZE)][(int)floor(xToCheck / TILE_SIZE)];
+            horzWallContent = data->map->grid[(int)(horzWallHitY / TILE_SIZE)][(int)(horzWallHitX / TILE_SIZE)];
             foundHorzWallHit = TRUE;
             break;
-        } else {
-            nextHorzTouchX += xstep;
-            nextHorzTouchY += ystep;
         }
+        nextHorzTouchX += xstep;
+        nextHorzTouchY += ystep;
     }
+
+    // Calculs pour le raycast vertical
     int foundVertWallHit = FALSE;
     float vertWallHitX = 0;
     float vertWallHitY = 0;
     int vertWallContent = 0;
+
     xintercept = floor(data->player->x / TILE_SIZE) * TILE_SIZE;
     xintercept += isRayFacingRight ? TILE_SIZE : 0;
     yintercept = data->player->y + (xintercept - data->player->x) * tan(rayAngle);
@@ -104,50 +92,64 @@ void castRay(t_data *data, float rayAngle, int stripId) {
     ystep = TILE_SIZE * tan(rayAngle);
     ystep *= (isRayFacingUp && ystep > 0) ? -1 : 1;
     ystep *= (isRayFacingDown && ystep < 0) ? -1 : 1;
+
     float nextVertTouchX = xintercept;
     float nextVertTouchY = yintercept;
+
     while (nextVertTouchX >= 0 && nextVertTouchX <= WINDOW_WIDTH && nextVertTouchY >= 0 && nextVertTouchY <= WINDOW_HEIGHT) {
-        float xToCheck = nextVertTouchX + (isRayFacingLeft ? -1 : 0);
-        float yToCheck = nextVertTouchY;
-        if (has_wall_at(data->map, xToCheck, yToCheck)) {
+        if (has_wall_at(data->map, nextVertTouchX, nextVertTouchY)) {
             vertWallHitX = nextVertTouchX;
             vertWallHitY = nextVertTouchY;
-            vertWallContent = data->map->grid[(int)floor(yToCheck / TILE_SIZE)][(int)floor(xToCheck / TILE_SIZE)];
+            vertWallContent = data->map->grid[(int)(vertWallHitY / TILE_SIZE)][(int)(vertWallHitX / TILE_SIZE)];
             foundVertWallHit = TRUE;
             break;
-        } else {
-            nextVertTouchX += xstep;
-            nextVertTouchY += ystep;
         }
+        nextVertTouchX += xstep;
+        nextVertTouchY += ystep;
     }
-    float horzHitDistance = foundHorzWallHit
-        ? distanceBetweenPoints(data->player->x, data->player->y, horzWallHitX, horzWallHitY)
-        : INT_MAX;
-    float vertHitDistance = foundVertWallHit
-        ? distanceBetweenPoints(data->player->x, data->player->y, vertWallHitX, vertWallHitY)
-        : INT_MAX;
-    if (vertHitDistance < horzHitDistance) {
-        rays[stripId].distance = vertHitDistance;
-        rays[stripId].wallHitX = vertWallHitX;
-        rays[stripId].wallHitY = vertWallHitY;
-        rays[stripId].wallHitContent = vertWallContent;
-        rays[stripId].wasHitVertical = TRUE;
+    
+    // Calculer la distance du rayon à la paroi la plus proche
+    double horzDistance = foundHorzWallHit ? distanceBetweenPoints(data->player->x, data->player->y, horzWallHitX, horzWallHitY) : INT_MAX;
+    double vertDistance = foundVertWallHit ? distanceBetweenPoints(data->player->x, data->player->y, vertWallHitX, vertWallHitY) : INT_MAX;
+
+    // Choisir la plus proche collision
+    if (horzDistance < vertDistance) {
+        data->rays[stripId].distance = horzDistance;
+        data->rays[stripId].wallHitX = horzWallHitX;
+        data->rays[stripId].wallHitY = horzWallHitY;
+        data->rays[stripId].wallHitContent = horzWallContent;
+        data->rays[stripId].wasHitVertical = FALSE;
     } else {
-        rays[stripId].distance = horzHitDistance;
-        rays[stripId].wallHitX = horzWallHitX;
-        rays[stripId].wallHitY = horzWallHitY;
-        rays[stripId].wallHitContent = horzWallContent;
-        rays[stripId].wasHitVertical = FALSE;
+        data->rays[stripId].distance = vertDistance;
+        data->rays[stripId].wallHitX = vertWallHitX;
+        data->rays[stripId].wallHitY = vertWallHitY;
+        data->rays[stripId].wallHitContent = vertWallContent;
+        data->rays[stripId].wasHitVertical = TRUE;
     }
-    rays[stripId].rayAngle = rayAngle;
-    rays[stripId].isRayFacingDown = isRayFacingDown;
-    rays[stripId].isRayFacingUp = isRayFacingUp;
-    rays[stripId].isRayFacingLeft = isRayFacingLeft;
-    rays[stripId].isRayFacingRight = isRayFacingRight;
-    printf("yhe pos x is : %f \n  yhe pos y is : %f \n",vertWallHitX, vertWallHitY );
-    mlx_pixel_put(data->mlx, data->win, (int)rays[stripId].wallHitX, (int)rays[stripId].wallHitY, 0xFFFFFF);
 }
 
+
+void render_walls(t_data *data) {
+    int i = 0;
+    while (i < NUM_RAYS) {
+        castRay(data, data->player->rotationAngle + (FOV_ANGLE / 2) - (i * (FOV_ANGLE / NUM_RAYS)), i);
+
+        // Calcul de la hauteur du mur en fonction de la distance
+        int wallHeight = (int)(WINDOW_HEIGHT / data->rays[i].distance);
+        int wallStart = (WINDOW_HEIGHT - wallHeight) / 2;
+        int wallEnd = (WINDOW_HEIGHT + wallHeight) / 2;
+
+        // Choisir une couleur pour le mur
+        int color = create_trgb(0, 255, 0, 0); // exemple avec une couleur rouge
+
+        // Dessiner le mur
+        for (int y = wallStart; y < wallEnd; y++) {
+            mlx_pixel_put(data->mlx, data->win, i, y, color);
+        }
+
+        i++;
+    }
+}
 void castAllRays(t_data *data) {
     float rayAngle = data->player->rotationAngle - (FOV_ANGLE / 2);
     for (int stripId = 0; stripId < NUM_RAYS; stripId++) {
@@ -182,6 +184,11 @@ int update_player(t_player *player, t_map *map) {
 
 
 int key_press(int keycode, t_data *data) {
+    if (data->player == NULL) {
+        fprintf(stderr, "Error: Player not initialized!\n");
+        return 1;
+    }
+
     if (keycode == KEY_UP) {
         data->player->walkDirection = 1;
     } else if (keycode == KEY_DOWN) {
@@ -191,8 +198,11 @@ int key_press(int keycode, t_data *data) {
     } else if (keycode == KEY_RIGHT) {
         data->player->turnDirection = 1;
     } else if (keycode == KEY_ESC) {
+        mlx_clear_window(data->mlx, data->win);
+        mlx_destroy_window(data->mlx, data->win);
         exit(0);
     }
+
     return 0;
 }
 
@@ -206,18 +216,9 @@ int key_release(int keycode, t_data *data) {
 }
 
 int game_loop(t_data *data) {
-        if (data->img.img_ptr == NULL) {
-        data->img.img_ptr = mlx_new_image(data->mlx , WINDOW_WIDTH, WINDOW_HEIGHT);
-        data->img.image_pixel_ptr = mlx_get_data_addr(data->img.img_ptr, &data->img.bits_per_pixel, &data->img.line_len, &data->img.endien);
-    }
     update_player(data->player, data->map);
     mlx_clear_window(data->mlx, data->win);
-    castAllRays(data);
     render_walls(data);
-        if (data->img.img_ptr) {
-        mlx_destroy_image(data->mlx, data->img.img_ptr); 
-        data->img.img_ptr = NULL;  
-    }
     return 0;
 }
 
@@ -249,37 +250,34 @@ void init_game(t_data *data, t_player *player) {
     data->mlx = mlx_init();
     data->win = mlx_new_window(data->mlx,WINDOW_WIDTH , WINDOW_HEIGHT, "2D Grid Map");
     data->player = player;
-    player->x = data->map->map_width * TILE_SIZE / 2;
-    player->y = data->map->map_height * TILE_SIZE / 2;
+    player->x = 300;
+    player->y = 300;
     player->radius = 3;
     player->turnDirection = 0;
     player->walkDirection = 0;
     player->rotationAngle = M_PI / 2;
-    player->moveSpeed = 0.2;
-    player->rotationSpeed = 0.3 * (M_PI / 180);
+    player->moveSpeed = 4;
+    player->rotationSpeed = 2 * (M_PI / 180);
 }
 
 int main(int argc, char **argv) {
     if (argc != 2) {
-        fprintf(stderr, "Usage: %s <map_file>\n", argv[0]);
+        printf("Usage: ./raycasting <map_file>\n");
         return 1;
     }
 
     t_data data;
-    t_player player;
-    t_map map;
-
-    data.map = &map;
+    data.player = (t_player *)malloc(sizeof(t_player));
+    init_game(&data, data.player);
+    data.map = (t_map *)malloc(sizeof(t_map));
 
     if (!read_map(&data, argv[1])) {
+        fprintf(stderr, "Error loading map\n");
         return 1;
     }
-
-    init_game(&data, &player);
-
+    mlx_hook(data.win, 2, 1L << 0, key_press, &data);
+    mlx_hook(data.win, 3, 1L << 1, key_release, &data);
     mlx_loop_hook(data.mlx, game_loop, &data);
-    mlx_hook(data.win, 2, 1L<<0, key_press, &data);
-    mlx_hook(data.win, 3, 1L<<1, key_release, &data);
     mlx_loop(data.mlx);
 
     return 0;
