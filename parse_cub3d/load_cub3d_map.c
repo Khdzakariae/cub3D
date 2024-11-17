@@ -40,6 +40,12 @@ void	load_cub3d_map(char **cube_file, t_cub3d **cub3d_data)
     // print map
     for (size_t i = 0; i < (*cub3d_data)->map.height; i++)
         printf("%s\n", (*cub3d_data)->map.map[i]);
+    if ((*cub3d_data)->map.width == 0 || (*cub3d_data)->map.height == 0)
+    {
+        printf("Error\nNo map\n");
+        // TODO free what needs to be freed.
+        exit(EXIT_FAILURE);
+    }
 }
 
 void	fill_map(char **cube_file, t_cub3d **cub3d_data, size_t *i)

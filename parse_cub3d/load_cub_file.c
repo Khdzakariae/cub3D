@@ -25,7 +25,9 @@ bool	load_cub3d_file(char *file, t_cub3d *cub3d)
 	if (file_is_valid(cube_file, &cub3d) == false)
 		return (printf("Error\nInvalid cube file\n"), free(cube_file), close(fd), false);  // TODO free 2d ARRAY.
 	load_cub3d_map(cube_file, &cub3d);
-	// parse cub file
+	// load textures and colors
+	// fetch_textures(cube_file, &cub3d);
+	// fetch_colors(cube_file, &cub3d);
 	return (true);
 }
 
