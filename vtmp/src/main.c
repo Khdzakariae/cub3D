@@ -1,5 +1,36 @@
 #include "../Includes/cub3d.h"
 
+// void render_walls(t_data *data) {
+//     for (int i = 0; i < NUM_RAYS; i++) {
+//          float distance = data->rays[i].distance;  
+//         int wallHeight = (int)(WINDOW_HEIGHT / distance);  
+//         int wallTop = (WINDOW_HEIGHT / 2) - (wallHeight / 2);  
+//         int wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);  
+
+
+//         float darknessFactor = 1.0f + (distance / 16.0f);
+
+//         int dither = data->rays[i].wallHitContent;
+//         int baseColor = 200 + dither;
+//         int adjustedColor = (int)(baseColor / darknessFactor);
+//         if (adjustedColor < 0) adjustedColor = 0;
+//         if (adjustedColor > 255) adjustedColor = 255;
+//         int wallColor = create_trgb(0, adjustedColor, 0, adjustedColor);
+
+//         for (int y = wallTop; y < wallBottom; y++) {
+//             my_pixel_put(&data->img, i , y, wallColor);
+//         }
+// }
+//     mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
+// }
+
+// void castAllRays(t_data *data) {
+//     float rayAngle = data->player->rotationAngle - (FOV_ANGLE / 2);
+//     for (int stripId = 0; stripId < NUM_RAYS; stripId++) {
+//         castRay(data, rayAngle, stripId);
+//         rayAngle += FOV_ANGLE / NUM_RAYS;
+//     }
+// }
 void my_pixel_put(t_img *img, int x, int y, int color) {
     if (x >= 0 && x < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT)
     {
