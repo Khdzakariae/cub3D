@@ -47,7 +47,6 @@ int close_window(t_data *data)
     if (data->player)
         free(data->player);
     exit(0);
-    return 0;
 }
 
 void my_pixel_put(t_img *img, int x, int y, int color)
@@ -139,9 +138,8 @@ int wall_hit(float x, float y, t_data *data)
 {
     int x_m, y_m;
 
-    if (x < 0 || y < 0)
-        return (0);
-
+    if (x < 0 || x >= data->map->map_width * TILE_SIZE || y < 0 || y >= data->map->map_height * TILE_SIZE)
+        return 0; 
     x_m = floor(x / data->map->tile_size);
     y_m = floor(y / data->map->tile_size);
 
@@ -349,7 +347,7 @@ int read_map(t_data *data, char *map_path)
     }
 
     data->map->grid = ft_split(content, '\n');
-    free(content);  // Free the final content
+    free(content);
     close(fd);
 
     if (!data->map->grid)
@@ -398,8 +396,8 @@ void init_game(t_data *data)
     data->player->turnDirection = 0;
     data->player->walkDirection = 0;
     data->player->rotationAngle = M_PI / 2;
-    data->player->moveSpeed = 3;
-    data->player->rotationSpeed = 2 * (M_PI / 180);
+    data->player->moveSpeed = 0.3;
+    data->player->rotationSpeed = 0.2 * (M_PI / 180);
 
     int startX = data->map->map_width * data->map->tile_size / 2;
     int startY = data->map->map_height * data->map->tile_size / 2;
