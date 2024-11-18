@@ -69,6 +69,7 @@ int			get_map_height(char **cube_file, size_t map_starting_i);
 void		get_map_line_len(char *line, size_t *line_map_len);
 bool 		valid_map_char(char c);
 bool		check_if_all_walls(char *line);
+void		free_2d_array(char **array);
 
 // libft_utils.c
 char    **get_lines(int fd, char **cube_file, int *line_count);
@@ -79,6 +80,8 @@ char	*ft_strtrim(char const *s1, char const *set);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 bool	ft_isspace(char c);
+char	**ft_split(char const *s, char c);
+int		ft_atoi(const char *str);
 
 // load_cub3d_map.c
 void		load_cub3d_map(char **cube_file, t_cub3d **cub3d_data);

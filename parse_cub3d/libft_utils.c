@@ -128,3 +128,112 @@ bool ft_isspace(char c)
 {
 	return (c == ' ' || c == '\t' || c == '\v' || c == '\f' || c == '\r');
 }
+
+static void	ft_clear(char **ptr, int current)
+{
+	int	i;
+
+	i = 0;
+	while (i < current)
+	{
+		free(ptr[i]);
+		i++;
+	}
+	free(ptr);
+}
+
+static int	checkwords(char const *s, char c)
+{
+	size_t	i;
+	int		words;
+
+	i = 0;
+	words = 0;
+	while (s[i])
+	{
+		if (s[i] != c)
+		{
+			while (s[i] && s[i] != c)
+			{
+				i++;
+			}
+			words++;
+			continue ;
+		}
+		i++;
+	}
+	return (words);
+}
+
+static int	fill_arrays(char const *s, char c, char **ptr, int end)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (s[i])
+	{
+		if (s[i] == c)
+		{
+			i++;
+			continue ;
+		}
+		else
+		{
+			end = i;
+			while (s[end] && s[end] != c)
+				end++;
+			ptr[j] = ft_substr(s, i, end - i);
+			if (ptr[j] == NULL)
+				return (ft_clear(ptr, j), 1);
+			j++;
+			i = end;
+		}
+	}
+	return (ptr[j] = NULL, 0);
+}
+
+char	**ft_split(char const *s, char c)
+{
+	int		words;
+	char	**ptr;
+
+	if (!s)
+		return (NULL);
+	words = checkwords(s, c) + 1;
+	ptr = malloc(words * sizeof(char *));
+	if (!ptr)
+		return (NULL);
+	if (fill_arrays(s, c, ptr, 0))
+		return (NULL);
+	return (ptr);
+}
+
+int	ft_atoi(const char *str)
+{
+	int	result;
+	int	sign;
+	int	i;
+
+	result = 0;
+	sign = 1;
+	i = 0;
+	while (str[i] == ' ' || (str[i] >= '\t' && str[i] <= '\r'))
+		i++;
+	if (str[i] == '-')
+	{
+		sign = -1;
+		i++;
+	}
+	else if (str[i] == '+')
+	{
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		result = result * 10 + (str[i] - '0');
+		i++;
+	}
+	return (result * sign);
+}

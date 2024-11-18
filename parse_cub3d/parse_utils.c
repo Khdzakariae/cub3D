@@ -6,6 +6,7 @@ int			get_map_height(char **cube_file, size_t map_starting_i);
 void		get_map_line_len(char *line, size_t *line_map_len);
 bool 		valid_map_char(char c);
 bool		check_if_all_walls(char *line);
+void 		free_2d_array(char **array);
 
 bool	check_cub_extension(char *file)
 {
@@ -75,4 +76,17 @@ bool	check_if_all_walls(char *line)
 		line++;
 	}
 	return (true);
+}
+
+void	free_2d_array(char **array)
+{
+	size_t i;
+
+	i = 0;
+	while (array[i] != NULL)
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
 }
