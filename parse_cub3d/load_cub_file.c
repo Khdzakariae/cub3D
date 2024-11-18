@@ -91,6 +91,21 @@ static bool file_is_valid(char **cube_file, t_cub3d **cub3d)
 			// TODO free what needs to be freed.
 			return (false);
 		}
+		else if (cube_file[i][0] == '1')
+		{
+			// check if the map is the last element
+			if ((*cub3d)->textures.no.is_set == false 
+				|| (*cub3d)->textures.so.is_set == false 
+				|| (*cub3d)->textures.we.is_set == false 
+				|| (*cub3d)->textures.ea.is_set == false 
+				|| (*cub3d)->colors.floor.is_set == false 
+				|| (*cub3d)->colors.ceiling.is_set == false)
+			{
+				printf("Error\nMap must be last element\n");
+				// TODO free what needs to be freed.
+				exit(EXIT_FAILURE);
+			}
+		}			
 		i++;
 	}
 	if ((*cub3d)->textures.no.is_set == false 

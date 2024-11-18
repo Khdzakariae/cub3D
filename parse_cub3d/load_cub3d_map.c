@@ -11,11 +11,9 @@ void	load_cub3d_map(char **cube_file, t_cub3d **cub3d_data)
 {
 	bool map;
 	size_t i;
-	size_t j;
 
 	map = false;
 	i = 0;
-	j = 0;
 	while (cube_file[i] != NULL)
 	{
 		if (cube_file[i][0] == '1' && map == false)
@@ -26,6 +24,8 @@ void	load_cub3d_map(char **cube_file, t_cub3d **cub3d_data)
 			// map contains all infos, it's surronded by walls.
 			map_is_valid(cub3d_data);
 			fetch_map_width(cub3d_data);
+            if (cube_file[i] == NULL || cube_file[i][0] == '\0')
+                break ;
 		}
 		else if (cube_file[i][0] == '1' && map == true)
 		{
@@ -107,7 +107,6 @@ void	copy_map_content(char **cube_file, t_cub3d **cub3d_data, size_t map_startin
 		map_starting_i++;
 	}
 	(*cub3d_data)->map.map[map_i] = NULL;
-	// print map
 }
 
 void    map_is_valid(t_cub3d **cub3d_data)
@@ -167,9 +166,6 @@ void        content_is_valid(t_cub3d **cub3d_data)
     i = 0;
     player = false;
     spaces = false;
-    // print map
-    for (size_t i = 0; i < (*cub3d_data)->map.height; i++)
-        printf("%s\n", (*cub3d_data)->map.map[i]);
     while ((*cub3d_data)->map.map[i] != NULL)
     {
         j = 0;
