@@ -30,13 +30,14 @@
 # define COLOR_GRAY     0x808080
 # define COLOR_PINK     0xFFC0CB
 
-#define FOV_ANGLE (60 * (M_PI / 180))
-#define TILE_SIZE 128
-#define MAP_NUM_ROWS 20
-#define MAP_NUM_COLS 20
-#define WINDOW_WIDTH 780
-#define WINDOW_HEIGHT 680
-#define NUM_RAYS WINDOW_WIDTH
+
+// #define FOV_ANGLE (60 * (M_PI / 180))
+// #define TILE_SIZE 128
+// #define MAP_NUM_ROWS 20
+// #define MAP_NUM_COLS 20
+// #define WINDOW_WIDTH 780
+// #define WINDOW_HEIGHT 680
+// #define NUM_RAYS WINDOW_WIDTH
 
 // #define KEY_UP 126
 // #define KEY_DOWN 125
