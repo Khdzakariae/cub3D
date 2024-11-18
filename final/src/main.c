@@ -1,74 +1,10 @@
 #include "../Includes/cub3d.h"
 
-#define WINDOW_WIDTH 1080
-#define WINDOW_HEIGHT 720
-#define NUM_RAYS WINDOW_WIDTH
-#define FOV_ANGLE (60 * (M_PI / 180))
-#define TILE_SIZE 64
-
-#define KEY_UP 126
-#define KEY_DOWN 125
-#define KEY_LEFT 123
-#define KEY_RIGHT 124
-#define KEY_ESC 53
-
-#define TRUE 1
-#define FALSE 0
-
-typedef struct s_img
-{
-    void    *img_ptr;
-    char    *image_pixel_ptr;
-    int     bits_per_pixel;
-    int     endian;
-    int     line_len;
-} t_img;
-
-typedef struct s_map {
-    int     map_height;
-    int     map_width;
-    char    **grid;
-    int     tile_size;
-} t_map;
-
-typedef struct s_player {
-    double  x;
-    double  y;
-    double  radius;
-    double  turnDirection;
-    double  walkDirection;
-    double  rotationAngle;
-    double  moveSpeed;
-    double  rotationSpeed;
-} t_player;
-
-typedef struct s_ray {
-    float   rayAngle;
-    float   wallHitX;
-    float   wallHitY;
-    float   distance;
-    int     wasHitVertical;
-    int     isRayFacingUp;
-    int     isRayFacingDown;
-    int     isRayFacingLeft;
-    int     isRayFacingRight;
-    int     wallHitContent;
-} t_ray;
-
-typedef struct s_data {
-    void        *mlx;
-    void        *win;
-    t_img       img;
-    t_map       *map;
-    t_player    *player;
-    t_ray       rays[NUM_RAYS];
-} t_data;
-
-
+char    **ft_split(char const *s, char c);
 void    cleanup_map(t_map *map);
 int     close_window(t_data *data);
-char    *ft_strjoin(char *s1, char *s2);
 char    *get_next_line(int fd);
+char    *ft_strjoin(char *s1, char *s2);
 
 double normalizeAngle(double angle)
 {
@@ -76,20 +12,6 @@ double normalizeAngle(double angle)
     if (angle < 0)
         angle += 2 * M_PI;
     return angle;
-}
-int close_window(t_data *data)
-{
-    if (!data)
-        return -1;
-
-    if (data->map)
-        cleanup_map(data->map);
-    if (data->win)
-        mlx_destroy_window(data->mlx, data->win);
-    if (data->img.img_ptr)
-        mlx_destroy_image(data->mlx, data->img.img_ptr);
-    exit(0);
-    return 0;
 }
 
 void safe_free(void **ptr)
@@ -111,6 +33,23 @@ void cleanup_map(t_map *map)
     safe_free((void**)&map->grid);
 }
 
+int close_window(t_data *data)
+{
+    if (!data)
+        return -1;
+
+    if (data->map)
+        cleanup_map(data->map);
+    if (data->win)
+        mlx_destroy_window(data->mlx, data->win);
+    if (data->img.img_ptr)
+        mlx_destroy_image(data->mlx, data->img.img_ptr);
+    if (data->player)
+        free(data->player);
+    exit(0);
+    return 0;
+}
+
 void my_pixel_put(t_img *img, int x, int y, int color)
 {
     if (x >= 0 && x < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT)
@@ -124,7 +63,6 @@ int create_trgb(int t, int r, int g, int b)
 {
     return (t << 24) | (r << 16) | (g << 8) | b;
 }
-
 
 double distanceBetweenPoints(double x1, double y1, double x2, double y2)
 {
@@ -153,9 +91,185 @@ void get_map_resolution(t_map *map)
     for (int i = 0; map->grid[i] != NULL; i++)
     {
         map->map_height++;
-        int row_length = strlen(map->grid[i]);
+        int row_length = ft_strlen(map->grid[i]);
         if (row_length > map->map_width)
             map->map_width = row_length;
+    }
+}
+
+int unit_circle(float angle, char c)
+{
+    if (c == 'x')
+    {
+        if (angle > 0 && angle < M_PI)
+            return (1);
+    }
+    else if (c == 'y')
+    {
+        if (angle > (M_PI / 2) && angle < (3 * M_PI) / 2)
+            return (1);
+    }
+    return (0);
+}
+
+int inter_check(t_data *data, float angle, float *inter, float *step, int is_horizon)
+{
+    if (is_horizon)
+    {
+        if (angle > 0 && angle < M_PI)
+        {
+            *inter += data->map->tile_size;
+            return (-1);
+        }
+        *step *= -1;
+    }
+    else
+    {
+        if (!(angle > M_PI / 2 && angle < 3 * M_PI / 2)) 
+        {
+            *inter += data->map->tile_size;
+            return (-1);
+        }
+        *step *= -1;
+    }
+    return (1);
+}
+
+int wall_hit(float x, float y, t_data *data)
+{
+    int x_m, y_m;
+
+    if (x < 0 || y < 0)
+        return (0);
+
+    x_m = floor(x / data->map->tile_size);
+    y_m = floor(y / data->map->tile_size);
+
+    if (y_m >= data->map->map_height || x_m >= data->map->map_width)
+        return (0);
+
+    if (data->map->grid[y_m] && x_m < (int)ft_strlen(data->map->grid[y_m]))
+        if (data->map->grid[y_m][x_m] == '1')
+            return (0);
+
+    return (1);
+}
+
+float get_h_inter(t_data *data, float angle)
+{
+    float h_x, h_y, x_step, y_step;
+    int pixel;
+
+    y_step = data->map->tile_size;
+    x_step = data->map->tile_size / tan(angle);
+    h_y = floor(data->player->y / data->map->tile_size) * data->map->tile_size;
+    pixel = inter_check(data, angle, &h_y, &y_step, 1);
+    h_x = data->player->x + (h_y - data->player->y) / tan(angle);
+
+    if ((unit_circle(angle, 'y') && x_step > 0) || (!unit_circle(angle, 'y') && x_step < 0))
+        x_step *= -1;
+
+    while (wall_hit(h_x, h_y - pixel, data))
+    {
+        h_x += x_step;
+        h_y += y_step;
+    }
+
+    return sqrt(pow(h_x - data->player->x, 2) + pow(h_y - data->player->y, 2));
+}
+
+float get_v_inter(t_data *data, float angle)
+{
+    float v_x, v_y, x_step, y_step;
+    int pixel;
+
+    x_step = data->map->tile_size; 
+    y_step = data->map->tile_size * tan(angle);
+    v_x = floor(data->player->x / data->map->tile_size) * data->map->tile_size;
+    pixel = inter_check(data, angle, &v_x, &x_step, 0);
+    v_y = data->player->y + (v_x - data->player->x) * tan(angle);
+
+    if ((unit_circle(angle, 'x') && y_step < 0) || (!unit_circle(angle, 'x') && y_step > 0))
+        y_step *= -1;
+
+    while (wall_hit(v_x - pixel, v_y, data))
+    {
+        v_x += x_step;
+        v_y += y_step;
+    }
+
+    return sqrt(pow(v_x - data->player->x, 2) + pow(v_y - data->player->y, 2));
+}
+
+void castRay(t_data *data, float rayAngle, int stripId)
+{
+    float h_inter, v_inter;
+    rayAngle = normalizeAngle(rayAngle);
+
+    h_inter = get_h_inter(data, rayAngle);
+    v_inter = get_v_inter(data, rayAngle);
+
+    if (v_inter <= h_inter)
+    {
+        data->rays[stripId].distance = v_inter;
+        data->rays[stripId].wasHitVertical = TRUE;
+    }
+    else
+    {
+        data->rays[stripId].distance = h_inter;
+        data->rays[stripId].wasHitVertical = FALSE;
+    }
+
+    data->rays[stripId].rayAngle = rayAngle;
+}
+
+void render_walls(t_data *data) {
+    memset(data->img.image_pixel_ptr, 0, WINDOW_WIDTH * WINDOW_HEIGHT * (data->img.bits_per_pixel / 8));
+
+    for (int x = 0; x < WINDOW_WIDTH; x++) {
+        for (int y = 0; y < WINDOW_HEIGHT / 2; y++) {
+            my_pixel_put(&data->img, x, y, create_trgb(0, 100, 100, 100));
+        }
+    }
+
+    for (int x = 0; x < WINDOW_WIDTH; x++) {
+        for (int y = WINDOW_HEIGHT / 2; y < WINDOW_HEIGHT; y++) {
+            my_pixel_put(&data->img, x, y, create_trgb(0, 50, 50, 50)); 
+        }
+    }
+
+    for (int i = 0; i < NUM_RAYS; i++) {
+        float distance =  data->rays[i].distance;   
+        
+        int wallHeight = (int)((WINDOW_HEIGHT / distance) * data->map->tile_size);
+        
+        int wallTop = (WINDOW_HEIGHT / 2) - (wallHeight / 2);
+        if (wallTop < 0) wallTop = 0;
+        
+        int wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);
+        if (wallBottom >= WINDOW_HEIGHT) wallBottom = WINDOW_HEIGHT - 1;
+
+        float darknessFactor = 1.0f + (distance / (data->map->tile_size * 5));
+        int baseColor = data->rays[i].wasHitVertical ? 160 : 200; 
+        int adjustedColor = (int)(baseColor / darknessFactor);
+        
+        if (adjustedColor < 0) adjustedColor = 0;
+        if (adjustedColor > 255) adjustedColor = 255;
+
+        int wallColor = create_trgb(0, adjustedColor, adjustedColor, adjustedColor);
+
+        for (int y = wallTop; y < wallBottom; y++) {
+            my_pixel_put(&data->img, i, y, wallColor);
+        }
+    }
+    mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
+}
+
+void castAllRays(t_data *data) {
+    float rayAngle = data->player->rotationAngle - (FOV_ANGLE / 2);
+    for (int stripId = 0; stripId < NUM_RAYS; stripId++) {
+        castRay(data, rayAngle, stripId);
+        rayAngle += FOV_ANGLE / NUM_RAYS;
     }
 }
 
@@ -222,7 +336,6 @@ int read_map(t_data *data, char *map_path)
     while ((line = get_next_line(fd)))
     {
         temp = ft_strjoin(content, line);
-        // Don't free content here as ft_strjoin already freed it
         free(line);
         content = temp;
         if (!content)
@@ -245,141 +358,6 @@ int read_map(t_data *data, char *map_path)
     get_map_resolution(data->map);
     data->map->tile_size = TILE_SIZE;
     return 1;
-}
-
-
-void castRay(t_data *data, float rayAngle, int stripId) {
-    rayAngle = normalizeAngle(rayAngle);
-
-    int isRayFacingDown = rayAngle > 0 && rayAngle < M_PI;
-    int isRayFacingUp = !isRayFacingDown;
-    int isRayFacingRight = rayAngle < 0.5 * M_PI || rayAngle > 1.5 * M_PI;
-    int isRayFacingLeft = !isRayFacingRight;
-
-    float xintercept, yintercept;
-    float xstep, ystep;
-
-    int foundHorzWallHit = FALSE;
-    float horzWallHitX = 0;
-    float horzWallHitY = 0;
-
-    yintercept = floor(data->player->y / data->map->tile_size) * data->map->tile_size;
-    yintercept += isRayFacingDown ? data->map->tile_size : 0;
-    xintercept = data->player->x + (yintercept - data->player->y) / tan(rayAngle);
-    ystep = data->map->tile_size;
-    ystep *= isRayFacingUp ? -1 : 1;
-    xstep = data->map->tile_size / tan(rayAngle);
-    xstep *= (isRayFacingLeft && xstep > 0) ? -1 : 1;
-    xstep *= (isRayFacingRight && xstep < 0) ? -1 : 1;
-
-    float nextHorzTouchX = xintercept;
-    float nextHorzTouchY = yintercept;
-
-    while (nextHorzTouchX >= 0 && nextHorzTouchX <= data->map->map_width * data->map->tile_size &&
-           nextHorzTouchY >= 0 && nextHorzTouchY <= data->map->map_height * data->map->tile_size) {
-        if (has_wall_at(data->map, nextHorzTouchX, nextHorzTouchY)) {
-            horzWallHitX = nextHorzTouchX;
-            horzWallHitY = nextHorzTouchY;
-            foundHorzWallHit = TRUE;
-            break;
-        }
-        nextHorzTouchX += xstep;
-        nextHorzTouchY += ystep;
-    }
-
-    int foundVertWallHit = FALSE;
-    float vertWallHitX = 0;
-    float vertWallHitY = 0;
-
-    xintercept = floor(data->player->x / data->map->tile_size) * data->map->tile_size;
-    xintercept += isRayFacingRight ? data->map->tile_size : 0;
-    yintercept = data->player->y + (xintercept - data->player->x) * tan(rayAngle);
-    xstep = data->map->tile_size;
-    xstep *= isRayFacingLeft ? -1 : 1;
-    ystep = data->map->tile_size * tan(rayAngle);
-    ystep *= (isRayFacingUp && ystep > 0) ? -1 : 1;
-    ystep *= (isRayFacingDown && ystep < 0) ? -1 : 1;
-
-    float nextVertTouchX = xintercept;
-    float nextVertTouchY = yintercept;
-
-    while (nextVertTouchX >= 0 && nextVertTouchX <= data->map->map_width * data->map->tile_size &&
-           nextVertTouchY >= 0 && nextVertTouchY <= data->map->map_height * data->map->tile_size) {
-        if (has_wall_at(data->map, nextVertTouchX, nextVertTouchY)) {
-            vertWallHitX = nextVertTouchX;
-            vertWallHitY = nextVertTouchY;
-            foundVertWallHit = TRUE;
-            break;
-        }
-        nextVertTouchX += xstep;
-        nextVertTouchY += ystep;
-    }
-
-    double horzDistance = foundHorzWallHit ? distanceBetweenPoints(data->player->x, data->player->y, horzWallHitX, horzWallHitY) : INT_MAX;
-    double vertDistance = foundVertWallHit ? distanceBetweenPoints(data->player->x, data->player->y, vertWallHitX, vertWallHitY) : INT_MAX;
-
-    if (horzDistance < vertDistance) {
-        data->rays[stripId].distance = horzDistance;
-        data->rays[stripId].wallHitX = horzWallHitX;
-        data->rays[stripId].wallHitY = horzWallHitY;
-        data->rays[stripId].wasHitVertical = FALSE;
-    } else {
-        data->rays[stripId].distance = vertDistance;
-        data->rays[stripId].wallHitX = vertWallHitX;
-        data->rays[stripId].wallHitY = vertWallHitY;
-        data->rays[stripId].wasHitVertical = TRUE;
-    }
-}
-
-void render_walls(t_data *data) {
-    memset(data->img.image_pixel_ptr, 0, WINDOW_WIDTH * WINDOW_HEIGHT * (data->img.bits_per_pixel / 8));
-
-    for (int x = 0; x < WINDOW_WIDTH; x++) {
-        for (int y = 0; y < WINDOW_HEIGHT / 2; y++) {
-            my_pixel_put(&data->img, x, y, create_trgb(0, 100, 100, 100));
-        }
-    }
-
-
-    for (int x = 0; x < WINDOW_WIDTH; x++) {
-        for (int y = WINDOW_HEIGHT / 2; y < WINDOW_HEIGHT; y++) {
-            my_pixel_put(&data->img, x, y, create_trgb(0, 50, 50, 50)); 
-        }
-    }
-
-    for (int i = 0; i < NUM_RAYS; i++) {
-        float distance =  data->rays[i].distance;   
-        
-        int wallHeight = (int)((WINDOW_HEIGHT / distance) * data->map->tile_size);
-        
-        int wallTop = (WINDOW_HEIGHT / 2) - (wallHeight / 2);
-        if (wallTop < 0) wallTop = 0;
-        
-        int wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);
-        if (wallBottom >= WINDOW_HEIGHT) wallBottom = WINDOW_HEIGHT - 1;
-
-        float darknessFactor = 1.0f + (distance / (data->map->tile_size * 5));
-        int baseColor = data->rays[i].wasHitVertical ? 160 : 200; 
-        int adjustedColor = (int)(baseColor / darknessFactor);
-        
-        if (adjustedColor < 0) adjustedColor = 0;
-        if (adjustedColor > 255) adjustedColor = 255;
-
-        int wallColor = create_trgb(0, adjustedColor, adjustedColor, adjustedColor);
-
-        for (int y = wallTop; y < wallBottom; y++) {
-            my_pixel_put(&data->img, i, y, wallColor);
-        }
-    }
-    mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
-}
-
-void castAllRays(t_data *data) {
-    float rayAngle = data->player->rotationAngle - (FOV_ANGLE / 2);
-    for (int stripId = 0; stripId < NUM_RAYS; stripId++) {
-        castRay(data, rayAngle, stripId);
-        rayAngle += FOV_ANGLE / NUM_RAYS;
-    }
 }
 
 int game_loop(t_data *data) {
@@ -436,7 +414,6 @@ void init_game(t_data *data)
     }
 }
 
-
 int main(int argc, char **argv)
 {
     if (argc != 2)
@@ -457,10 +434,15 @@ int main(int argc, char **argv)
         fprintf(stderr, "Error: Failed to read map file\n");
         return 1;
     }
+    
     init_game(&data);
     if (!data.mlx || !data.win || !data.player)
     {
         cleanup_map(&map);
+        if (data.mlx) {
+            if (data.win) mlx_destroy_window(data.mlx, data.win);
+            if (data.player) free(data.player);
+        }
         fprintf(stderr, "Error: Failed to initialize game\n");
         return 1;
     }
@@ -468,8 +450,13 @@ int main(int argc, char **argv)
     mlx_loop_hook(data.mlx, game_loop, &data);
     mlx_hook(data.win, 2, 1L<<0, key_press, &data);
     mlx_hook(data.win, 3, 1L<<1, key_release, &data);
-    mlx_hook(data.win, 17, 0, close_window, &data);  // Handle window close button
+    mlx_hook(data.win, 17, 0, close_window, &data);
     mlx_loop(data.mlx);
+
+    cleanup_map(&map);
+    free(data.player);
+    mlx_destroy_image(data.mlx, data.img.img_ptr);
+    mlx_destroy_window(data.mlx, data.win);
 
     return 0;
 }
