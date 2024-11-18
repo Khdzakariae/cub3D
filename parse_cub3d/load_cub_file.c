@@ -101,7 +101,7 @@ static bool file_is_valid(char **cube_file, t_cub3d **cub3d)
 				|| (*cub3d)->colors.floor.is_set == false 
 				|| (*cub3d)->colors.ceiling.is_set == false)
 			{
-				printf("Error\nMap must be last element\n");
+				printf("Error\nMap must be last element or Texture missing\n");
 				// TODO free what needs to be freed.
 				exit(EXIT_FAILURE);
 			}
