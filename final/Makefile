@@ -1,4 +1,4 @@
-FLAGS = -Wall -Wextra -Werror -fsanitize=address -g3
+FLAGS = -Wall -Wextra -Werror #-fsanitize=address -g3
 
 NAME = cub3D
 mlx = mlx/libmlx.a
@@ -17,19 +17,19 @@ $(LIBFT) :$(SRC)
 	@make -C lib/libft --silent
 	@echo "libft DONE [✅]"
 
-%.o: %.c
-	@$(CC) -Wall -Wextra -Werror -c $< -o $@
-
-$(NAME): $(OBJ)
-	@$(CC) $(FLAGS) $(mlx) $(OBJ) $(LIBFT) $(PRINTF) -Lmlx -lmlx -framework OpenGL -framework AppKit -o $(NAME)
-	@echo "SO_LONG DONE [🤡]"
-
 # %.o: %.c
-# 	@$(CC) -Wall -Wextra -Werror -I/usr/include -Imlx_linux -O3 -c $< -o $@
+# 	@$(CC) -Wall -Wextra -Werror -c $< -o $@
 
 # $(NAME): $(OBJ)
-# 	@$(CC)  $(INCLUDES) $(OBJ) $(LIBFT) -fsanitize=address -g3 -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME)
-# 	@echo "CUB3D DONE [🤡]"
+# 	@$(CC) $(FLAGS) $(mlx) $(OBJ) $(LIBFT) $(PRINTF) -Lmlx -lmlx -framework OpenGL -framework AppKit -o $(NAME)
+# 	@echo "SO_LONG DONE [🤡]"
+
+%.o: %.c
+	@$(CC) -Wall -Wextra -Werror -I/usr/include -Imlx_linux -O3 -c $< -o $@
+
+$(NAME): $(OBJ)
+	@$(CC)  $(INCLUDES) $(OBJ) $(LIBFT)  -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME)
+	@echo "CUB3D DONE [🤡]"
 clean:
 	@echo "CLEAN DONE [✅]"
 	@rm -f $(OBJ) 
