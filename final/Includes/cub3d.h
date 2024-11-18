@@ -30,7 +30,69 @@
 # define COLOR_GRAY     0x808080
 # define COLOR_PINK     0xFFC0CB
 
+#define WINDOW_WIDTH 1080
+#define WINDOW_HEIGHT 1080
+#define NUM_RAYS WINDOW_WIDTH
+#define FOV_ANGLE (60 * (M_PI / 180))
+#define TILE_SIZE 64
 
+#define KEY_UP 126
+#define KEY_DOWN 125
+#define KEY_LEFT 123
+#define KEY_RIGHT 124
+#define KEY_ESC 53
+
+#define TRUE 1
+#define FALSE 0
+
+typedef struct s_img
+{
+    void    *img_ptr;
+    char    *image_pixel_ptr;
+    int     bits_per_pixel;
+    int     endian;
+    int     line_len;
+} t_img;
+
+typedef struct s_map {
+    int     map_height;
+    int     map_width;
+    char    **grid;
+    int     tile_size;
+} t_map;
+
+typedef struct s_player {
+    double  x;
+    double  y;
+    double  radius;
+    double  turnDirection;
+    double  walkDirection;
+    double  rotationAngle;
+    double  moveSpeed;
+    double  rotationSpeed;
+} t_player;
+
+typedef struct s_ray {
+    float   rayAngle;
+    float   wallHitX;
+    float   wallHitY;
+    float   distance;
+    int     wasHitVertical;
+    int     isRayFacingUp;
+    int     isRayFacingDown;
+    int     isRayFacingLeft;
+    int     isRayFacingRight;
+    int     wallHitContent;
+} t_ray;
+
+typedef struct s_data {
+    void        *mlx;
+    void        *win;
+    t_img       img;
+    t_map       *map;
+    t_player    *player;
+    t_ray       rays[NUM_RAYS];
+} t_data;
 
 // #define KEY_UP 65362
 // #define KEY_DOWN 65364
