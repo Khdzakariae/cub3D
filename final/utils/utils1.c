@@ -186,3 +186,4 @@ void my_mlx_pixel_put(t_mlx *mlx, int x, int y, int color)
 //     }
 //     mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
 // }
+
