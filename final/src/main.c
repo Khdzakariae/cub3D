@@ -143,6 +143,7 @@ int wall_hit(float x, float y, t_data *data)
     x_m = floor(x / data->map->tile_size);
     y_m = floor(y / data->map->tile_size);
 
+
     if (y_m >= data->map->map_height || x_m >= data->map->map_width)
         return (0);
 
@@ -221,12 +222,12 @@ void castRay(t_data *data, float rayAngle, int stripId)
     data->rays[stripId].rayAngle = rayAngle;
 }
 
-int my_mlx_pixel_get(t_data *data, double wallX, int y, int wallHeight) {
-    int tex_x = (int)(wallX * data->texter.texter_with);
-    int tex_y = (int)((y * data->texter.texter_height) / wallHeight);
+int my_mlx_pixel_get(int flage,t_data *data, double wallX, int y, int wallHeight) {
+    int tex_x = (int)(wallX * data->texter[flage].texter_with);
+    int tex_y = (int)((y * data->texter[flage].texter_height) / wallHeight);
     
-    tex_x = tex_x % data->texter.texter_with;
-    tex_y = tex_y % data->texter.texter_height;
+    tex_x = tex_x % data->texter[flage].texter_with;
+    tex_y = tex_y % data->texter[flage].texter_height;
     
     if (!data || tex_x < 0 || tex_y < 0 || 
         tex_x >= WINDOW_HEIGHT || 
@@ -235,14 +236,15 @@ int my_mlx_pixel_get(t_data *data, double wallX, int y, int wallHeight) {
         return 0;
     }           
 
-    char *pixel_ptr = data->texter.image_pixel_ptr + 
-                     (tex_y * data->texter.line_len + 
-                      tex_x * (data->texter.bits_per_pixel / 8));
+    char *pixel_ptr = data->texter[flage].image_pixel_ptr + 
+                     (tex_y * data->texter[flage].line_len + 
+                      tex_x * (data->texter[flage].bits_per_pixel / 8));
 
     return *(int*)pixel_ptr;
 }
 
 void render_walls(t_data *data) {
+    int flage = 0;
     memset(data->img.image_pixel_ptr, 0, 
            WINDOW_WIDTH * WINDOW_HEIGHT * (data->img.bits_per_pixel / 8));
 
@@ -253,22 +255,23 @@ void render_walls(t_data *data) {
         int wallHeight = (int)((WINDOW_HEIGHT / perpDistance) * data->map->tile_size);
         
         int wallTop = (WINDOW_HEIGHT / 2) - (wallHeight / 2);
-        if (wallTop < 0) wallTop = 0;
-        
         int wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);
         if (wallBottom >= WINDOW_HEIGHT) wallBottom = WINDOW_HEIGHT - 1;
 
         double wallX;
         if (data->rays[i].wasHitVertical) {
+            flage = 1;
             wallX = fmod(data->player->y + data->rays[i].distance * 
                         sin(data->rays[i].rayAngle), data->map->tile_size) / data->map->tile_size;
         } else {
+            flage = 0;
             wallX = fmod(data->player->x + data->rays[i].distance * 
                         cos(data->rays[i].rayAngle), data->map->tile_size) / data->map->tile_size;
         }
 
         for (int y = wallTop; y < wallBottom; y++) {
-            int texColor = my_mlx_pixel_get(data, wallX, y - wallTop, wallHeight);
+
+            int texColor = my_mlx_pixel_get(flage, data,  wallX, y - wallTop , wallHeight);
             
             float darkness = 1.0f + (perpDistance / (data->map->tile_size * 5));
             
@@ -412,12 +415,21 @@ void init_game(t_data *data)
                                               &data->img.line_len,
                                               &data->img.endian);
     
-    data->texter.img_ptr = mlx_xpm_file_to_image(data->mlx, NO, &data->texter.texter_with, &data->texter.texter_height);
+    data->texter[0].img_ptr = mlx_xpm_file_to_image(data->mlx, NO, &data->texter[0].texter_with, &data->texter[0].texter_height);
 
-    data->texter.image_pixel_ptr = mlx_get_data_addr(data->texter.img_ptr, 
-                                              &data->texter.bits_per_pixel,
-                                              &data->texter.line_len,
-                                              &data->texter.endian);
+    data->texter[0].image_pixel_ptr = mlx_get_data_addr(data->texter[0].img_ptr, 
+                                              &data->texter[0].bits_per_pixel,
+                                              &data->texter[0].line_len,
+                                              &data->texter[0].endian);
+
+
+    data->texter[1].img_ptr = mlx_xpm_file_to_image(data->mlx, VO, &data->texter[1].texter_with, &data->texter[1].texter_height);
+
+    data->texter[1].image_pixel_ptr = mlx_get_data_addr(data->texter[1].img_ptr, 
+                                              &data->texter[1].bits_per_pixel,
+                                              &data->texter[1].line_len,
+                                              &data->texter[1].endian);
+    
 
     data->player = malloc(sizeof(t_player));
     if (!data->player)
@@ -427,7 +439,7 @@ void init_game(t_data *data)
     data->player->turnDirection = 0;
     data->player->walkDirection = 0;
     data->player->rotationAngle = M_PI / 2;
-    data->player->moveSpeed = 3;
+    data->player->moveSpeed = 5;
     data->player->rotationSpeed = 2 * (M_PI / 180);
 
     int startX = data->map->map_width * data->map->tile_size / 2;

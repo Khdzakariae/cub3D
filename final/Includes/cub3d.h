@@ -30,7 +30,7 @@
 # define COLOR_GRAY     0x808080
 # define COLOR_PINK     0xFFC0CB
 
-#define WINDOW_WIDTH 800
+#define WINDOW_WIDTH 1080
 #define WINDOW_HEIGHT 720
 #define NUM_RAYS WINDOW_WIDTH
 #define FOV_ANGLE (30 * (M_PI / 180))
@@ -45,7 +45,9 @@
 #define TRUE 1
 #define FALSE 0
 
-#define NO "texters/1.xpm"
+#define NO "texters/2.xpm"
+#define VO "texters/1.xpm"
+
 
 typedef struct s_texter
 {
@@ -101,7 +103,7 @@ typedef struct s_ray {
 typedef struct s_data {
     void        *mlx;
     void        *win;
-    t_texter    texter;
+    t_texter    texter[4];
     t_img       img;
     t_map       *map;
     t_player    *player;
