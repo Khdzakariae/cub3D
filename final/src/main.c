@@ -243,10 +243,26 @@ int my_mlx_pixel_get(int flage,t_data *data, double wallX, int y, int wallHeight
     return *(int*)pixel_ptr;
 }
 
+
+
+
+
 void render_walls(t_data *data) {
     int flage = 0;
     memset(data->img.image_pixel_ptr, 0, 
            WINDOW_WIDTH * WINDOW_HEIGHT * (data->img.bits_per_pixel / 8));
+        for (int x = 0; x < WINDOW_WIDTH; x++) {
+        for (int y = 0; y < WINDOW_HEIGHT / 2; y++) {
+            my_pixel_put(&data->img, x, y, create_trgb(0, 100, 100, 100));
+        }
+    }
+    
+    // Draw floor
+    for (int x = 0; x < WINDOW_WIDTH; x++) {
+        for (int y = WINDOW_HEIGHT / 2; y < WINDOW_HEIGHT; y++) {
+            my_pixel_put(&data->img, x, y, create_trgb(0, 50, 50, 50));
+        }
+    }
 
     for (int i = 0; i < NUM_RAYS; i++) {
         float perpDistance = data->rays[i].distance * 
