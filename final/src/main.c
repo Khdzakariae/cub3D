@@ -243,10 +243,6 @@ int my_mlx_pixel_get(int flage,t_data *data, double wallX, int y, int wallHeight
     return *(int*)pixel_ptr;
 }
 
-
-
-
-
 void render_walls(t_data *data) {
     int flage = 0;
     memset(data->img.image_pixel_ptr, 0, 
