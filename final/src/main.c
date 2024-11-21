@@ -243,31 +243,43 @@ int my_mlx_pixel_get(int flage,t_data *data, double wallX, int y, int wallHeight
     return *(int*)pixel_ptr;
 }
 
-void render_walls(t_data *data) {
-    int flage = 0;
-    memset(data->img.image_pixel_ptr, 0, 
-           WINDOW_WIDTH * WINDOW_HEIGHT * (data->img.bits_per_pixel / 8));
-        for (int x = 0; x < WINDOW_WIDTH; x++) {
+
+
+
+void drawing_east(t_data *data){
+    for (int x = 0; x < WINDOW_WIDTH; x++) {
         for (int y = 0; y < WINDOW_HEIGHT / 2; y++) {
             my_pixel_put(&data->img, x, y, create_trgb(0, 100, 100, 100));
         }
     }
-    
-    // Draw floor
-    for (int x = 0; x < WINDOW_WIDTH; x++) {
+}
+
+void drawing_floor(t_data *data){
+        for (int x = 0; x < WINDOW_WIDTH; x++) {
         for (int y = WINDOW_HEIGHT / 2; y < WINDOW_HEIGHT; y++) {
             my_pixel_put(&data->img, x, y, create_trgb(0, 50, 50, 50));
         }
     }
+}
 
+
+void render_walls(t_data *data) {
+    int flage = 0;
+    int wallHeight;
+    int wallTop ;
+    int wallBottom;
+    int texColor;
+    float darkness; 
+
+    
     for (int i = 0; i < NUM_RAYS; i++) {
         float perpDistance = data->rays[i].distance * 
                            cos(data->rays[i].rayAngle - data->player->rotationAngle);
         
-        int wallHeight = (int)((WINDOW_HEIGHT / perpDistance) * data->map->tile_size);
+        wallHeight = (int)((WINDOW_HEIGHT / perpDistance) * data->map->tile_size);
         
-        int wallTop = (WINDOW_HEIGHT / 2) - (wallHeight / 2);
-        int wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);
+        wallTop = (WINDOW_HEIGHT / 2) - (wallHeight / 2);
+        wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);
         if (wallBottom >= WINDOW_HEIGHT) wallBottom = WINDOW_HEIGHT - 1;
 
         double wallX;
@@ -283,9 +295,9 @@ void render_walls(t_data *data) {
 
         for (int y = wallTop; y < wallBottom; y++) {
 
-            int texColor = my_mlx_pixel_get(flage, data,  wallX, y - wallTop , wallHeight);
+            texColor = my_mlx_pixel_get(flage, data,  wallX, y - wallTop , wallHeight);
             
-            float darkness = 1.0f + (perpDistance / (data->map->tile_size * 5));
+            darkness = 1.0f + (perpDistance / (data->map->tile_size * 5));
             
             int r = ((texColor >> 16) & 0xFF) / darkness;
             int g = ((texColor >> 8) & 0xFF) / darkness;
@@ -315,12 +327,15 @@ int update_player(t_player *player, t_map *map)
     if (!player || !map)
         return -1;
 
+    double moveStep;
+    double newPlayerX;
+    double newPlayerY;
     player->rotationAngle = normalizeAngle(player->rotationAngle + 
                            player->turnDirection * player->rotationSpeed);
 
-    double moveStep = player->walkDirection * player->moveSpeed;
-    double newPlayerX = player->x + cos(player->rotationAngle) * moveStep;
-    double newPlayerY = player->y + sin(player->rotationAngle) * moveStep;
+    moveStep = player->walkDirection * player->moveSpeed;
+    newPlayerX = player->x + cos(player->rotationAngle) * moveStep;
+    newPlayerY = player->y + sin(player->rotationAngle) * moveStep;
 
     if (!has_wall_at(map, newPlayerX, newPlayerY))
     {
@@ -401,8 +416,54 @@ int game_loop(t_data *data) {
     update_player(data->player, data->map);
     mlx_clear_window(data->mlx, data->win);
     castAllRays(data);
+    memset(data->img.image_pixel_ptr, 0,  WINDOW_WIDTH * WINDOW_HEIGHT * (data->img.bits_per_pixel / 8));
+    drawing_east(data);
+    drawing_floor(data);
     render_walls(data);
     return 0;
+}
+
+void init_player(t_data *data){
+    int startX;
+    int startY;
+
+    data->player->radius = 3;
+    data->player->turnDirection = 0;
+    data->player->walkDirection = 0;
+    data->player->rotationAngle = M_PI / 2;
+    data->player->moveSpeed = 5;
+    data->player->rotationSpeed = 2 * (M_PI / 180);
+
+    startX = data->map->map_width * data->map->tile_size / 2;
+    startY = data->map->map_height * data->map->tile_size / 2;
+
+    data->player->x = startX;
+    data->player->y = startY;
+    if (has_wall_at(data->map, data->player->x, data->player->y))
+    {
+        data->player->x = startX - data->map->tile_size;
+        data->player->y = startY - data->map->tile_size;
+    }
+
+}
+
+
+void init_textures(t_data *data){
+    data->texter[0].img_ptr = mlx_xpm_file_to_image(data->mlx, NO, &data->texter[0].texter_with, &data->texter[0].texter_height);
+
+    data->texter[0].image_pixel_ptr = mlx_get_data_addr(data->texter[0].img_ptr, 
+                                              &data->texter[0].bits_per_pixel,
+                                              &data->texter[0].line_len,
+                                              &data->texter[0].endian);
+
+
+    data->texter[1].img_ptr = mlx_xpm_file_to_image(data->mlx, VO, &data->texter[1].texter_with, &data->texter[1].texter_height);
+
+    data->texter[1].image_pixel_ptr = mlx_get_data_addr(data->texter[1].img_ptr, 
+                                              &data->texter[1].bits_per_pixel,
+                                              &data->texter[1].line_len,
+                                              &data->texter[1].endian);
+
 }
 
 void init_game(t_data *data)
@@ -426,45 +487,32 @@ void init_game(t_data *data)
                                               &data->img.bits_per_pixel,
                                               &data->img.line_len,
                                               &data->img.endian);
-    
-    data->texter[0].img_ptr = mlx_xpm_file_to_image(data->mlx, NO, &data->texter[0].texter_with, &data->texter[0].texter_height);
-
-    data->texter[0].image_pixel_ptr = mlx_get_data_addr(data->texter[0].img_ptr, 
-                                              &data->texter[0].bits_per_pixel,
-                                              &data->texter[0].line_len,
-                                              &data->texter[0].endian);
+}
 
 
-    data->texter[1].img_ptr = mlx_xpm_file_to_image(data->mlx, VO, &data->texter[1].texter_with, &data->texter[1].texter_height);
-
-    data->texter[1].image_pixel_ptr = mlx_get_data_addr(data->texter[1].img_ptr, 
-                                              &data->texter[1].bits_per_pixel,
-                                              &data->texter[1].line_len,
-                                              &data->texter[1].endian);
-    
-
+bool init(t_data *data, char *argv){
     data->player = malloc(sizeof(t_player));
     if (!data->player)
-        return;
-
-    data->player->radius = 3;
-    data->player->turnDirection = 0;
-    data->player->walkDirection = 0;
-    data->player->rotationAngle = M_PI / 2;
-    data->player->moveSpeed = 5;
-    data->player->rotationSpeed = 2 * (M_PI / 180);
-
-    int startX = data->map->map_width * data->map->tile_size / 2;
-    int startY = data->map->map_height * data->map->tile_size / 2;
-
-    data->player->x = startX;
-    data->player->y = startY;
-
-    if (has_wall_at(data->map, data->player->x, data->player->y))
+        return 0;
+    if (!read_map(data, argv))
     {
-        data->player->x = startX - data->map->tile_size;
-        data->player->y = startY - data->map->tile_size;
+        fprintf(stderr, "Error: Failed to read map file\n");
+        return 0;
     }
+    init_game(data);
+    init_player(data);
+    init_textures(data);
+    if (!data->mlx || !data->win || !data->player)
+    {
+        cleanup_map(data->map);
+        if (data->mlx) {
+            if (data->win) mlx_destroy_window(data->mlx, data->win);
+            if (data->player) free(data->player);
+        }
+        fprintf(stderr, "Error: Failed to initialize game\n");
+        return 0;
+    }
+    return(1);
 }
 
 int main(int argc, char **argv)
@@ -482,23 +530,8 @@ int main(int argc, char **argv)
     memset(&map, 0, sizeof(t_map));
     data.map = &map;
 
-    if (!read_map(&data, argv[1]))
-    {
-        fprintf(stderr, "Error: Failed to read map file\n");
+    if (!init(&data, argv[1]))
         return 1;
-    }
-    
-    init_game(&data);
-    if (!data.mlx || !data.win || !data.player)
-    {
-        cleanup_map(&map);
-        if (data.mlx) {
-            if (data.win) mlx_destroy_window(data.mlx, data.win);
-            if (data.player) free(data.player);
-        }
-        fprintf(stderr, "Error: Failed to initialize game\n");
-        return 1;
-    }
 
     mlx_loop_hook(data.mlx, game_loop, &data);
     mlx_hook(data.win, 2, 1L<<0, key_press, &data);
