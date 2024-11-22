@@ -17,10 +17,8 @@
 # endif /* BUFFER_SIZE */
 # include <stdlib.h>
 # include <unistd.h>
+# include "../lib/libft/libft.h"
 
 int     get_next_line(int fd, char **line);
-int		ft_strchr(const char *s, int c);
-char	*ft_strjoin(char *s1, char *s2);
-size_t	ft_strlen(char *str);
 
 #endif /* GET_NEXT_LINE_H */

@@ -30,6 +30,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 {
 	int	start;
 	int	end;
+	char *substr;
 
 	if (!s1 || !set)
 		return (NULL);
@@ -39,5 +40,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 	end = ft_strlen(s1);
 	while (end && is_set(set, s1[end - 1]))
 		end--;
-	return (ft_substr(s1, start, end - start));
+	substr = ft_substr(s1, start, end - start);
+	free((char *)s1);
+	return (substr);
 }

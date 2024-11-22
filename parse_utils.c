@@ -1,14 +1,14 @@
 #include "main.h"
 
-bool		check_cub_extension(char *file);
-void		init_cub3d_data(t_cub3d **cub3d);
+t_bool		check_cub_extension(char *file);
+void		init_cub3d_data(t_cub3d **cub3d, int fd);
 int			get_map_height(char **cube_file, size_t map_starting_i);
 void		get_map_line_len(char *line, size_t *line_map_len);
-bool 		valid_map_char(char c);
-bool		check_if_all_walls(char *line);
+t_bool 		valid_map_char(char c);
+t_bool		check_if_all_walls(char *line);
 void 		free_2d_array(char **array);
 
-bool	check_cub_extension(char *file)
+t_bool	check_cub_extension(char *file)
 {
 	while (file && *file)
 	{
@@ -18,7 +18,7 @@ bool	check_cub_extension(char *file)
 	}
 	return (false);
 }
-void	init_cub3d_data(t_cub3d **cub3d)
+void	init_cub3d_data(t_cub3d **cub3d, int fd)
 {
 	(*cub3d)->textures.no.path = NULL;
 	(*cub3d)->textures.no.is_set = false;
@@ -35,8 +35,10 @@ void	init_cub3d_data(t_cub3d **cub3d)
 	(*cub3d)->map.map = NULL;
 	(*cub3d)->map.width = 0;
 	(*cub3d)->map.height = 0;
-	(*cub3d)->player_x = -1;
-	(*cub3d)->player_y = -1;
+	(*cub3d)->map.title_size = TILE_SIZE;
+	(*cub3d)->map.player_x = -1;
+	(*cub3d)->map.player_y = -1;
+	(*cub3d)->fd = fd;
 }
 
 int	get_map_height(char **cube_file, size_t map_starting_i)
@@ -62,12 +64,12 @@ void	get_map_line_len(char *line, size_t *line_map_len)
 	}
 }
 
-bool	valid_map_char(char c)
+t_bool	valid_map_char(char c)
 {
 	return (c == '0' || c == '1' || c == 'N' || c == 'S' || c == 'W' || c == 'E' || c == ' ');
 }
 
-bool	check_if_all_walls(char *line)
+t_bool	check_if_all_walls(char *line)
 {
 	while (*line)
 	{
@@ -83,6 +85,8 @@ void	free_2d_array(char **array)
 	size_t i;
 
 	i = 0;
+	if (!array)
+		return ;
 	while (array[i] != NULL)
 	{
 		free(array[i]);
