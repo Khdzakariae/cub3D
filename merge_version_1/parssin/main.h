@@ -9,7 +9,7 @@
 # include <string.h>
 
 #define NO_FD -1
-#define TILE_SIZE 256
+#define TILE_SIZE 128
 
 typedef enum	e_bool
 {
