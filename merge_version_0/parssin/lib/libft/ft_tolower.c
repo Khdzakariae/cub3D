@@ -1,31 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   ft_tolower.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: useraccount <useraccount@student.42.fr>    +#+  +:+       +#+        */
+/*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/04 14:49:02 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/02/06 15:14:37 by useraccount      ###   ########.fr       */
+/*   Created: 2023/10/31 20:03:30 by zel-khad          #+#    #+#             */
+/*   Updated: 2023/11/12 11:47:34 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strdup(char *s)
+int	ft_tolower(int c)
 {
-	char	*ptr;
-	size_t	i;
-
-	i = 0;
-	ptr = malloc(ft_strlen(s) + 1 * sizeof(char));
-	if (!ptr)
-		return (NULL);
-	while (s[i])
+	if (c >= 'A' && c <= 'Z')
 	{
-		ptr[i] = s[i];
-		i++;
+		c += 32;
 	}
-	ptr[i] = '\0';
-	return (ptr);
+	return (c);
 }

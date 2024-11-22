@@ -1,46 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strtrim.c                                       :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/07 11:16:05 by zel-khad          #+#    #+#             */
-/*   Updated: 2023/11/15 12:53:59 by zel-khad         ###   ########.fr       */
+/*   Created: 2023/11/01 22:04:37 by zel-khad          #+#    #+#             */
+/*   Updated: 2023/11/12 11:44:04 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	is_set(char const *set, char ret)
+int	ft_atoi(const char *str)
 {
+	int	result;
+	int	sign;
 	int	i;
 
+	result = 0;
+	sign = 1;
 	i = 0;
-	while (set[i])
+	while (str[i] == ' ' || (str[i] >= '\t' && str[i] <= '\r'))
+		i++;
+	if (str[i] == '-')
 	{
-		if (set[i] == ret)
-			return (1);
+		sign = -1;
 		i++;
 	}
-	return (0);
-}
-
-char	*ft_strtrim(char const *s1, char const *set)
-{
-	int	start;
-	int	end;
-	char *substr;
-
-	if (!s1 || !set)
-		return (NULL);
-	start = 0;
-	while (s1[start] && is_set(set, s1[start]))
-		start++;
-	end = ft_strlen(s1);
-	while (end && is_set(set, s1[end - 1]))
-		end--;
-	substr = ft_substr(s1, start, end - start);
-	free((char *)s1);
-	return (substr);
+	else if (str[i] == '+')
+	{
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		result = result * 10 + (str[i] - '0');
+		i++;
+	}
+	return (result * sign);
 }

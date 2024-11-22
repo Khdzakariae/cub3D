@@ -11,7 +11,6 @@ void		retrieve_color(char **split_rgb, int *color, t_cub3d **cub3d, char **cube_
 
 void	load_cub3d_file(char *file, t_cub3d *cub3d)
 {
-	printf("the file is : %s\n", file);
 	int fd;
 	char **cube_file;
 	int	line_count;
@@ -58,9 +57,9 @@ char    **get_lines(int fd, char **cube_file, int *line_count, t_cub3d **cub3d)
 
 	line = NULL;
 	char *lines = NULL;
-		// skip empty lines and lines with only spaces
 	while ((len = get_next_line(fd, &line)) > 0)
 	{
+		// skip empty lines and lines with only spaces
 		if (*line == '\0' || space_checker(line) == true)
 		{
 			free(line);

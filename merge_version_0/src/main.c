@@ -3,7 +3,7 @@
 char    **ft_split(char const *s, char c);
 void    cleanup_map(t_map *map);
 int     close_window(t_data *data);
-
+char    *get_next_line(int fd);
 char    *ft_strjoin(char *s1, char *s2);
 
 double normalizeAngle(double angle)
@@ -38,8 +38,8 @@ int close_window(t_data *data)
     if (!data)
         return -1;
 
-    // if (&data->cub->map)
-    //     cleanup_map(&data->cub->map);
+    if (&data->cub->map)
+        cleanup_map(&data->cub->map);
     if (data->win)
         mlx_destroy_window(data->mlx, data->win);
     if (data->img.img_ptr)
@@ -128,19 +128,14 @@ int wall_hit(float x, float y, t_data *data)
         return 0; 
     x_m = floor(x / TILE_SIZE);
     y_m = floor(y / TILE_SIZE);
-    // printf("the cont is : %s\n", data->cub->map.title_size);
-    exit(0);
-
-
 
 
     if (y_m >= data->cub->map.height|| x_m >= data->cub->map.width)
         return (0);
-    if (data->cub->map.map[y_m] && x_m < data->cub->map.width){
-            // exit(0);
-        if (data->cub->map.map[y_m][x_m] == '1'){
-        }
-    }
+
+    if (data->cub->map.map[y_m] && x_m < (int)ft_strlen(data->cub->map.map[y_m]))
+        if (data->cub->map.map[y_m][x_m] == '1')
+            return (0);
 
     return (1);
 }
@@ -155,7 +150,6 @@ float get_h_inter(t_data *data, float angle)
     h_y = floor(data->player->y /TILE_SIZE) * TILE_SIZE;
     pixel = inter_check(data, angle, &h_y, &y_step, 1);
     h_x = data->player->x + (h_y - data->player->y) / tan(angle);
-
 
     if ((unit_circle(angle, 'y') && x_step > 0) || (!unit_circle(angle, 'y') && x_step < 0))
         x_step *= -1;
@@ -220,28 +214,27 @@ void castRay(t_data *data, float rayAngle, int stripId)
 
 int my_mlx_pixel_get(int flage,t_data *data, double wallX, int y, int wallHeight) {
 
-    t_dir_texture texter[4];
-    texter[0] = data->cub->textures.ea;
-    texter[1] = data->cub->textures.no;
-    texter[2] = data->cub->textures.so;
-    texter[3] = data->cub->textures.we;
+    if (flage = 0)
+    {
+        int tex_x = (int)(wallX * data.texter_with);
+        int tex_y = (int)((y * data->texter[flage].texter_height) / wallHeight);
+        
+        tex_x = tex_x % data->texter[flage].texter_with;
+        tex_y = tex_y % data->texter[flage].texter_height;
+        
+        if (!data || tex_x < 0 || tex_y < 0 || 
+            tex_x >= WINDOW_HEIGHT || 
+            tex_y >= WINDOW_WIDTH)     
+        {         
+            return 0;
+        }           
 
-    int tex_x = (int)(wallX * texter[flage].texter_with);
-    int tex_y = (int)((y * texter[flage].texter_height) / wallHeight);
-    
-    tex_x = tex_x % texter[flage].texter_with;
-    tex_y = tex_y % texter[flage].texter_height;
-    
-    if (!data || tex_x < 0 || tex_y < 0 || 
-        tex_x >= WINDOW_HEIGHT || 
-        tex_y >= WINDOW_WIDTH)     
-    {         
-        return 0;
-    }           
+        char *pixel_ptr = data->texter[flage].image_pixel_ptr + 
+                        (tex_y * data->texter[flage].line_len + 
+                        tex_x * (data->texter[flage].bits_per_pixel / 8));
 
-    char *pixel_ptr = texter[flage].image_pixel_ptr + 
-                   (tex_y * texter[flage].line_len + 
-                   tex_x * (texter[flage].bits_per_pixel / 8));
+    }
+
 
     return *(int*)pixel_ptr;
 }
@@ -489,7 +482,7 @@ void init_textures(t_data *data){
 
 void init_game(t_data *data)
 {
-    if (!data)
+    if (!data || !&data->cub->map)
         return;
 
     data->mlx = mlx_init();
@@ -513,13 +506,9 @@ void init_game(t_data *data)
 
 bool init(t_data *data, char *argv){
     data->player = malloc(sizeof(t_player));
-    t_cub3d cub3d;
     if (!data->player)
         return 0;
-    load_cub3d_file(argv, &cub3d);
-
-    data->cub = &cub3d;
-
+    load_cub3d_file(argv[1], &data);
     init_game(data);
     init_player(data);
     init_textures(data);
@@ -538,7 +527,6 @@ bool init(t_data *data, char *argv){
 
 int main(int argc, char **argv)
 {
-
     if (argc != 2)
     {
         fprintf(stderr, "Usage: %s <map_file>\n", argv[0]);
@@ -554,7 +542,6 @@ int main(int argc, char **argv)
     if (!init(&data, argv[1]))
         return 1;
 
-
     mlx_loop_hook(data.mlx, game_loop, &data);
     mlx_hook(data.win, 2, 1L<<0, key_press, &data);
     mlx_hook(data.win, 3, 1L<<1, key_release, &data);
@@ -562,13 +549,6 @@ int main(int argc, char **argv)
     mlx_loop(data.mlx);
 
     // cleanup_map(&map);
-
-    // 	free_2d_array(cub3d.map.map);
-	// // free texture's path
-	// free(cub3d.textures.ea.path);
-	// free(cub3d.textures.no.path);
-	// free(cub3d.textures.we.path);
-	// free(cub3d.textures.so.path);
     free(data.player);
     mlx_destroy_image(data.mlx, data.img.img_ptr);
     mlx_destroy_window(data.mlx, data.win);

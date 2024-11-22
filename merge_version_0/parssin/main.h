@@ -5,11 +5,11 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include "../lib/get_next_line/get_next_line.h"
+# include "get_next_line/get_next_line.h"
 # include <string.h>
 
 #define NO_FD -1
-#define TILE_SIZE 256
+#define TILE_SIZE 64
 
 typedef enum	e_bool
 {

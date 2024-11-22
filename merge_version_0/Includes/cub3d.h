@@ -35,7 +35,7 @@
 #define WINDOW_HEIGHT 720
 #define NUM_RAYS WINDOW_WIDTH
 #define FOV_ANGLE (60 * (M_PI / 180))
-
+#define TILE_SIZE 256
 
 #define KEY_UP 126
 #define KEY_DOWN 125

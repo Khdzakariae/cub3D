@@ -28,7 +28,7 @@
 # endif
 
 char	*ft_read(char *str, int fd);
-int     get_next_line(int fd, char **line);
+char	*get_next_line(int fd);
 char	*ft_line(char *line);
 char	*ft_return(char *str);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
@@ -57,7 +57,7 @@ int		ft_toupper(int c);
 char	*ft_itoa(int n);
 char	**ft_split(char const *s, char c);
 char	*ft_strchr(const char *s, int c);
-char	*ft_strdup(char *s);
+char	*ft_strdup(const char *s);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 char	*ft_strnstr(const char *big, const char *little, size_t len);
