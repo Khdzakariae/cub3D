@@ -210,6 +210,10 @@ void castRay(t_data *data, float rayAngle, int stripId)
 
     if (v_inter <= h_inter)
     {
+        if (data->rays->rayAngle > FOV_ANGLE / 2)
+            data->rays->c = 'W';
+        else
+            data->rays->c = 'N';
         data->rays[stripId].distance = v_inter;
         data->rays[stripId].wasHitVertical = TRUE;
     }
@@ -223,6 +227,7 @@ void castRay(t_data *data, float rayAngle, int stripId)
 }
 
 int my_mlx_pixel_get(int flage,t_data *data, double wallX, int y, int wallHeight) {
+
     int tex_x = (int)(wallX * data->texter[flage].texter_with);
     int tex_y = (int)((y * data->texter[flage].texter_height) / wallHeight);
     
@@ -236,6 +241,8 @@ int my_mlx_pixel_get(int flage,t_data *data, double wallX, int y, int wallHeight
         return 0;
     }           
 
+
+    // if (data->rays->rayAngle )
     char *pixel_ptr = data->texter[flage].image_pixel_ptr + 
                      (tex_y * data->texter[flage].line_len + 
                       tex_x * (data->texter[flage].bits_per_pixel / 8));
@@ -271,7 +278,6 @@ void render_walls(t_data *data) {
     int texColor;
     float darkness; 
 
-    
     for (int i = 0; i < NUM_RAYS; i++) {
         float perpDistance = data->rays[i].distance * 
                            cos(data->rays[i].rayAngle - data->player->rotationAngle);
@@ -284,11 +290,17 @@ void render_walls(t_data *data) {
 
         double wallX;
         if (data->rays[i].wasHitVertical) {
-            flage = 1;
+            if (data->rays->c == 'W')
+                flage = 3;     
+           else
+                flage = 2;
             wallX = fmod(data->player->y + data->rays[i].distance * 
                         sin(data->rays[i].rayAngle), data->map->tile_size) / data->map->tile_size;
         } else {
-            flage = 0;
+            if (data->rays->rayAngle > 90)
+                flage = 3;     
+           else if (data->rays->rayAngle < 180)
+                flage = 3;
             wallX = fmod(data->player->x + data->rays[i].distance * 
                         cos(data->rays[i].rayAngle), data->map->tile_size) / data->map->tile_size;
         }
@@ -463,7 +475,19 @@ void init_textures(t_data *data){
                                               &data->texter[1].bits_per_pixel,
                                               &data->texter[1].line_len,
                                               &data->texter[1].endian);
+    
+    data->texter[2].img_ptr = mlx_xpm_file_to_image(data->mlx, WO, &data->texter[2].texter_with, &data->texter[2].texter_height);
 
+    data->texter[2].image_pixel_ptr = mlx_get_data_addr(data->texter[2].img_ptr, 
+                                              &data->texter[2].bits_per_pixel,
+                                              &data->texter[2].line_len,
+                                              &data->texter[2].endian);
+    data->texter[3].img_ptr = mlx_xpm_file_to_image(data->mlx, EO, &data->texter[3].texter_with, &data->texter[3].texter_height);
+
+    data->texter[3].image_pixel_ptr = mlx_get_data_addr(data->texter[1].img_ptr, 
+                                              &data->texter[3].bits_per_pixel,
+                                              &data->texter[3].line_len,
+                                              &data->texter[3].endian);
 }
 
 void init_game(t_data *data)

@@ -47,6 +47,9 @@
 
 #define NO "texters/2.xpm"
 #define VO "texters/1.xpm"
+#define WO "texters/3.xpm"
+#define EO "texters/4.xpm"
+
 
 
 typedef struct s_texter
@@ -88,6 +91,7 @@ typedef struct s_player {
 } t_player;
 
 typedef struct s_ray {
+    char c;
     float   rayAngle;
     float   wallHitX;
     float   wallHitY;
