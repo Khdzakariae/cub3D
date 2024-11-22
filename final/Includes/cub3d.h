@@ -30,11 +30,11 @@
 # define COLOR_GRAY     0x808080
 # define COLOR_PINK     0xFFC0CB
 
-#define WINDOW_WIDTH 720
+#define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
 #define NUM_RAYS WINDOW_WIDTH
-#define FOV_ANGLE (30 * (M_PI / 180))
-#define TILE_SIZE 64
+#define FOV_ANGLE (60 * (M_PI / 180))
+#define TILE_SIZE 256
 
 #define KEY_UP 126
 #define KEY_DOWN 125
