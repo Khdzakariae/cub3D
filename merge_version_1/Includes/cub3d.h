@@ -80,7 +80,6 @@ typedef struct s_data {
     void        *mlx;
     void        *win;
     t_img       img;
-    t_player    *player;
     t_ray       rays[NUM_RAYS];
 } t_data;
 
