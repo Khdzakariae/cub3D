@@ -241,8 +241,6 @@ int my_mlx_pixel_get(int flage,t_data *data, double wallX, int y, int wallHeight
         return 0;
     }           
 
-
-    // if (data->rays->rayAngle )
     char *pixel_ptr = data->texter[flage].image_pixel_ptr + 
                      (tex_y * data->texter[flage].line_len + 
                       tex_x * (data->texter[flage].bits_per_pixel / 8));
@@ -271,12 +269,12 @@ void drawing_floor(t_data *data){
 
 
 void render_walls(t_data *data) {
-    int flage = 0;
+    int texture_id;
     int wallHeight;
-    int wallTop ;
+    int wallTop;
     int wallBottom;
     int texColor;
-    float darkness; 
+    float darkness;
 
     for (int i = 0; i < NUM_RAYS; i++) {
         float perpDistance = data->rays[i].distance * 
@@ -285,29 +283,37 @@ void render_walls(t_data *data) {
         wallHeight = (int)((WINDOW_HEIGHT / perpDistance) * data->map->tile_size);
         
         wallTop = (WINDOW_HEIGHT / 2) - (wallHeight / 2);
+        
         wallBottom = (WINDOW_HEIGHT / 2) + (wallHeight / 2);
         if (wallBottom >= WINDOW_HEIGHT) wallBottom = WINDOW_HEIGHT - 1;
 
+        double rayAngle = normalizeAngle(data->rays[i].rayAngle);
+        
+        if (data->rays[i].wasHitVertical) {
+            if (cos(rayAngle) > 0) {
+                texture_id = 3; 
+            } else {
+                texture_id = 2; 
+            }
+        } else {
+            if (sin(rayAngle) > 0) {
+                texture_id = 0;
+            } else {
+                texture_id = 1; 
+            }
+        }
+
         double wallX;
         if (data->rays[i].wasHitVertical) {
-            if (data->rays->c == 'W')
-                flage = 3;     
-           else
-                flage = 2;
             wallX = fmod(data->player->y + data->rays[i].distance * 
                         sin(data->rays[i].rayAngle), data->map->tile_size) / data->map->tile_size;
         } else {
-            if (data->rays->rayAngle > 90)
-                flage = 3;     
-           else if (data->rays->rayAngle < 180)
-                flage = 3;
             wallX = fmod(data->player->x + data->rays[i].distance * 
                         cos(data->rays[i].rayAngle), data->map->tile_size) / data->map->tile_size;
         }
 
         for (int y = wallTop; y < wallBottom; y++) {
-
-            texColor = my_mlx_pixel_get(flage, data,  wallX, y - wallTop , wallHeight);
+            texColor = my_mlx_pixel_get(texture_id, data, wallX, y - wallTop, wallHeight);
             
             darkness = 1.0f + (perpDistance / (data->map->tile_size * 5));
             
@@ -325,7 +331,6 @@ void render_walls(t_data *data) {
     }
     mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
 }
-
 void castAllRays(t_data *data) {
     float rayAngle = data->player->rotationAngle - (FOV_ANGLE / 2);
     for (int stripId = 0; stripId < NUM_RAYS; stripId++) {
