@@ -38,14 +38,30 @@ int close_window(t_data *data)
     if (!data)
         return -1;
 
-    // if (&data->cub->map)
-    //     cleanup_map(&data->cub->map);
-    if (data->win)
-        mlx_destroy_window(data->mlx, data->win);
+    if (data->cub)
+    {
+        // Cleanup textures
+        if (data->cub->textures.ea.img_ptr)
+            mlx_destroy_image(data->mlx, data->cub->textures.ea.img_ptr);
+        if (data->cub->textures.no.img_ptr)
+            mlx_destroy_image(data->mlx, data->cub->textures.no.img_ptr);
+        if (data->cub->textures.so.img_ptr)
+            mlx_destroy_image(data->mlx, data->cub->textures.so.img_ptr);
+        if (data->cub->textures.we.img_ptr)
+            mlx_destroy_image(data->mlx, data->cub->textures.we.img_ptr);
+        
+        cleanup_map(&data->cub->map);
+    }
+
     if (data->img.img_ptr)
         mlx_destroy_image(data->mlx, data->img.img_ptr);
-    if (data->player)
-        free(data->player);
+    if (data->win)
+        mlx_destroy_window(data->mlx, data->win);
+    if (data->mlx)
+    {
+        // mlx_destroy_display(data->mlx);
+        free(data->mlx);
+    }
     exit(0);
 }
 
@@ -124,25 +140,23 @@ int wall_hit(float x, float y, t_data *data)
 {
     int x_m, y_m;
 
-    if (x < 0 || x >= data->cub->map.width * TILE_SIZE || y < 0 || y >= data->cub->map.height * TILE_SIZE)
-        return 0; 
+    if (!data || !data->cub)
+        return 0;
+
+    if (x < 0 || x >= data->cub->map.width * TILE_SIZE || 
+        y < 0 || y >= data->cub->map.height * TILE_SIZE)
+        return 1; 
+
     x_m = floor(x / TILE_SIZE);
     y_m = floor(y / TILE_SIZE);
-    // printf("the cont is : %s\n", data->cub->map.title_size);
-    exit(0);
 
+    if (y_m >= data->cub->map.height || x_m >= data->cub->map.width)
+        return 1;
 
+    if (data->cub->map.map[y_m] && x_m < data->cub->map.width)
+        return (data->cub->map.map[y_m][x_m] == '1');
 
-
-    if (y_m >= data->cub->map.height|| x_m >= data->cub->map.width)
-        return (0);
-    if (data->cub->map.map[y_m] && x_m < data->cub->map.width){
-            // exit(0);
-        if (data->cub->map.map[y_m][x_m] == '1'){
-        }
-    }
-
-    return (1);
+    return 1;
 }
 
 float get_h_inter(t_data *data, float angle)
@@ -152,9 +166,9 @@ float get_h_inter(t_data *data, float angle)
 
     y_step = TILE_SIZE;
     x_step = TILE_SIZE / tan(angle);
-    h_y = floor(data->player->y /TILE_SIZE) * TILE_SIZE;
+    h_y = floor(data->cub->player.y /TILE_SIZE) * TILE_SIZE;
     pixel = inter_check(data, angle, &h_y, &y_step, 1);
-    h_x = data->player->x + (h_y - data->player->y) / tan(angle);
+    h_x = data->cub->player.x + (h_y - data->cub->player.y) / tan(angle);
 
 
     if ((unit_circle(angle, 'y') && x_step > 0) || (!unit_circle(angle, 'y') && x_step < 0))
@@ -166,7 +180,7 @@ float get_h_inter(t_data *data, float angle)
         h_y += y_step;
     }
 
-    return sqrt(pow(h_x - data->player->x, 2) + pow(h_y - data->player->y, 2));
+    return sqrt(pow(h_x - data->cub->player.x, 2) + pow(h_y - data->cub->player.y, 2));
 }
 
 float get_v_inter(t_data *data, float angle)
@@ -176,9 +190,9 @@ float get_v_inter(t_data *data, float angle)
 
     x_step = TILE_SIZE; 
     y_step = TILE_SIZE * tan(angle);
-    v_x = floor(data->player->x / TILE_SIZE) *TILE_SIZE;
+    v_x = floor(data->cub->player.x / TILE_SIZE) *TILE_SIZE;
     pixel = inter_check(data, angle, &v_x, &x_step, 0);
-    v_y = data->player->y + (v_x - data->player->x) * tan(angle);
+    v_y = data->cub->player.y + (v_x - data->cub->player.x) * tan(angle);
 
     if ((unit_circle(angle, 'x') && y_step < 0) || (!unit_circle(angle, 'x') && y_step > 0))
         y_step *= -1;
@@ -189,7 +203,7 @@ float get_v_inter(t_data *data, float angle)
         v_y += y_step;
     }
 
-    return sqrt(pow(v_x - data->player->x, 2) + pow(v_y - data->player->y, 2));
+    return sqrt(pow(v_x - data->cub->player.x, 2) + pow(v_y - data->cub->player.y, 2));
 }
 
 void castRay(t_data *data, float rayAngle, int stripId)
@@ -218,32 +232,38 @@ void castRay(t_data *data, float rayAngle, int stripId)
     data->rays[stripId].rayAngle = rayAngle;
 }
 
-int my_mlx_pixel_get(int flage,t_data *data, double wallX, int y, int wallHeight) {
-
+int my_mlx_pixel_get(int flage, t_data *data, double wallX, int y, int wallHeight) 
+{
     t_dir_texture texter[4];
+    
+    if (!data || flage < 0 || flage > 3)
+        return 0;
+        
     texter[0] = data->cub->textures.ea;
     texter[1] = data->cub->textures.no;
     texter[2] = data->cub->textures.so;
     texter[3] = data->cub->textures.we;
 
     int tex_x = (int)(wallX * texter[flage].texter_with);
-    int tex_y = (int)((y * texter[flage].texter_height) / wallHeight);
-    
-    tex_x = tex_x % texter[flage].texter_with;
-    tex_y = tex_y % texter[flage].texter_height;
-    
-    if (!data || tex_x < 0 || tex_y < 0 || 
-        tex_x >= WINDOW_HEIGHT || 
-        tex_y >= WINDOW_WIDTH)     
-    {         
+    int tex_y = (int)((double)y * texter[flage].texter_height / wallHeight);
+
+    tex_x = tex_x < 0 ? 0 : tex_x;
+    tex_y = tex_y < 0 ? 0 : tex_y;
+    tex_x = tex_x >= texter[flage].texter_with ? texter[flage].texter_with - 1 : tex_x;
+    tex_y = tex_y >= texter[flage].texter_height ? texter[flage].texter_height - 1 : tex_y;
+
+    if (!texter[flage].image_pixel_ptr || 
+        texter[flage].bits_per_pixel < 8 || 
+        texter[flage].line_len <= 0)
+    {
         return 0;
-    }           
+    }
 
     char *pixel_ptr = texter[flage].image_pixel_ptr + 
-                   (tex_y * texter[flage].line_len + 
-                   tex_x * (texter[flage].bits_per_pixel / 8));
+                     (tex_y * texter[flage].line_len + 
+                      tex_x * (texter[flage].bits_per_pixel / 8));
 
-    return *(int*)pixel_ptr;
+    return *(unsigned int*)pixel_ptr;
 }
 
 
@@ -267,6 +287,8 @@ void drawing_floor(t_data *data){
 
 
 void render_walls(t_data *data) {
+    if (!data || !data->cub )
+        return;
     int texture_id;
     int wallHeight;
     int wallTop;
@@ -276,7 +298,7 @@ void render_walls(t_data *data) {
 
     for (int i = 0; i < NUM_RAYS; i++) {
         float perpDistance = data->rays[i].distance * 
-                           cos(data->rays[i].rayAngle - data->player->rotationAngle);
+                           cos(data->rays[i].rayAngle - data->cub->player.rotationAngle);
         
         wallHeight = (int)((WINDOW_HEIGHT / perpDistance) * TILE_SIZE);
         
@@ -303,10 +325,10 @@ void render_walls(t_data *data) {
 
         double wallX;
         if (data->rays[i].wasHitVertical) {
-            wallX = fmod(data->player->y + data->rays[i].distance * 
+            wallX = fmod(data->cub->player.y + data->rays[i].distance * 
                         sin(data->rays[i].rayAngle),TILE_SIZE) / TILE_SIZE;
         } else {
-            wallX = fmod(data->player->x + data->rays[i].distance * 
+            wallX = fmod(data->cub->player.x + data->rays[i].distance * 
                         cos(data->rays[i].rayAngle), TILE_SIZE) / TILE_SIZE;
         }
 
@@ -330,7 +352,7 @@ void render_walls(t_data *data) {
     mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
 }
 void castAllRays(t_data *data) {
-    float rayAngle = data->player->rotationAngle - (FOV_ANGLE / 2);
+    float rayAngle = data->cub->player.rotationAngle - (FOV_ANGLE / 2);
     for (int stripId = 0; stripId < NUM_RAYS; stripId++) {
         castRay(data, rayAngle, stripId);
         rayAngle += FOV_ANGLE / NUM_RAYS;
@@ -362,17 +384,17 @@ int update_player(t_player *player, t_map *map)
 
 int key_press(int keycode, t_data *data)
 {
-    if (!data || !data->player)
+    if (!data )
         return -1;
 
     if (keycode == KEY_UP)
-        data->player->walkDirection = 1;
+        data->cub->player.walkDirection = 1;
     else if (keycode == KEY_DOWN)
-        data->player->walkDirection = -1;
+        data->cub->player.walkDirection = -1;
     else if (keycode == KEY_LEFT)
-        data->player->turnDirection = -1;
+        data->cub->player.turnDirection = -1;
     else if (keycode == KEY_RIGHT)
-        data->player->turnDirection = 1;
+        data->cub->player.turnDirection = 1;
     else if (keycode == KEY_ESC)
         close_window(data);
     return 0;
@@ -380,13 +402,13 @@ int key_press(int keycode, t_data *data)
 
 int key_release(int keycode, t_data *data)
 {
-    if (!data || !data->player)
+    if (!data)
         return -1;
 
     if (keycode == KEY_UP || keycode == KEY_DOWN)
-        data->player->walkDirection = 0;
+       data->cub->player.walkDirection = 0;
     else if (keycode == KEY_LEFT || keycode == KEY_RIGHT)
-        data->player->turnDirection = 0;
+        data->cub->player.turnDirection = 0;
     return 0;
 }
 
@@ -428,7 +450,7 @@ int key_release(int keycode, t_data *data)
 // }
 
 int game_loop(t_data *data) {
-    update_player(data->player, &data->cub->map);
+    update_player(&data->cub->player, &data->cub->map);
     mlx_clear_window(data->mlx, data->win);
     castAllRays(data);
     memset(data->img.image_pixel_ptr, 0,  WINDOW_WIDTH * WINDOW_HEIGHT * (data->img.bits_per_pixel / 8));
@@ -440,12 +462,12 @@ int game_loop(t_data *data) {
 
 void init_player(t_data *data){
 
-    data->player->radius = 3;
-    data->player->turnDirection = 0;
-    data->player->walkDirection = 0;
-    data->player->rotationAngle = M_PI / 2;
-    data->player->moveSpeed = 5;
-    data->player->rotationSpeed = 2 * (M_PI / 180);
+    data->cub->player.radius = 3;
+    data->cub->player.turnDirection = 0;
+    data->cub->player.walkDirection = 0;
+    data->cub->player.rotationAngle = M_PI / 2;
+    data->cub->player.moveSpeed = 5;
+    data->cub->player.rotationSpeed = 2 * (M_PI / 180);
 
     // if (has_wall_at(data->map, data->player->x, data->player->y))
     // {
@@ -455,36 +477,50 @@ void init_player(t_data *data){
 
 }
 
+bool init_textures(t_data *data){
+    if (!data || !data->cub || !data->mlx)
+        return false;
 
-void init_textures(t_data *data){
     t_texture *texters = &data->cub->textures;
     texters->ea.img_ptr = mlx_xpm_file_to_image(data->mlx,texters->ea.path, &texters->ea.texter_with,&texters->ea.texter_height);
 
+    if (!texters->ea.img_ptr)
+        return false;
     texters->ea.image_pixel_ptr = mlx_get_data_addr(texters->ea.img_ptr, 
                                               &texters->ea.bits_per_pixel,
                                               &texters->ea.line_len,
                                              &texters->ea.endian);
 
-
+    if (!texters->ea.image_pixel_ptr)
+        return false;
     texters->no.img_ptr = mlx_xpm_file_to_image(data->mlx, texters->no.path, &texters->no.texter_with, &texters->no.texter_height);
-
+    if (!texters->no.img_ptr)
+        return false;
     texters->no.image_pixel_ptr = mlx_get_data_addr(texters->no.img_ptr, 
                                               &texters->no.bits_per_pixel,
                                               &texters->no.line_len,
                                               &texters->no.endian);
-    
+     if (!texters->no.image_pixel_ptr)
+        return false;
     texters->so.img_ptr = mlx_xpm_file_to_image(data->mlx, texters->so.path, &texters->so.texter_with, &texters->so.texter_height);
-
+    if (!texters->so.img_ptr)
+        return false;
     texters->so.image_pixel_ptr = mlx_get_data_addr(texters->so.img_ptr, 
                                               &texters->so.bits_per_pixel,
                                               &texters->so.line_len,
-                                              &texters->so.endian);
+                                               &texters->so.endian);
+    if (!texters->so.image_pixel_ptr)
+        return false;
     texters->we.img_ptr = mlx_xpm_file_to_image(data->mlx, texters->we.path, &texters->we.texter_with, &texters->we.texter_height);
-
+    if (!texters->we.img_ptr)
+        return false;
     texters->we.image_pixel_ptr = mlx_get_data_addr(texters->we.img_ptr, 
                                               &texters->we.bits_per_pixel,
                                               &texters->we.line_len,
                                               &texters->we.endian);
+    if (!texters->we.image_pixel_ptr)
+        return false;
+    return(true);
 }
 
 void init_game(t_data *data)
@@ -511,29 +547,41 @@ void init_game(t_data *data)
 }
 
 
-bool init(t_data *data, char *argv){
-    data->player = malloc(sizeof(t_player));
-    t_cub3d cub3d;
-    if (!data->player)
-        return 0;
-    load_cub3d_file(argv, &cub3d);
+bool init(t_data *data, char *argv)
+{
+    if (!data || !argv)
+        return false;
 
-    data->cub = &cub3d;
+    memset(data, 0, sizeof(t_data));
+    
+    data->cub = malloc(sizeof(t_cub3d));
+    if (!data->cub)
+        return false;
+    
+    load_cub3d_file(argv, data->cub);
 
     init_game(data);
-    init_player(data);
-    init_textures(data);
-    if (!data->mlx || !data->win || !data->player)
+    if (!data->mlx || !data->win)
     {
-        // cleanup_map(data->map);
-        if (data->mlx) {
-            if (data->win) mlx_destroy_window(data->mlx, data->win);
-            if (data->player) free(data->player);
+        free(data->cub);
+        if (data->mlx)
+        {
+            if (data->win)
+                mlx_destroy_window(data->mlx, data->win);
+            // mlx_destroy_display(data->mlx);
+            free(data->mlx);
         }
-        fprintf(stderr, "Error: Failed to initialize game\n");
-        return 0;
+        return false;
     }
-    return(1);
+
+    init_player(data);
+    if (!init_textures(data))
+    {
+        close_window(data);
+        return false;
+    }
+
+    return true;
 }
 
 int main(int argc, char **argv)
@@ -561,15 +609,6 @@ int main(int argc, char **argv)
     mlx_hook(data.win, 17, 0, close_window, &data);
     mlx_loop(data.mlx);
 
-    // cleanup_map(&map);
-
-    // 	free_2d_array(cub3d.map.map);
-	// // free texture's path
-	// free(cub3d.textures.ea.path);
-	// free(cub3d.textures.no.path);
-	// free(cub3d.textures.we.path);
-	// free(cub3d.textures.so.path);
-    free(data.player);
     mlx_destroy_image(data.mlx, data.img.img_ptr);
     mlx_destroy_window(data.mlx, data.win);
 
