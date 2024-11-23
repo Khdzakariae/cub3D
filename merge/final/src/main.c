@@ -451,7 +451,6 @@ void init_game(t_data *data)
         return;
     }
 
-    // Create image buffer
     data->img.img_ptr = mlx_new_image(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
     if (!data->img.img_ptr)
     {
