@@ -43,6 +43,12 @@
 #define KEY_RIGHT 124
 #define KEY_ESC 53
 
+#define KEY_W 126
+#define KEY_S 125
+#define KEY_A 123
+#define KEY_D 124
+
+
 #define TRUE 1
 #define FALSE 0
 
