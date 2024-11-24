@@ -1,9 +1,9 @@
 
 
 WE ./texters/10.xpm 
-              NO      ./texters/12.xpm
-SO ./texters/13.xpm
-EA ./texters/14.xpm
+              NO      ./texters/1.xpm
+SO ./texters/3.xpm
+EA ./texters/2.xpm
 
 
 
@@ -14,7 +14,7 @@ EA ./texters/14.xpm
 
 
 1111111111
-100000E001
+100000S001
 1010110101
 1000000001
 1000000001
