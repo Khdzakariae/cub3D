@@ -8,6 +8,8 @@ void        content_is_valid(t_cub3d **cub3d_data, char **cube_file);
 void        fetch_map_width(t_cub3d **cub3d_data);
 void        check_player_escapes(t_cub3d **cub3d_data, char **cube_file);
 
+/* Todo, seg fault if character is invalid */
+
 void	load_cub3d_map(char **cube_file, t_cub3d **cub3d_data)
 {
 	t_bool map;
