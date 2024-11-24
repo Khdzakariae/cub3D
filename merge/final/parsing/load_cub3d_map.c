@@ -167,7 +167,7 @@ void    check_player_escapes(t_cub3d **cub3d_data, char **cube_file)
         j = 0;
         while ((*cub3d_data)->map.map[i][j])
         {
-            if (j > min_width && (*cub3d_data)->map.map[i][j] != '1'
+            if (j >= min_width && (*cub3d_data)->map.map[i][j] != '1'
                 && i != 0 && i < (*cub3d_data)->map.height - 1)
             {
                 if ((*cub3d_data)->map.map[i - 1][j] != '1' && (*cub3d_data)->map.map[i + 1][j] != '1')
