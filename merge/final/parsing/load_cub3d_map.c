@@ -97,10 +97,10 @@ void	copy_map_content(char **cube_file, t_cub3d **cub3d_data, size_t map_startin
 		map_starting_i++;
 	}
 	(*cub3d_data)->map.map[map_i] = NULL;
-    for (int i = 0; (*cub3d_data)->map.map[i]; i++)
-    {
-        printf("map line is: %s\n", (*cub3d_data)->map.map[i]);
-    }
+    // for (int i = 0; (*cub3d_data)->map.map[i]; i++)
+    // {
+    //     printf("map line is: %s\n", (*cub3d_data)->map.map[i]);
+    // }
 }
 
 void    map_is_valid(t_cub3d **cub3d_data, char **cube_file)
