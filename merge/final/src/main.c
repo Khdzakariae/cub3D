@@ -1,6 +1,18 @@
 #include "../Includes/cub3d.h"
 int cleanup(t_data *data);
 
+void set_player_orientation(t_player *player, char orientation) 
+{
+    if (orientation == 'N')
+        player->rotationAngle = 3 * M_PI / 2; 
+    else if (orientation == 'S')
+            player->rotationAngle = M_PI / 2; 
+    else if (orientation == 'E')
+            player->rotationAngle = 0; 
+    else if (orientation == 'W')
+            player->rotationAngle = M_PI;
+}
+
 double normalizeAngle(double angle)
 {
     angle = fmod(angle, 2 * M_PI);
@@ -28,29 +40,36 @@ double distanceBetweenPoints(double x1, double y1, double x2, double y2)
     return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
 }
 
-int has_wall_at(t_map *map, double x, double y)
-{
-    if (!map || !map->map || x < 0 || y < 0)
+int has_wall_at(t_map *map, double x, double y) {
+    if (!map || !map->map || x < COLLISION_MARGIN || 
+        x >= (map->width * TILE_SIZE - COLLISION_MARGIN) || 
+        y < COLLISION_MARGIN || y >= (map->height * TILE_SIZE - COLLISION_MARGIN))
+        return 1;
+
+    int mapX = (int)(x / TILE_SIZE);
+    int mapY = (int)(y / TILE_SIZE);
+    
+    if (mapY >= map->height || mapX >= map->width || mapY < 0 || mapX < 0)
         return 1;
         
-    double margin = 15;
-    
-    double check_points[4][2] = {
-        {x - margin, y - margin}, 
-        {x + margin, y - margin},  
-        {x - margin, y + margin}, 
-        {x + margin, y + margin}   
+    if (map->map[mapY][mapX] == '1')
+        return 1;
+        
+    int radius = 20;
+    int points[4][2] = {
+        {-radius, -radius},
+        {-radius, radius},
+        {radius, -radius},
+        {radius, radius}
     };
     
-    for (int i = 0; i < 4; i++)
-    {
-        int mapX = (int)(check_points[i][0] / map->title_size);
-        int mapY = (int)(check_points[i][1] / map->title_size);
+    for (int i = 0; i < 4; i++) {
+        int checkX = (int)((x + points[i][0]) / TILE_SIZE);
+        int checkY = (int)((y + points[i][1]) / TILE_SIZE);
         
-        if (mapY >= map->height || mapX >= map->width)
-            return 1;
-            
-        if (map->map[mapY][mapX] == '1')
+        if (checkX >= 0 && checkX < map->width && 
+            checkY >= 0 && checkY < map->height && 
+            map->map[checkY][checkX] == '1')
             return 1;
     }
     
@@ -322,22 +341,34 @@ int update_player(t_player *player, t_map *map)
         return -1;
 
     double moveStep;
-    double newPlayerX;
-    double newPlayerY;
+    double newPlayerX, newPlayerY;
+
     player->rotationAngle = normalizeAngle(player->rotationAngle + 
                            player->turnDirection * player->rotationSpeed);
 
     moveStep = player->walkDirection * player->moveSpeed;
+
     newPlayerX = player->x + cos(player->rotationAngle) * moveStep;
     newPlayerY = player->y + sin(player->rotationAngle) * moveStep;
 
-    if (!has_wall_at(map, newPlayerX, newPlayerY))
+    if (has_wall_at(map, newPlayerX, player->y)) 
     {
-        player->x = newPlayerX;
-        player->y = newPlayerY;
-    }
+        if (!has_wall_at(map, player->x, newPlayerY)) 
+            player->y = newPlayerY; 
+    } 
+    else 
+        player->x = newPlayerX; 
+    if (has_wall_at(map, player->x, newPlayerY)) 
+    {
+        if (!has_wall_at(map, newPlayerX, player->y))
+            player->x = newPlayerX; 
+    } 
+    else 
+        player->y = newPlayerY; 
     return 0;
 }
+
+
 
 int key_press(int keycode, t_data *data)
 {
@@ -394,7 +425,7 @@ int game_loop(t_data *data)
     ft_memset(data->img.image_pixel_ptr, 0, 
              WINDOW_WIDTH * WINDOW_HEIGHT * (data->img.bits_per_pixel / 8));
              
-    ciel(data);
+    // ciel(data);
     drawing_floor(data);
     castAllRays(data);
     render_walls(data);
@@ -409,6 +440,8 @@ void init_player(t_data *data)
     data->game.player.walkDirection = 0;
     data->game.player.rotationAngle = M_PI / 2;
     data->game.player.moveSpeed = 4.0;  
+    set_player_orientation(&data->game.player ,data->game.player.player_direction);
+
     data->game.player.rotationSpeed = 3 * (M_PI / 180); 
 
 
@@ -533,7 +566,7 @@ int cleanup(t_data *data)
         mlx_destroy_window(data->mlx, data->win);
     if (data->mlx)
     {
-        mlx_destroy_display(data->mlx);
+        // mlx_destroy_display(data->mlx);
         free(data->mlx);
     }
     /* free cub3d data */
