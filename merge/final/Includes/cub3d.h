@@ -31,8 +31,8 @@
 # define COLOR_GRAY     0x808080
 # define COLOR_PINK     0xFFC0CB
 
-#define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 720
+#define WINDOW_WIDTH 1080
+#define WINDOW_HEIGHT 780
 #define NUM_RAYS WINDOW_WIDTH
 #define FOV_ANGLE (60 * (M_PI / 180))
 // #define TILE_SIZE 256
@@ -52,10 +52,8 @@
 #define TRUE 1
 #define FALSE 0
 
-#define NO "texters/2.xpm"
-#define VO "texters/1.xpm"
-#define WO "texters/3.xpm"
-#define EO "texters/4.xpm"
+#define CIEL "texters/100.xpm"
+
 
 
 
