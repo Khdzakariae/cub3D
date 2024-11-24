@@ -1,5 +1,8 @@
 #include "../Includes/parsing.h"
 
+/* TODO */
+// fix map different lines length (player can escape, then map is invalid)
+
 void		load_cub3d_file(char *file, t_cub3d *cub3d);
 char   		 **get_lines(int fd, char **cube_file, int *line_count, t_cub3d **cub3d_data);
 static void	file_is_valid(char **cube_file, t_cub3d **cub3d);
@@ -42,8 +45,8 @@ void	load_cub3d_file(char *file, t_cub3d *cub3d)
 	printf("Map width: %d\n", cub3d->map.width);
     printf("Map height: %d\n", cub3d->map.height); */
     // print map
-/*     for (size_t i = 0; i < cub3d->map.height; i++)
-        printf("%s\n", cub3d->map.map[i]);  */
+    for (size_t i = 0; (int)i < cub3d->map.height; i++)
+        printf("%s\n", cub3d->map.map[i]); 
 	// update players position according to the resolution screen.
 	cub3d->player.x = cub3d->map.player_x * TILE_SIZE;
 	cub3d->player.y = cub3d->map.player_y * TILE_SIZE;
