@@ -10,6 +10,7 @@
 
 #define NO_FD -1
 #define TILE_SIZE 128
+#define MAX_INT 2147483647
 
 typedef enum	e_bool
 {
@@ -99,7 +100,7 @@ void	load_cub3d_file(char *file, t_cub3d *cub3d);
 // parse_utils.c
 t_bool		check_cub_extension(char *file);
 void		init_cub3d_data(t_cub3d **cub3d, int fd);
-int			get_map_height(char **cube_file, size_t map_starting_i);
+void			get_map_height(char **cube_file, size_t map_starting_i, size_t *map_height, size_t *map_width);
 void		get_map_line_len(char *line, size_t *line_map_len);
 t_bool 		valid_map_char(char c);
 t_bool		check_if_all_walls(char *line);

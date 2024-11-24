@@ -6,6 +6,7 @@ void		copy_map_content(char **cube_file, t_cub3d **cub3d_data, size_t map_starti
 void        map_is_valid(t_cub3d **cub3d_data, char **cube_file);
 void        content_is_valid(t_cub3d **cub3d_data, char **cube_file);
 void        fetch_map_width(t_cub3d **cub3d_data);
+void        check_player_escapes(t_cub3d **cub3d_data, char **cube_file);
 
 void	load_cub3d_map(char **cube_file, t_cub3d **cub3d_data)
 {
@@ -39,11 +40,13 @@ void	fill_map(char **cube_file, t_cub3d **cub3d_data, size_t *i)
 {
 	size_t map_starting_i;
 	size_t map_height;
+    size_t  map_width;
 
 	map_starting_i = *i;
-	map_height = get_map_height(cube_file, map_starting_i);
+	get_map_height(cube_file, map_starting_i, &map_height, &map_width);
 	*i += map_height;
 	(*cub3d_data)->map.height = map_height;
+    (*cub3d_data)->map.width = map_width;
 	(*cub3d_data)->map.map = (char **)malloc(sizeof(char *) * (map_height + 1));
 	if (!(*cub3d_data)->map.map)
         err_exit("Error\nFailed to allocte memory\n", (*cub3d_data)->fd, cube_file, NULL, cub3d_data);
@@ -68,8 +71,9 @@ void	copy_map_content(char **cube_file, t_cub3d **cub3d_data, size_t map_startin
 		map_j = 0;
 		j = 0;
        	line_map_len = 0;
-		get_map_line_len(cube_file[map_starting_i], &line_map_len);
-		(*cub3d_data)->map.map[map_i] = (char *)malloc(sizeof(char) * line_map_len + 1);
+		/* get_map_line_len(cube_file[map_starting_i], &line_map_len);
+        (*cub3d_data)->map.map[map_i] = (char *)malloc(sizeof(char) * line_map_len + 1); */
+        (*cub3d_data)->map.map[map_i] = (char *)malloc(sizeof(char) * (*cub3d_data)->map.width + 1);
 		while (cube_file[map_starting_i][j] != '\0')
 		{
 			if (valid_map_char(cube_file[map_starting_i][j]) == false)
@@ -81,15 +85,20 @@ void	copy_map_content(char **cube_file, t_cub3d **cub3d_data, size_t map_startin
 			}
 			j++;
 		}
+        while (map_j < (*cub3d_data)->map.width)
+        {
+             (*cub3d_data)->map.map[map_i][map_j] = '\0';
+            map_j++;
+        }
 		(*cub3d_data)->map.map[map_i][map_j] = '\0';
 		map_i++;
 		map_starting_i++;
 	}
 	(*cub3d_data)->map.map[map_i] = NULL;
- /*    for (int i = 0; (*cub3d_data)->map.map[i]; i++)
+    for (int i = 0; (*cub3d_data)->map.map[i]; i++)
     {
         printf("map line is: %s\n", (*cub3d_data)->map.map[i]);
-    } */
+    }
 }
 
 void    map_is_valid(t_cub3d **cub3d_data, char **cube_file)
@@ -99,6 +108,8 @@ void    map_is_valid(t_cub3d **cub3d_data, char **cube_file)
     int     len_line;
 
     i = 0;
+    // check map dimensions, player could escape for different widths.
+    check_player_escapes(cub3d_data, cube_file);
     while ((*cub3d_data)->map.map[i] != NULL)
     {
         len_line = ft_strlen((*cub3d_data)->map.map[i]);
@@ -121,6 +132,49 @@ void    map_is_valid(t_cub3d **cub3d_data, char **cube_file)
     // check if map's data is valid (0, 1, N, S, W, E).
     // check if the map content is valid.
     content_is_valid(cub3d_data, cube_file);
+}
+
+void    fetch_min_map_width(char **map, size_t *min_width)
+{
+    size_t  i;
+    size_t  j;
+
+    i = 0;
+    while(map[i])
+    {
+        j = 0;
+        while(map[i][j])
+            j++;
+        if (j < *min_width)
+            *min_width = j;
+        i++;
+    }
+}
+
+void    check_player_escapes(t_cub3d **cub3d_data, char **cube_file)
+{
+    size_t  min_width;
+    size_t  i;
+    size_t  j;
+
+    min_width = MAX_INT;
+    i = 0;
+    fetch_min_map_width((*cub3d_data)->map.map, &min_width);
+    while ((*cub3d_data)->map.map[i])
+    {
+        j = 0;
+        while ((*cub3d_data)->map.map[i][j])
+        {
+            if (j > min_width && (*cub3d_data)->map.map[i][j] != '1'
+                && i != 0 && i < (*cub3d_data)->map.height - 1)
+            {
+                if ((*cub3d_data)->map.map[i - 1][j] != '1' && (*cub3d_data)->map.map[i + 1][j] != '1')
+                    err_exit("Error\nPlayer can escape, Rja3 a W9\n", (*cub3d_data)->fd, cube_file, (*cub3d_data)->map.map, cub3d_data);
+            }
+            j++;
+        }
+        i++;
+    }
 }
 
 void        content_is_valid(t_cub3d **cub3d_data, char **cube_file)
