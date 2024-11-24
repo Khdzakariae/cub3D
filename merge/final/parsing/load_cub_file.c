@@ -45,8 +45,8 @@ void	load_cub3d_file(char *file, t_cub3d *cub3d)
 	printf("Map width: %d\n", cub3d->map.width);
     printf("Map height: %d\n", cub3d->map.height); */
     // print map
-    for (size_t i = 0; (int)i < cub3d->map.height; i++)
-        printf("%s\n", cub3d->map.map[i]); 
+    /* for (size_t i = 0; (int)i < cub3d->map.height; i++)
+        printf("%s\n", cub3d->map.map[i]);  */
 	// update players position according to the resolution screen.
 	cub3d->player.x = cub3d->map.player_x * TILE_SIZE +(TILE_SIZE / 2);
 	cub3d->player.y = cub3d->map.player_y * TILE_SIZE + (TILE_SIZE / 2);
