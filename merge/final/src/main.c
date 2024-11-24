@@ -1,4 +1,5 @@
 #include "../Includes/cub3d.h"
+int cleanup(t_data *data);
 
 double normalizeAngle(double angle)
 {
@@ -339,7 +340,7 @@ int key_press(int keycode, t_data *data)
     else if (keycode == KEY_RIGHT || keycode == KEY_D)
         data->game.player.turnDirection = 1;
     else if (keycode == KEY_ESC)
-        exit(0);
+        cleanup(data);
         
     return 0;
 }
@@ -382,11 +383,7 @@ void init_player(t_data *data)
     data->game.player.moveSpeed = 4.0;  
     data->game.player.rotationSpeed = 3 * (M_PI / 180); 
 
-    if (data->game.player.x == 0 && data->game.player.y == 0)
-    {
-        data->game.player.x = data->game.map.title_size * 1.5;
-        data->game.player.y = data->game.map.title_size * 1.5;
-    }
+
 }
 
 void init_textures(t_data *data)
@@ -446,7 +443,7 @@ void init_game(t_data *data)
     data->win = mlx_new_window(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "Cub3D");
     if (!data->win)
     {
-        // mlx_destroy_display(data->mlx);
+        //mlx_destroy_display(data->mlx);
         free(data->mlx);
         return;
     }
@@ -454,8 +451,8 @@ void init_game(t_data *data)
     data->img.img_ptr = mlx_new_image(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
     if (!data->img.img_ptr)
     {
-        // mlx_destroy_window(data->mlx, data->win);
-        // mlx_destroy_display(data->mlx);
+        mlx_destroy_window(data->mlx, data->win);
+        //mlx_destroy_display(data->mlx);
         free(data->mlx);
         return;
     }
@@ -480,8 +477,9 @@ bool init(t_data *data)
 
 int cleanup(t_data *data)
 {
-
-    t_texture *texters = &data->game.textures;
+    t_texture *texters;
+    
+    texters = &data->game.textures;
     if (texters->ea.img_ptr)
         mlx_destroy_image(data->mlx, texters->ea.img_ptr);
     if (texters->no.img_ptr)
@@ -490,19 +488,22 @@ int cleanup(t_data *data)
         mlx_destroy_image(data->mlx, texters->so.img_ptr);
     if (texters->we.img_ptr)
         mlx_destroy_image(data->mlx, texters->we.img_ptr);
-
     if (data->img.img_ptr)
         mlx_destroy_image(data->mlx, data->img.img_ptr);
     if (data->win)
         mlx_destroy_window(data->mlx, data->win);
     if (data->mlx)
     {
-        // mlx_destroy_display(data->mlx);
+        mlx_destroy_display(data->mlx);
         free(data->mlx);
     }
-
+    /* free cub3d data */
+    free_2d_array(data->game.map.map);
+    free(data->game.textures.ea.path);
+    free(data->game.textures.we.path);
+    free(data->game.textures.no.path);
+    free(data->game.textures.so.path);
     exit(0);
-    return 0;
 }
 
 int main(int argc, char **argv)

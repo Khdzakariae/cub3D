@@ -31,19 +31,19 @@ void	load_cub3d_file(char *file, t_cub3d *cub3d)
 	// load textures and colors
 	fetch_textures(cube_file, &cub3d);
 	// check paths
-	 printf("NO: %s\n", cub3d->textures.no.path);
+/* 	 printf("NO: %s\n", cub3d->textures.no.path);
 	printf("SO: %s\n", cub3d->textures.so.path);
 	printf("WE: %s\n", cub3d->textures.we.path);
-	printf("EA: %s\n", cub3d->textures.ea.path);
+	printf("EA: %s\n", cub3d->textures.ea.path); */
 	fetch_colors(cube_file, &cub3d);
 	// check colors
-	printf("F: %x\n", cub3d->colors.floor.color);
+/* 	printf("F: %x\n", cub3d->colors.floor.color);
 	printf("C: %x\n", cub3d->colors.ceiling.color);
 	printf("Map width: %d\n", cub3d->map.width);
-    printf("Map height: %d\n", cub3d->map.height);
+    printf("Map height: %d\n", cub3d->map.height); */
     // print map
-    for (size_t i = 0; i < cub3d->map.height; i++)
-        printf("%s\n", cub3d->map.map[i]); 
+/*     for (size_t i = 0; i < cub3d->map.height; i++)
+        printf("%s\n", cub3d->map.map[i]);  */
 	// update players position according to the resolution screen.
 	cub3d->player.x = cub3d->map.player_x * TILE_SIZE;
 	cub3d->player.y = cub3d->map.player_y * TILE_SIZE;

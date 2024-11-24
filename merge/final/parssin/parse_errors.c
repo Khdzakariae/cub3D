@@ -3,8 +3,10 @@
 void	err_exit(const char *err_msg, int close_fd, char **cube_file, char **map,
 			t_cub3d **cub3d_data)
 {
+	ssize_t err;
+
 	if (err_msg)
-		write(STDERR_FILENO, err_msg, ft_strlen(err_msg));
+		err = write(STDERR_FILENO, err_msg, ft_strlen(err_msg));
 	if (close_fd > 2)
 		close(close_fd);
 	if (cube_file)
@@ -22,11 +24,15 @@ void	err_exit(const char *err_msg, int close_fd, char **cube_file, char **map,
 		if ((*cub3d_data)->textures.no.path)
 			free((*cub3d_data)->textures.no.path);
 	}
+	(void)err;
 	exit(EXIT_FAILURE);
 }
 
 void	print_exit(const char *err_msg)
 {
-	write(2, err_msg, ft_strlen(err_msg));
+	ssize_t err;
+
+	err = write(2, err_msg, ft_strlen(err_msg));
+	(void)err;
 	exit(EXIT_FAILURE);
 }
