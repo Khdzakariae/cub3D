@@ -534,6 +534,6 @@ int main(int argc, char **argv)
     mlx_hook(data.win, 17, 0, cleanup, &data);
 
     mlx_loop(data.mlx);
-
+    
     return 0;
 }

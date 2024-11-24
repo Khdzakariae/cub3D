@@ -1,4 +1,4 @@
-#include "main.h"
+#include "../Includes/parsing.h"
 
 void		load_cub3d_map(char **cube_file, t_cub3d **cub3d_data);
 void		fill_map(char **cube_file, t_cub3d **cub3d_data, size_t *i);
@@ -24,7 +24,7 @@ void	load_cub3d_map(char **cube_file, t_cub3d **cub3d_data)
 			// map contains all infos, it's surronded by walls.
 			map_is_valid(cub3d_data, cube_file);
 			fetch_map_width(cub3d_data);
-            if (cube_file[i] == NULL || cube_file[i][0] == '\0')
+            if (cube_file[i] == NULL)
                 break ;
 		}
 		else if (cube_file[i][0] == '1' && map == true)

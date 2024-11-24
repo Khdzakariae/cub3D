@@ -2,7 +2,7 @@
 # define CUB3D_H
 
 # include "../lib/libft/libft.h"
-#include "../parssin/main.h"
+#include "parsing.h"
 # include <fcntl.h>
 # include <errno.h>
 #include "../mlx/mlx.h"

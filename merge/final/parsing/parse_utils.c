@@ -1,4 +1,4 @@
-#include "main.h"
+#include "../Includes/parsing.h"
 
 t_bool		check_cub_extension(char *file);
 void		init_cub3d_data(t_cub3d **cub3d, int fd);
@@ -46,7 +46,7 @@ int	get_map_height(char **cube_file, size_t map_starting_i)
 	size_t i;
 
 	i = map_starting_i;
-	while (cube_file[i] != NULL && cube_file[i][0] == '1')
+	while (cube_file[i] != NULL && cube_file[i][0] == '1' && cube_file[i][0])
 		i++;
 	return (i - map_starting_i);
 }

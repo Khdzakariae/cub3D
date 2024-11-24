@@ -1,4 +1,4 @@
-#include "main.h"
+#include "../Includes/parsing.h"
 
 void		load_cub3d_file(char *file, t_cub3d *cub3d);
 char   		 **get_lines(int fd, char **cube_file, int *line_count, t_cub3d **cub3d_data);
@@ -54,16 +54,26 @@ char    **get_lines(int fd, char **cube_file, int *line_count, t_cub3d **cub3d)
 {
 	int len;
 	char *line;
+	char	*lines;
+	t_bool	map;
 
 	line = NULL;
-	char *lines = NULL;
+	lines = NULL;
+	map = false;
 	while ((len = get_next_line(fd, &line)) > 0)
 	{
+		if (*line == '1')
+			map = true;
 		// skip empty lines and lines with only spaces
-		if (*line == '\0' || space_checker(line) == true)
+		else if ((*line == '\0' || space_checker(line) == true) && map == false)
 		{
 			free(line);
 			continue;
+		}
+		if (*line == '\n')
+		{
+			line = ft_strjoin(line, "\n");
+			*line = ' ';
 		}
 		lines = ft_strjoin(lines, line);
 		free(line);
@@ -99,7 +109,7 @@ static void file_is_valid(char **cube_file, t_cub3d **cub3d)
 			(*cub3d)->colors.floor.is_set = true;
 		else if (!ft_strncmp("C ", cube_file[i], 2) && (*cub3d)->colors.ceiling.is_set == false)
 			(*cub3d)->colors.ceiling.is_set = true;
-		else if (cube_file[i][0] != '1')
+		else if (cube_file[i][0] != '1' && cube_file[i][0] != '\0')
 			err_exit("Error\nInvalid line, texture or color\n", (*cub3d)->fd, cube_file, NULL, cub3d);
 		else if (cube_file[i][0] == '1')
 		{

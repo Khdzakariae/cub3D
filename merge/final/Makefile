@@ -7,7 +7,7 @@ INCLUDES = -I "Includes/"
 
 SRC	 = 	$(addprefix lib/get_next_line/, get_next_line.c get_next_line_utils.c) \
 		$(addprefix src/, main.c) \
-	    $(addprefix parssin/, parse_errors.c parse_utils.c load_cub3d_map.c load_cub_file.c libft_utils.c)
+	    $(addprefix parsing/, parse_errors.c parse_utils.c load_cub3d_map.c load_cub_file.c libft_utils.c)
 
 LIBFT = lib/libft/libft.a
 
@@ -15,7 +15,7 @@ OBJ = $(SRC:.c=.o)
 
 all: $(LIBFT) $(NAME)
 
-$(LIBFT) :$(SRC)
+$(LIBFT) : $(SRC)
 	@make -C lib/libft --silent
 	@echo "libft DONE [✅]"
 
@@ -45,5 +45,3 @@ fclean: clean
 	
 re: fclean all
 	@echo "REBUILD DONE [✅]"
-
-
