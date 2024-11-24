@@ -9,7 +9,7 @@
 # include <string.h>
 
 #define NO_FD -1
-#define TILE_SIZE 128
+#define TILE_SIZE 256
 #define MAX_INT 2147483647
 
 typedef enum	e_bool
@@ -59,6 +59,7 @@ typedef struct s_texture
 	t_dir_texture	so;
 	t_dir_texture	we;
 	t_dir_texture	ea;
+	t_dir_texture	ciel;
 } t_texture;
 
 typedef struct s_color
