@@ -1,7 +1,0 @@
- ** To conclude cub3D is a remarkable playground to explore the playful practical appli-
-cations of mathematics without having to understand the specifics.
-
-
-- note 
-    Display different wall textures (the choice is yours) that vary depending on which
-    side the wall is facing (North, South, East, West).
