@@ -1,4 +1,4 @@
-#include "main.h"
+#include "../Includes/parsing.h"
 
 t_bool space_checker(char *line)
 {

@@ -1,8 +1,8 @@
-#include "main.h"
+#include "../Includes/parsing.h"
 
 t_bool		check_cub_extension(char *file);
 void		init_cub3d_data(t_cub3d **cub3d, int fd);
-int			get_map_height(char **cube_file, size_t map_starting_i);
+void		get_map_height(char **cube_file, size_t map_starting_i, size_t *map_height, size_t *map_width);
 void		get_map_line_len(char *line, size_t *line_map_len);
 t_bool 		valid_map_char(char c);
 t_bool		check_if_all_walls(char *line);
@@ -41,14 +41,25 @@ void	init_cub3d_data(t_cub3d **cub3d, int fd)
 	(*cub3d)->fd = fd;
 }
 
-int	get_map_height(char **cube_file, size_t map_starting_i)
+void	get_map_height(char **cube_file, size_t map_starting_i, size_t *map_height, size_t *map_width)
 {
 	size_t i;
+	size_t j;
+	size_t	max_map_width;
 
 	i = map_starting_i;
-	while (cube_file[i] != NULL && cube_file[i][0] == '1')
+	max_map_width = 0;
+	while (cube_file[i] != NULL && cube_file[i][0] == '1' && cube_file[i][0])
+	{
+		j = 0;
+		while (cube_file[i][j])
+			j++;
+		if (j > max_map_width)
+			max_map_width = j;
 		i++;
-	return (i - map_starting_i);
+	}
+	*map_height = i - map_starting_i;
+	*map_width = max_map_width;
 }
 
 void	get_map_line_len(char *line, size_t *line_map_len)

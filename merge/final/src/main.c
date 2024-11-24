@@ -33,7 +33,7 @@ int has_wall_at(t_map *map, double x, double y)
     if (!map || !map->map || x < 0 || y < 0)
         return 1;
         
-    double margin = 20;
+    double margin = 15;
     
     double check_points[4][2] = {
         {x - margin, y - margin}, 
@@ -198,9 +198,9 @@ int my_mlx_pixel_get(int flag, t_data *data, double wallX, int y, int wallHeight
     tex_x = tex_x >= texter[flag].texter_with ? texter[flag].texter_with - 1 : tex_x;
     tex_y = tex_y >= texter[flag].texter_height ? texter[flag].texter_height - 1 : tex_y;
 
-    // if (!texter[flag].image_pixel_ptr ||   )
-    //     // texter[flag].line_len <= 0)
-    //     return 0;
+     if (!texter[flag].image_pixel_ptr ||  
+          texter[flag].line_len <= 0)
+         return 0;
 
     char *pixel_ptr = texter[flag].image_pixel_ptr + 
                      (tex_y * texter[flag].line_len + 
@@ -271,7 +271,7 @@ void render_walls(t_data *data)
                         cos(data->rays[i].rayAngle), data->game.map.title_size) / data->game.map.title_size;
         }
 
-        for (int y = wallTop; y < wallBottom; y++)
+        for (int y = wallTop; y <= wallBottom; y++)
         {
             texColor = my_mlx_pixel_get(texture_id, data, wallX, y - wallTop, wallHeight);
             
@@ -534,6 +534,6 @@ int main(int argc, char **argv)
     mlx_hook(data.win, 17, 0, cleanup, &data);
 
     mlx_loop(data.mlx);
-
+    //printf("pis is: %d\n", M_PI);
     return 0;
 }

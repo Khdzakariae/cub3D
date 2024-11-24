@@ -1,4 +1,4 @@
-#include "main.h"
+#include "../Includes/parsing.h"
 
 void	err_exit(const char *err_msg, int close_fd, char **cube_file, char **map,
 			t_cub3d **cub3d_data)
