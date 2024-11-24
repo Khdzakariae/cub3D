@@ -37,11 +37,12 @@
 #define FOV_ANGLE (60 * (M_PI / 180))
 // #define TILE_SIZE 256
 
-/* #define KEY_UP 126
+#define COLLISION_MARGIN 5
+ #define KEY_UP 126
 #define KEY_DOWN 125
 #define KEY_LEFT 123
 #define KEY_RIGHT 124
-#define KEY_ESC 53 */
+#define KEY_ESC 53 
 
 #define KEY_W 126
 #define KEY_S 125
@@ -114,11 +115,11 @@ typedef struct s_data {
     t_ray       rays[NUM_RAYS];
 } t_data;
 
- #define KEY_UP 65362
- #define KEY_DOWN 65364
- #define KEY_LEFT 65361
- #define KEY_RIGHT 65363
- #define KEY_ESC 65307
+//  #define KEY_UP 65362
+//  #define KEY_DOWN 65364
+//  #define KEY_LEFT 65361
+//  #define KEY_RIGHT 65363
+//  #define KEY_ESC 65307
 
 
 
