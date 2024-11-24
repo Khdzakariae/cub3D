@@ -180,15 +180,29 @@ void castRay(t_data *data, float rayAngle, int stripId)
 
 int my_mlx_pixel_get(int flag, t_data *data, double wallX, int y, int wallHeight) 
 {
-    t_dir_texture texter[4];
+    t_dir_texture texter[5];
     
-    if (!data || flag < 0 || flag > 3)
+    if (!data || flag < 0 || flag > 4)
         return 0;
         
     texter[0] = data->game.textures.ea;
     texter[1] = data->game.textures.no;
     texter[2] = data->game.textures.so;
     texter[3] = data->game.textures.we;
+    texter[4] = data->game.textures.ciel;
+
+    if (flag == 4)
+    {
+        wallX = (int)wallX % 580;
+        y = y % 580;
+
+        char *pixel_ptr = texter[flag].image_pixel_ptr + 
+                     ((int)wallX * texter[flag].line_len + 
+                      y * (texter[flag].bits_per_pixel / 8));
+
+        return *(unsigned int*)pixel_ptr;
+
+    }
 
     int tex_x = (int)(wallX * texter[flag].texter_with);
     int tex_y = (int)((double)y * texter[flag].texter_height / wallHeight);
@@ -289,7 +303,6 @@ void render_walls(t_data *data)
             my_pixel_put(&data->img, i, y, finalColor);
         }
     }
-    mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
 }
 
 void castAllRays(t_data *data)
@@ -358,6 +371,20 @@ int key_release(int keycode, t_data *data)
         data->game.player.turnDirection = 0;
     return 0;
 }
+void ciel(t_data *data){
+    int texColor;
+    t_texture *texters = &data->game.textures;
+
+    for (int x = 0; x < WINDOW_WIDTH; x++)
+    {
+        for (int y = 0; y < WINDOW_HEIGHT / 2; y++)
+        {
+            texColor = my_mlx_pixel_get(4, data, x, y , 0);
+            my_pixel_put(&data->img, x, y, texColor);
+        }
+    }
+
+}
 
 int game_loop(t_data *data)
 {
@@ -367,10 +394,11 @@ int game_loop(t_data *data)
     ft_memset(data->img.image_pixel_ptr, 0, 
              WINDOW_WIDTH * WINDOW_HEIGHT * (data->img.bits_per_pixel / 8));
              
-    drawing_east(data);
+    ciel(data);
     drawing_floor(data);
     castAllRays(data);
     render_walls(data);
+    mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
     return 0;
 }
 
@@ -429,6 +457,15 @@ void init_textures(t_data *data)
                                                    &texters->we.bits_per_pixel,
                                                    &texters->we.line_len,
                                                    &texters->we.endian);
+        texters->ciel.img_ptr = mlx_xpm_file_to_image(data->mlx, 
+                                               CIEL, 
+                                               &texters->ciel.texter_with,
+                                               &texters->ciel.texter_height);
+    if (texters->ciel.img_ptr)
+        texters->ciel.image_pixel_ptr = mlx_get_data_addr(texters->ciel.img_ptr, 
+                                                   &texters->ciel.bits_per_pixel,
+                                                   &texters->ciel.line_len,
+                                                   &texters->ciel.endian);
 }
 
 void init_game(t_data *data)
@@ -488,6 +525,8 @@ int cleanup(t_data *data)
         mlx_destroy_image(data->mlx, texters->so.img_ptr);
     if (texters->we.img_ptr)
         mlx_destroy_image(data->mlx, texters->we.img_ptr);
+    if (texters->we.img_ptr)
+        mlx_destroy_image(data->mlx, texters->ciel.img_ptr);
     if (data->img.img_ptr)
         mlx_destroy_image(data->mlx, data->img.img_ptr);
     if (data->win)
@@ -534,6 +573,5 @@ int main(int argc, char **argv)
     mlx_hook(data.win, 17, 0, cleanup, &data);
 
     mlx_loop(data.mlx);
-    //printf("pis is: %d\n", M_PI);
     return 0;
 }
