@@ -87,6 +87,7 @@ typedef struct s_map
 
 typedef struct s_cub3d
 {
+	double last_mouse_x;
 	t_texture textures;
 	t_colors   colors;
 	t_map     map;
