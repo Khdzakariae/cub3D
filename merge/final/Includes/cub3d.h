@@ -63,6 +63,15 @@
 
 #define CIEL "texters/100.xpm"
 
+typedef struct s_wall
+{
+    int texture_id;
+    int wallTop;
+    int wallBottom;
+    int wallHeight;
+    float perpDistance;
+}t_wall;
+
 typedef struct s_img
 {
     void    *img_ptr;
@@ -87,6 +96,7 @@ typedef struct s_ray {
 } t_ray;
 
 typedef struct s_data {
+    t_wall *wall;
 	int flage_mousse;
     t_cub3d     game;
     void        *mlx;
@@ -100,5 +110,55 @@ typedef struct s_data {
  #define KEY_LEFT 65361
  #define KEY_RIGHT 65363
  #define KEY_ESC 65307
+
+
+void cleanup_textures(t_cub3d *game);
+int cleanup(t_data *data);
+
+int update_player(t_player *player, t_map *map);
+int game_loop(t_data *data);
+
+void set_player_orientation(t_player *player, char orientation) ;
+void init_player(t_data *data);
+void init_textures(t_data *data);
+void init_game(t_data *data);
+bool init(t_data *data);
+
+int key_press(int keycode, t_data *data);
+int key_release(int keycode, t_data *data);
+int mouse_move(int x, int y, t_data *data);
+
+double distanceBetweenPoints(double x1, double y1, double x2, double y2);
+double normalizeAngle(double angle);
+int is_wall_at(t_map *map, double x, double y);
+
+int is_within_bounds(t_map *map, double x, double y);
+int has_wall_at(t_map *map, double x, double y);
+int unit_circle(float angle, char c);
+int inter_check(t_data *data, float angle, float *inter, float *step, int is_horizon);
+int wall_hit(float x, float y, t_data *data);
+
+float get_h_inter(t_data *data, float angle);
+float get_v_inter(t_data *data, float angle);
+void castRay(t_data *data, float rayAngle, int stripId);
+void castAllRays(t_data *data);
+
+void my_pixel_put(t_img *img, int x, int y, int color);
+int apply_darkness(int texColor, float darkness);
+void ciel(t_data *data);
+void drawing_east(t_data *data);
+void drawing_floor(t_data *data);
+
+int create_trgb(int t, int r, int g, int b);
+int my_mlx_pixel_get(int flag, t_data *data, double wallX, int y, int wallHeight) ;
+double get_wallX(t_data *data, int i, float perpDistance);
+void render_wall_texture(t_data *data, int i);
+
+int get_wall_top(int wallHeight);
+int get_wall_bottom(int wallHeight);
+int get_wall_height(float perpDistance);
+int get_texture_id(t_data *data, int i);
+void render_walls(t_data *data);
+
 
 # endif
