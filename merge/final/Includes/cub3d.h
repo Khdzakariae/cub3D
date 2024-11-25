@@ -18,6 +18,8 @@
 #include <stdlib.h>
 
 
+#define MOUSE_SENSITIVITY 1
+
 # define COLOR_RED      0xFF0000
 # define COLOR_GREEN    0x00FF00
 # define COLOR_BLUE     0x0000FF
@@ -38,30 +40,28 @@
 // #define TILE_SIZE 256
 
 #define COLLISION_MARGIN 5
- #define KEY_UP 126
-#define KEY_DOWN 125
-#define KEY_LEFT 123
-#define KEY_RIGHT 124
-#define KEY_ESC 53 
 
-#define KEY_W 126
-#define KEY_S 125
-#define KEY_A 123
-#define KEY_D 124
+//  #define KEY_UP 126
+// #define KEY_DOWN 125
+// #define KEY_LEFT 123
+// #define KEY_RIGHT 124
+// #define KEY_ESC 53 
 
+#define KEY_W 119
+#define KEY_S 115
+#define KEY_A 97
+#define KEY_D 100
+
+#define KEY_ACTIVE_MOUSSE 65436
+
+#define CIEL_IMAGE TRUE
+#define DARKNESS 500
+#define RADIUS 20
 
 #define TRUE 1
 #define FALSE 0
 
 #define CIEL "texters/100.xpm"
-
-
-
-
-// typedef struct s_texter
-// {
-//     t_texture *text;
-// } t_texter;
 
 typedef struct s_img
 {
@@ -71,24 +71,6 @@ typedef struct s_img
     int     endian;
     int     line_len;
 } t_img;
-
-// typedef struct s_map {
-//     int     map_height;
-//     int     map_width;
-//     char    **grid;
-//     int     tile_size;
-// } t_map;
-
-// typedef struct s_player {
-//     double  x;
-//     double  y;
-//     double  radius;
-//     double  turnDirection;
-//     double  walkDirection;
-//     double  rotationAngle;
-//     double  moveSpeed;
-//     double  rotationSpeed;
-// } t_player;
 
 typedef struct s_ray {
     char c;
@@ -105,22 +87,18 @@ typedef struct s_ray {
 } t_ray;
 
 typedef struct s_data {
+	int flage_mousse;
     t_cub3d     game;
     void        *mlx;
     void        *win;
     t_img       img;
-    // t_texter    texter[4];
-    // t_map       *map;
-    // t_player    *player;
     t_ray       rays[NUM_RAYS];
 } t_data;
 
-//  #define KEY_UP 65362
-//  #define KEY_DOWN 65364
-//  #define KEY_LEFT 65361
-//  #define KEY_RIGHT 65363
-//  #define KEY_ESC 65307
-
-
+ #define KEY_UP 65362
+ #define KEY_DOWN 65364
+ #define KEY_LEFT 65361
+ #define KEY_RIGHT 65363
+ #define KEY_ESC 65307
 
 # endif
