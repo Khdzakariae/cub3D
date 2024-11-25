@@ -7,6 +7,7 @@ void		get_map_line_len(char *line, size_t *line_map_len);
 t_bool 		valid_map_char(char c);
 t_bool		check_if_all_walls(char *line);
 void 		free_2d_array(char **array);
+void    fetch_min_map_width(char **map, size_t *min_width);
 
 t_bool	check_cub_extension(char *file)
 {
@@ -41,7 +42,7 @@ void	init_cub3d_data(t_cub3d **cub3d, int fd)
 	(*cub3d)->fd = fd;
 }
 
-void	get_map_height(char **cube_file, size_t map_starting_i, size_t *map_height, size_t *map_width)
+void	get_map_dimensions(char **cube_file, size_t map_starting_i, size_t *map_height, size_t *map_width)
 {
 	size_t i;
 	size_t j;
@@ -104,4 +105,21 @@ void	free_2d_array(char **array)
 		i++;
 	}
 	free(array);
+}
+
+void    fetch_min_map_width(char **map, size_t *min_width)
+{
+    size_t  i;
+    size_t  j;
+
+    i = 0;
+    while(map[i])
+    {
+        j = 0;
+        while(map[i][j])
+            j++;
+        if (j < *min_width)
+            *min_width = j;
+        i++;
+    }
 }

@@ -91,6 +91,7 @@ typedef struct s_cub3d
 	t_map     map;
 	t_player	player;
 	int			fd;
+	char		**cube_file;
 } t_cub3d;
 
 
@@ -100,17 +101,18 @@ void	load_cub3d_file(char *file, t_cub3d *cub3d);
 // parse_utils.c
 t_bool		check_cub_extension(char *file);
 void		init_cub3d_data(t_cub3d **cub3d, int fd);
-void			get_map_height(char **cube_file, size_t map_starting_i, size_t *map_height, size_t *map_width);
+void			get_map_dimensions(char **cube_file, size_t map_starting_i, size_t *map_height, size_t *map_width);
 void		get_map_line_len(char *line, size_t *line_map_len);
 t_bool 		valid_map_char(char c);
 t_bool		check_if_all_walls(char *line);
 void		free_2d_array(char **array);
+void    fetch_min_map_width(char **map, size_t *min_width);
 
 // libft_utils.c
-char    **get_lines(int fd, char **cube_file, int *line_count, t_cub3d **cub3d_data);
 t_bool	space_checker(char *line);
 t_bool	ft_isspace(char c);
 char	**ft_split(char const *s, char c);
+void	print_tmc(t_cub3d *cub3d);
 
 // load_cub3d_map.c
 void		load_cub3d_map(char **cube_file, t_cub3d **cub3d_data);
@@ -119,11 +121,13 @@ void		copy_map_content(char **cube_file, t_cub3d **cub3d_data, size_t map_starti
 
 // load_cub_file.c
 void		load_cub3d_file(char *file, t_cub3d *cub3d);
-char   		 **get_lines(int fd, char **cube_file, int *line_count, t_cub3d **cub3d_data);
+char   		 **get_lines(char **cube_file, int *line_count, t_cub3d **cub3d_data);
 
 /* parse_errors */
-void	err_exit(const char *err_msg, int close_fd, char **cube_file, char **map,
-			t_cub3d **cub3d_data);
+void	err_exit(char *err_msg, t_cub3d **cub3d_data);
 void	print_exit(const char *err_msg);
+void	free_incomplete_map(t_cub3d **cub3d_data, size_t map_i, char *err_msg);
+
+
 
 #endif // CUB3D_H

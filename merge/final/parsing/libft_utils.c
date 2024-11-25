@@ -82,3 +82,20 @@ t_bool ft_isspace(char c)
 // 	}
 // 	return (ptr[j] = NULL, 0);
 // }
+
+void	print_tmc(t_cub3d *cub3d)
+{
+	// check paths
+	 printf("NO: %s\n", cub3d->textures.no.path);
+	printf("SO: %s\n", cub3d->textures.so.path);
+	printf("WE: %s\n", cub3d->textures.we.path);
+	printf("EA: %s\n", cub3d->textures.ea.path);
+	// check colors
+	printf("F: %x\n", cub3d->colors.floor.color);
+	printf("C: %x\n", cub3d->colors.ceiling.color);
+	printf("Map width: %d\n", cub3d->map.width);
+    printf("Map height: %d\n", cub3d->map.height);
+    // print map
+    for (size_t i = 0; (int)i < cub3d->map.height; i++)
+        printf("%s\n", cub3d->map.map[i]); 
+}
