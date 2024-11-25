@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:09:53 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/25 19:50:09 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/25 21:30:32 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ void ciel(t_data *data)
     int texColor;
     t_texture *texters = &data->game.textures;
 
-    for (int x = 20; x < WINDOW_WIDTH; x++)
+    for (int x = 0; x < WINDOW_WIDTH; x++)
     {
-        for (int y = 20; y < WINDOW_HEIGHT / 2; y++)
+        for (int y = 0; y < WINDOW_HEIGHT / 2; y++)
         {
             texColor = my_mlx_pixel_get(4, data, x, y , 0);
             my_pixel_put(&data->img, x, y, texColor);

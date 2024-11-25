@@ -1,15 +1,15 @@
 
 
-WE ./texters/10.xpm 
-              NO      ./texters/1.xpm
-SO ./texters/3.xpm
-EA ./texters/2.xpm
+WE ./texters/go3bi.xpm 
+              NO      ./texters/go3bi.xpm
+SO ./texters/go3bi.xpm
+EA ./texters/go3bi.xpm
 
 
 
 
 
-      F 255,15,0      
+      F 0,15,0      
       C 0,20,0     
 
 

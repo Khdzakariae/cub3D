@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:11:51 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/25 19:51:04 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/25 21:35:20 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ int my_mlx_pixel_get(int flag, t_data *data, double wallX, int y, int wallHeight
 
     if (flag == 4)
     {
-        wallX = (int)wallX % 580;
-        y = y % 580;
+        wallX = (int)wallX % 720;
+        y = y % 720;
 
         char *pixel_ptr = texter[flag].image_pixel_ptr + 
                      ((int)wallX * texter[flag].line_len + 

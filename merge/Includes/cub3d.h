@@ -42,7 +42,7 @@
 // #define TILE_SIZE 256
 
 #define CIEL_IMAGE TRUE
-#define DARKNESS 500
+#define DARKNESS 100
 #define RADIUS 30
 #define COLLISION_MARGIN 50
 #define KEY_ACTIVE_MOUSSE 65436
@@ -63,7 +63,7 @@
 #define TRUE 1
 #define FALSE 0
 
-#define CIEL "texters/100.xpm"
+#define CIEL "texters/9078_1.xpm"
 
 typedef struct s_wall
 {
