@@ -1,7 +1,7 @@
 FLAGS = -Wall -Wextra -Werror -fsanitize=address -g3
 
 NAME = cub3D
-mlx = mlx/libmlx.a
+mlx = lib/mlx/libmlx.a
 
 INCLUDES = -I "Includes/"
 
