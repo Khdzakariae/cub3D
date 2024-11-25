@@ -55,7 +55,7 @@ int has_wall_at(t_map *map, double x, double y) {
     if (map->map[mapY][mapX] == '1')
         return 1;
         
-    int radius = 20;
+    int radius = RADIUS;
     int points[4][2] = {
         {-radius, -radius},
         {-radius, radius},
@@ -308,7 +308,7 @@ void render_walls(t_data *data)
         {
             texColor = my_mlx_pixel_get(texture_id, data, wallX, y - wallTop, wallHeight);
             
-            darkness = 1.0f + (perpDistance / (data->game.map.title_size * 5));
+            darkness = 1.0f + (perpDistance / DARKNESS);
             
             int r = ((texColor >> 16) & 0xFF) / darkness;
             int g = ((texColor >> 8) & 0xFF) / darkness;
@@ -347,7 +347,6 @@ int update_player(t_player *player, t_map *map)
                            player->turnDirection * player->rotationSpeed);
 
     moveStep = player->walkDirection * player->moveSpeed;
-
     newPlayerX = player->x + cos(player->rotationAngle) * moveStep;
     newPlayerY = player->y + sin(player->rotationAngle) * moveStep;
 
@@ -372,6 +371,8 @@ int update_player(t_player *player, t_map *map)
 
 int key_press(int keycode, t_data *data)
 {
+
+
     if (!data)
         return -1;
 
@@ -385,7 +386,8 @@ int key_press(int keycode, t_data *data)
         data->game.player.turnDirection = 1;
     else if (keycode == KEY_ESC)
         cleanup(data);
-        
+    else if (keycode == KEY_ACTIVE_MOUSSE)
+        data->flage_mousse *= -1; 
     return 0;
 }
 
@@ -402,6 +404,7 @@ int key_release(int keycode, t_data *data)
         data->game.player.turnDirection = 0;
     return 0;
 }
+
 void ciel(t_data *data){
     int texColor;
     t_texture *texters = &data->game.textures;
@@ -425,7 +428,10 @@ int game_loop(t_data *data)
     ft_memset(data->img.image_pixel_ptr, 0, 
              WINDOW_WIDTH * WINDOW_HEIGHT * (data->img.bits_per_pixel / 8));
              
-    // ciel(data);
+    if(CIEL_IMAGE)
+        ciel(data);
+    else
+        drawing_east(data);
     drawing_floor(data);
     castAllRays(data);
     render_walls(data);
@@ -513,7 +519,7 @@ void init_game(t_data *data)
     data->win = mlx_new_window(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "Cub3D");
     if (!data->win)
     {
-        //mlx_destroy_display(data->mlx);
+        mlx_destroy_display(data->mlx);
         free(data->mlx);
         return;
     }
@@ -522,7 +528,7 @@ void init_game(t_data *data)
     if (!data->img.img_ptr)
     {
         mlx_destroy_window(data->mlx, data->win);
-        //mlx_destroy_display(data->mlx);
+        mlx_destroy_display(data->mlx);
         free(data->mlx);
         return;
     }
@@ -541,8 +547,19 @@ bool init(t_data *data)
 
     init_player(data);
     init_textures(data);
+    data->flage_mousse = -1;
 
     return true;
+}
+
+
+void cleanup_textures(t_cub3d *game)
+{
+    free_2d_array(game->map.map);
+    free(game->textures.ea.path);
+    free(game->textures.we.path);
+    free(game->textures.no.path);
+    free(game->textures.so.path);
 }
 
 int cleanup(t_data *data)
@@ -566,16 +583,35 @@ int cleanup(t_data *data)
         mlx_destroy_window(data->mlx, data->win);
     if (data->mlx)
     {
-        // mlx_destroy_display(data->mlx);
+        mlx_destroy_display(data->mlx);
         free(data->mlx);
     }
-    /* free cub3d data */
-    free_2d_array(data->game.map.map);
-    free(data->game.textures.ea.path);
-    free(data->game.textures.we.path);
-    free(data->game.textures.no.path);
-    free(data->game.textures.so.path);
+    cleanup_textures(&data->game);
+
     exit(0);
+}
+
+int mouse_move(int x, int y, t_data *data) {
+    if (data->flage_mousse == -1)
+        return 0;
+    if (!data)
+        return -1;
+
+    static int first_move = 1;
+    if (first_move) {
+        data->game.last_mouse_x = x;
+        first_move = 0;
+        return 0;
+    }
+
+    int delta_x = x - data->game.last_mouse_x;
+    
+    data->game.player.rotationAngle += delta_x * MOUSE_SENSITIVITY * (M_PI / 180);
+    data->game.player.rotationAngle = normalizeAngle(data->game.player.rotationAngle);
+    
+    data->game.last_mouse_x = x;
+    
+    return 0;
 }
 
 int main(int argc, char **argv)
@@ -603,6 +639,7 @@ int main(int argc, char **argv)
     mlx_loop_hook(data.mlx, game_loop, &data);
     mlx_hook(data.win, 2, 1L<<0, key_press, &data);
     mlx_hook(data.win, 3, 1L<<1, key_release, &data);
+    mlx_hook(data.win, 6, 1L<<6, mouse_move, &data);
     mlx_hook(data.win, 17, 0, cleanup, &data);
 
     mlx_loop(data.mlx);
