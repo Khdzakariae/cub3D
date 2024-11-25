@@ -7,7 +7,8 @@ INCLUDES = -I "Includes/"
 
 SRC	 = 	$(addprefix lib/get_next_line/, get_next_line.c get_next_line_utils.c) \
 		$(addprefix src/, main.c) \
-	    $(addprefix parsing/, parse_errors.c parse_utils.c load_cub3d_map.c load_cub_file.c libft_utils.c)
+	    $(addprefix parsing/, parse_errors.c parse_utils.c load_cub3d_map.c load_cub_file.c libft_utils.c \
+								parse_utils2.c parse_utils3.c)
 
 LIBFT = lib/libft/libft.a
 

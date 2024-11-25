@@ -8,7 +8,6 @@ void	move_content_to_map(char **cube_file, t_cub3d **cub3d_data,
 			size_t map_starting_i, size_t map_i);
 void	map_is_valid(t_cub3d **cub3d_data);
 void	check_player_escapes(t_cub3d **cub3d_data);
-void	check_player_escapes(t_cub3d **cub3d_data);
 void	content_is_valid(t_cub3d **cub3d_data);
 void	check_content(t_cub3d **cub3d_data, t_bool *player,
 			t_bool *spaces, size_t i);

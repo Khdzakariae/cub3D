@@ -49,3 +49,13 @@ void	free_incomplete_map(t_cub3d **cub3d_data, size_t map_i, char *err_msg)
 	(*cub3d_data)->map.map = NULL;
 	err_exit(err_msg, cub3d_data);
 }
+
+void	free_arrays_exit(char **arr1, char **arr2,
+			char *err_msg, t_cub3d **cub3d)
+{
+	if (arr1)
+		free_2d_array(arr1);
+	if (arr2)
+		free_2d_array(arr2);
+	err_exit(err_msg, cub3d);
+}

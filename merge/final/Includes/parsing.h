@@ -104,9 +104,20 @@ void		init_cub3d_data(t_cub3d **cub3d, int fd);
 void			get_map_dimensions(char **cube_file, size_t map_starting_i, size_t *map_height, size_t *map_width);
 void		get_map_line_len(char *line, size_t *line_map_len);
 t_bool 		valid_map_char(char c);
-t_bool		check_if_all_walls(char *line);
 void		free_2d_array(char **array);
-void    fetch_min_map_width(char **map, size_t *min_width);
+void    	fetch_min_map_width(char **map, size_t *min_width);
+t_bool		all_cub3d_data_set(t_cub3d **cub3d);
+void		get_color(char *line, int *color, t_cub3d **cub3d);
+void		retrieve_color(char **split_colors, int *color, t_cub3d **cub3d);
+
+// parse_utils2.c
+char   		**get_lines(char **cube_file, int *line_count, t_cub3d **cub3d_data);
+void		fetch_lines(t_cub3d **cub3d, char **lines,
+				t_bool *map, int *line_count);
+void		check_file_lines(char **cube_file, t_cub3d **cub3d, size_t i);
+void		get_texture_path(char *line, char **path, t_cub3d **cub3d_data);
+t_bool		check_if_all_walls(char *line);
+
 
 // libft_utils.c
 t_bool	space_checker(char *line);
@@ -119,14 +130,19 @@ void		load_cub3d_map(char **cube_file, t_cub3d **cub3d_data);
 void		fill_map(char **cube_file, t_cub3d **cub3d_data, size_t *i);
 void		copy_map_content(char **cube_file, t_cub3d **cub3d_data, size_t map_starting_i);
 
-// load_cub_file.c
+// load_cub_file.c /* DONE */
 void		load_cub3d_file(char *file, t_cub3d *cub3d);
-char   		 **get_lines(char **cube_file, int *line_count, t_cub3d **cub3d_data);
+static void	file_is_valid(char **cube_file, t_cub3d **cub3d);
+static void	fetch_textures(char **cube_file, t_cub3d **cub3d);
+static void		fetch_colors(char **cube_file, t_cub3d **cub3d);
 
 /* parse_errors */
 void	err_exit(char *err_msg, t_cub3d **cub3d_data);
 void	print_exit(const char *err_msg);
 void	free_incomplete_map(t_cub3d **cub3d_data, size_t map_i, char *err_msg);
+void	free_arrays_exit(char **arr1, char **arr2,
+			char *err_msg, t_cub3d **cub3d);
+
 
 
 
