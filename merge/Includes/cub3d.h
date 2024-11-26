@@ -67,6 +67,7 @@
 
 typedef struct s_wall
 {
+    double wallX;
     int texture_id;
     int wallTop;
     int wallBottom;

@@ -1,9 +1,9 @@
 
 
-WE ./texters/go3bi.xpm 
-              NO      ./texters/go3bi.xpm
-SO ./texters/go3bi.xpm
-EA ./texters/go3bi.xpm
+WE ./texters/10.xpm 
+              NO      ./texters/1.xpm
+SO ./texters/2.xpm
+EA ./texters/3.xpm
 
 
 
