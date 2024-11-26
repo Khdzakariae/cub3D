@@ -1,12 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_errors.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: achahid- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/26 08:10:38 by achahid-          #+#    #+#             */
+/*   Updated: 2024/11/26 08:10:39 by achahid-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../Includes/parsing.h"
+
+void	err_exit(char *err_msg, t_cub3d **cub3d_data);
+void	print_exit(const char *err_msg);
+void	free_incomplete_map(t_cub3d **cub3d_data, size_t map_i, char *err_msg);
+void	free_arrays_exit(char **arr1, char **arr2,
+			char *err_msg, t_cub3d **cub3d);
 
 void	err_exit(char *err_msg, t_cub3d **cub3d_data)
 {
-	ssize_t err;
+	ssize_t	err;
 
 	if (err_msg)
 		err = write(STDERR_FILENO, err_msg, ft_strlen(err_msg));
-	(void)err;		
+	(void)err;
 	if (cub3d_data == NULL)
 		exit(EXIT_FAILURE);
 	if ((*cub3d_data)->fd > 2)
@@ -28,7 +46,7 @@ void	err_exit(char *err_msg, t_cub3d **cub3d_data)
 
 void	print_exit(const char *err_msg)
 {
-	ssize_t err;
+	ssize_t	err;
 
 	err = write(2, err_msg, ft_strlen(err_msg));
 	(void)err;

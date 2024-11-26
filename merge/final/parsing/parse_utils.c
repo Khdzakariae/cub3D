@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: achahid- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/26 08:10:45 by achahid-          #+#    #+#             */
+/*   Updated: 2024/11/26 08:10:46 by achahid-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../Includes/parsing.h"
 
 t_bool	check_cub_extension(char *file);
 void	init_cub3d_data(t_cub3d **cub3d, int fd);
-t_bool	all_cub3d_data_set(t_cub3d **cub3d);
+void	fetch_min_map_width(char **map, size_t *min_width);
 void	get_color(char *line, int *color, t_cub3d **cub3d_data);
 void	retrieve_color(char **split_colors, int *color, t_cub3d **cub3d_data);
 
@@ -17,6 +29,7 @@ t_bool	check_cub_extension(char *file)
 	}
 	return (false);
 }
+
 void	init_cub3d_data(t_cub3d **cub3d, int fd)
 {
 	(*cub3d)->textures.no.path = NULL;
@@ -47,10 +60,10 @@ void	fetch_min_map_width(char **map, size_t *min_width)
 	size_t	j;
 
 	i = 0;
-	while(map[i])
+	while (map[i])
 	{
 		j = 0;
-		while(map[i][j])
+		while (map[i][j])
 			j++;
 		if (j < *min_width)
 			*min_width = j;
@@ -60,7 +73,7 @@ void	fetch_min_map_width(char **map, size_t *min_width)
 
 void	get_color(char *line, int *color, t_cub3d **cub3d_data)
 {
-	char **split_colors;
+	char	**split_colors;
 
 	split_colors = ft_split(line, ' ');
 	if (!split_colors)
@@ -82,12 +95,12 @@ void	get_color(char *line, int *color, t_cub3d **cub3d_data)
 	free_2d_array(split_colors);
 }
 
-void 	retrieve_color(char **split_colors, int *color, t_cub3d **cub3d_data)
+void	retrieve_color(char **split_colors, int *color, t_cub3d **cub3d_data)
 {
 	char	**split_rgb;
-	int 	r;
-	int 	g;
-	int 	b;
+	int		r;
+	int		g;
+	int		b;
 
 	split_rgb = ft_split(split_colors[1], ',');
 	if (!split_rgb)
@@ -105,4 +118,3 @@ void 	retrieve_color(char **split_colors, int *color, t_cub3d **cub3d_data)
 	*color = (r << 16) | (g << 8) | b;
 	free_2d_array(split_rgb);
 }
-
