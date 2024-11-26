@@ -1,23 +1,35 @@
-#include "../Includes/parsing.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/26 08:10:45 by achahid-          #+#    #+#             */
+/*   Updated: 2024/11/26 13:29:06 by zel-khad         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-t_bool		check_cub_extension(char *file);
-void		init_cub3d_data(t_cub3d **cub3d, int fd);
-void		get_map_height(char **cube_file, size_t map_starting_i, size_t *map_height, size_t *map_width);
-void		get_map_line_len(char *line, size_t *line_map_len);
-t_bool 		valid_map_char(char c);
-t_bool		check_if_all_walls(char *line);
-void 		free_2d_array(char **array);
+#include <parsing.h>
+
+t_bool	check_cub_extension(char *file);
+void	init_cub3d_data(t_cub3d **cub3d, int fd);
+void	fetch_min_map_width(char **map, size_t *min_width);
+void	get_color(char *line, int *color, t_cub3d **cub3d_data);
+void	retrieve_color(char **split_colors, int *color, t_cub3d **cub3d_data);
 
 t_bool	check_cub_extension(char *file)
 {
 	while (file && *file)
 	{
-		if (*file == '.' && *(file + 1) == 'c' && *(file + 2) == 'u' && *(file + 3) == 'b' && *(file + 4) == '\0')
+		if (*file == '.' && *(file + 1) == 'c' && *(file + 2) == 'u'
+			&& *(file + 3) == 'b' && *(file + 4) == '\0')
 			return (true);
 		file++;
 	}
 	return (false);
 }
+
 void	init_cub3d_data(t_cub3d **cub3d, int fd)
 {
 	(*cub3d)->textures.no.path = NULL;
@@ -39,69 +51,70 @@ void	init_cub3d_data(t_cub3d **cub3d, int fd)
 	(*cub3d)->map.player_x = -1;
 	(*cub3d)->map.player_y = -1;
 	(*cub3d)->fd = fd;
+	(*cub3d)->cube_file = NULL;
 }
 
-void	get_map_height(char **cube_file, size_t map_starting_i, size_t *map_height, size_t *map_width)
+void	fetch_min_map_width(char **map, size_t *min_width)
 {
-	size_t i;
-	size_t j;
-	size_t	max_map_width;
+	size_t	i;
+	size_t	j;
 
-	i = map_starting_i;
-	max_map_width = 0;
-	while (cube_file[i] != NULL && cube_file[i][0] == '1' && cube_file[i][0])
+	i = 0;
+	while (map[i])
 	{
 		j = 0;
-		while (cube_file[i][j])
+		while (map[i][j])
 			j++;
-		if (j > max_map_width)
-			max_map_width = j;
-		i++;
-	}
-	*map_height = i - map_starting_i;
-	*map_width = max_map_width;
-}
-
-void	get_map_line_len(char *line, size_t *line_map_len)
-{
-	size_t i;
-
-	i = 0;
-	while (line[i] != '\0')
-	{
-		if (ft_isspace(line[i]) == false)
-			*line_map_len += 1;
+		if (j < *min_width)
+			*min_width = j;
 		i++;
 	}
 }
 
-t_bool	valid_map_char(char c)
+void	get_color(char *line, int *color, t_cub3d **cub3d_data)
 {
-	return (c == '0' || c == '1' || c == 'N' || c == 'S' || c == 'W' || c == 'E' || c == ' ');
+	char	**split_colors;
+
+	split_colors = ft_split(line, ' ');
+	if (!split_colors)
+	{
+		free_2d_array(split_colors);
+		err_exit("", cub3d_data);
+	}
+	else if (!split_colors[1])
+	{
+		free_2d_array(split_colors);
+		err_exit("Error\nInvalid color\n", cub3d_data);
+	}
+	else if (split_colors[2])
+	{
+		free_2d_array(split_colors);
+		err_exit("Error\nInvalid color\n", cub3d_data);
+	}
+	retrieve_color(split_colors, color, cub3d_data);
+	free_2d_array(split_colors);
 }
 
-t_bool	check_if_all_walls(char *line)
+void	retrieve_color(char **split_colors, int *color, t_cub3d **cub3d_data)
 {
-	while (*line)
-	{
-		if (*line != '1')
-			return (false);
-		line++;
-	}
-	return (true);
-}
+	char	**split_rgb;
+	int		r;
+	int		g;
+	int		b;
 
-void	free_2d_array(char **array)
-{
-	size_t i;
-
-	i = 0;
-	if (!array)
-		return ;
-	while (array[i] != NULL)
-	{
-		free(array[i]);
-		i++;
-	}
-	free(array);
+	split_rgb = ft_split(split_colors[1], ',');
+	if (!split_rgb)
+		free_arrays_exit(split_colors, split_rgb,
+			"Error\nFailed to split colors\n", cub3d_data);
+	else if (!split_rgb[0] || !split_rgb[1] || !split_rgb[2])
+		free_arrays_exit(split_colors, split_rgb,
+			"Error\nInvalid color\n", cub3d_data);
+	r = ft_atoi(split_rgb[0]);
+	g = ft_atoi(split_rgb[1]);
+	b = ft_atoi(split_rgb[2]);
+	if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
+		free_arrays_exit(split_colors, split_rgb,
+			"Error\nInvalid color\n", cub3d_data);
+	*color = (r << 16) | (g << 8) | b;
+	free_2d_array(split_rgb);
 }
