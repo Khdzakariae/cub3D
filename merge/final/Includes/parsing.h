@@ -11,25 +11,26 @@
 /* ************************************************************************** */
 
 #ifndef PARSING_H
-#define PARSING_H
+# define PARSING_H
 
-#include <fcntl.h>
+# include <fcntl.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include "../lib/get_next_line/get_next_line.h"
 # include <string.h>
 
-#define TILE_SIZE 128
-#define MAX_INT 2147483647
+# define TILE_SIZE 128
+# define MAX_INT 2147483647
 
-typedef enum	e_bool
+typedef enum e_bool
 {
 	false,
 	true
 }	t_bool;
 
-typedef struct s_player {
+typedef struct s_player
+{
 	double	x;
 	double	y;
 	char	player_direction;
@@ -124,8 +125,8 @@ t_bool		check_if_all_walls(char *line);
 void		get_map_dimensions(char **cube_file, size_t map_starting_i,
 				size_t *map_height, size_t *map_width);
 void		get_map_line_len(char *line, size_t *line_map_len);
-t_bool 		valid_map_char(char c);
-void 		free_2d_array(char **array);
+t_bool		valid_map_char(char c);
+void		free_2d_array(char **array);
 t_bool		all_cub3d_data_set(t_cub3d **cub3d);
 
 // general_utils.c
