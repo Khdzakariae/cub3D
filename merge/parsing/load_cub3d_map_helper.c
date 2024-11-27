@@ -60,7 +60,7 @@ static void	check_player_escapes(t_cub3d **cub3d_data)
 			{
 				if ((*cub3d_data)->map.map[i - 1][j] == '\0'
 					|| (*cub3d_data)->map.map[i + 1][j] == '\0')
-					err_exit("Error\nPlayer can escape, Rja3 a W9\n",
+					err_exit("Error\nPlayer can escape or map is invalid\n",
 						cub3d_data);
 			}
 			j++;
