@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:09:39 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/26 19:23:38 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/27 10:15:54 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	get_texture_id(t_data *data, int i)
 	}
 }
 
-t_wall	init_daya_walls(t_wall *wall, t_data *data, int i)
+void	init_daya_walls(t_wall *wall, t_data *data, int i)
 {
 	wall->perpDistance = data->rays[i].distance * cos(data->rays[i].rayangle
 			- data->game.player.rotationAngle);
@@ -75,39 +75,63 @@ t_wall	init_daya_walls(t_wall *wall, t_data *data, int i)
 	}
 }
 
+void	calculate_wall_color(int tex_color, double darkness, int *r, int *g)
+{
+	*r = ((tex_color >> 16) & 0xFF) / darkness;
+	*g = ((tex_color >> 8) & 0xFF) / darkness;
+	if (*r < 0)
+		*r = 0;
+	else if (*r > 255)
+		*r = 255;
+	if (*g < 0)
+		*g = 0;
+	else if (*g > 255)
+		*g = 255;
+}
+
+void	calculate_blue_component(int tex_color, double darkness, int *b)
+{
+	*b = (tex_color & 0xFF) / darkness;
+	if (*b < 0)
+		*b = 0;
+	else if (*b > 255)
+		*b = 255;
+}
+
+void	render_vertical_wall_slice(t_data *data, t_wall *wall, int ray_x)
+{
+	int		y;
+	int		r;
+	int		g;
+	int		b;
+
+	y = wall->wallTop;
+
+	while (y <= wall->wallBottom)
+	{
+		wall->texcolor = my_mlx_pixel_get(wall->texture_id, data, wall->wallX, y
+				- wall->wallTop, wall->wallHeight);
+		wall->darkness = 1.0f + (wall->perpDistance / DARKNESS);
+		calculate_wall_color(wall->texcolor, wall->darkness, &r, &g);
+		calculate_blue_component(wall->texcolor, wall->darkness, &b);
+		wall->finalcolor = create_trgb(0, r, g, b);
+		my_pixel_put(&data->img, ray_x, y, wall->finalcolor);
+		y++;
+	}
+}
+
 void	render_walls(t_data *data)
 {
 	t_wall wall;
-	int finalcolor;
 	int i;
-	int y;
 
 	i = 0;
-	y = 0;
 	while (i < NUM_RAYS)
 	{
 		init_daya_walls(&wall, data, i);
 		data->wall = &wall;
-		y = wall.wallTop;
-		while (y <= wall.wallBottom)
-		{
-			int texColor = my_mlx_pixel_get(wall.texture_id, data,
-					data->wall->wallX, y - wall.wallTop, wall.wallHeight);
 
-			double darkness = 1.0f + (wall.perpDistance / DARKNESS);
-
-			int r = ((texColor >> 16) & 0xFF) / darkness;
-			int g = ((texColor >> 8) & 0xFF) / darkness;
-			int b = (texColor & 0xFF) / darkness;
-
-			r = (r < 0) ? 0 : (r > 255) ? 255 : r;
-			g = (g < 0) ? 0 : (g > 255) ? 255 : g;
-			b = (b < 0) ? 0 : (b > 255) ? 255 : b;
-
-			finalcolor = create_trgb(0, r, g, b);
-			my_pixel_put(&data->img, i, y, finalcolor);
-			y++;
-		}
+		render_vertical_wall_slice(data, &wall, i);
 		i++;
 	}
 }

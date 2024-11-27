@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 19:29:17 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/26 19:29:18 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/27 10:16:19 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,14 +71,27 @@
 
 # define CIEL "texters/9078_1.xpm"
 
+typedef struct s_color_params {
+    int tex_color;
+    double darkness_factor;
+    int wall_height;
+    int wall_x;
+} t_color_params;
+
 typedef struct s_wall
 {
+	int		finalcolor;
+	int		texcolor;
+	double	darkness;
 	double	wallX;
 	int		texture_id;
 	int		wallTop;
 	int		wallBottom;
 	int		wallHeight;
 	float	perpDistance;
+	int 	tex_x;
+	int 	tex_y;
+	int y;
 }			t_wall;
 
 typedef struct s_img
