@@ -6,52 +6,11 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:09:39 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/27 10:15:54 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/27 11:30:12 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cub3d.h>
-
-int	get_wall_top(int wallHeight)
-{
-	return ((WINDOW_HEIGHT / 2) - (wallHeight / 2));
-}
-
-int	get_wall_bottom(int wallheight)
-{
-	int	wallbottom;
-
-	wallbottom = (WINDOW_HEIGHT / 2) + (wallheight / 2);
-	if (wallbottom >= WINDOW_HEIGHT)
-		return (WINDOW_HEIGHT - 1);
-	return (wallbottom);
-}
-
-int	get_wall_height(float perpDistance)
-{
-	return ((int)((WINDOW_HEIGHT / perpDistance) * TILE_SIZE));
-}
-
-int	get_texture_id(t_data *data, int i)
-{
-	double	rayangle;
-
-	rayangle = normalizeangle(data->rays[i].rayangle);
-	if (data->rays[i].wasHitVertical)
-	{
-		if (cos(rayangle) > 0)
-			return (3);
-		else
-			return (2);
-	}
-	else
-	{
-		if (sin(rayangle) > 0)
-			return (0);
-		else
-			return (1);
-	}
-}
 
 void	init_daya_walls(t_wall *wall, t_data *data, int i)
 {
@@ -106,7 +65,6 @@ void	render_vertical_wall_slice(t_data *data, t_wall *wall, int ray_x)
 	int		b;
 
 	y = wall->wallTop;
-
 	while (y <= wall->wallBottom)
 	{
 		wall->texcolor = my_mlx_pixel_get(wall->texture_id, data, wall->wallX, y
@@ -122,15 +80,14 @@ void	render_vertical_wall_slice(t_data *data, t_wall *wall, int ray_x)
 
 void	render_walls(t_data *data)
 {
-	t_wall wall;
-	int i;
+	t_wall	wall;
+	int		i;
 
 	i = 0;
 	while (i < NUM_RAYS)
 	{
 		init_daya_walls(&wall, data, i);
 		data->wall = &wall;
-
 		render_vertical_wall_slice(data, &wall, i);
 		i++;
 	}

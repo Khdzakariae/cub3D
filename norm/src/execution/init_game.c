@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:06:03 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/26 17:38:56 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/27 11:24:32 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,15 +105,4 @@ void	init_game(t_data *data)
 	}
 	data->img.image_pixel_ptr = mlx_get_data_addr(data->img.img_ptr,
 			&data->img.bits_per_pixel, &data->img.line_len, &data->img.endian);
-}
-
-bool	init(t_data *data)
-{
-	init_game(data);
-	if (!data->mlx || !data->win || !data->img.img_ptr)
-		return (false);
-	init_player(data);
-	init_textures(data);
-	data->flage_mousse = -1;
-	return (true);
 }

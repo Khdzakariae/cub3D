@@ -6,11 +6,22 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:44:09 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/26 18:03:02 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/27 11:24:20 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cub3d.h>
+
+bool	init(t_data *data)
+{
+	init_game(data);
+	if (!data->mlx || !data->win || !data->img.img_ptr)
+		return (false);
+	init_player(data);
+	init_textures(data);
+	data->flage_mousse = -1;
+	return (true);
+}
 
 int	main(int argc, char **argv)
 {
