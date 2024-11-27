@@ -19,6 +19,10 @@
 
 
 #define MOUSE_SENSITIVITY 1
+#define MINIMAP_SCALE_FACTOR 0.2
+#define MINIMAP_PLAYER_COLOR 0xFF0000 // Red color for the player
+#define MINIMAP_WALL_COLOR 0xFFFFFF // White color for walls
+#define MINIMAP_EMPTY_COLOR 0x000000 // Black color for empty spaces
 
 # define COLOR_RED      0xFF0000
 # define COLOR_GREEN    0x00FF00
