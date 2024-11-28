@@ -64,51 +64,6 @@ void    minimap_drawer(t_data *data, size_t x, size_t y, int color)
     }
 }
 
-void    minimap_draw_player(t_data *data)
-{
-    int player_x;
-    int player_y;
-    int player_size;
-    int  i;
-    int  j;
-
-    player_x = data->game.player.x * MINIMAP_SCALE_FACTOR;
-    player_y = data->game.player.y * MINIMAP_SCALE_FACTOR;
-    player_size = 2;
-    i = -player_size;
-    while (i <= player_size)
-    {
-        j = player_size * -1;
-        while (j <= player_size)
-        {
-            my_pixel_put(&data->img, player_x + j, player_y + i, MINIMAP_PLAYER_COLOR);
-            j++;
-        }
-        i++;
-    }
-}
-
-void draw_minimap(t_data *data)
-{
-    size_t  y;
-    size_t  x;
-    int     color;
-
-    y = 0;
-    while (y < data->game.map.height)
-    {
-        x = 0;
-        while (x < data->game.map.width)
-        {
-            color = data->game.map.map[y][x] == '1' ? MINIMAP_WALL_COLOR : MINIMAP_EMPTY_COLOR;
-            minimap_drawer(data, x, y, color);
-            x++;
-        }
-        y++;
-    }
-    minimap_draw_player(data);
-}
-
 int game_loop(t_data *data)
 {
     update_player(&data->game.player, &data->game.map);
@@ -124,7 +79,6 @@ int game_loop(t_data *data)
     drawing_floor(data);
     castAllRays(data);
     render_walls(data);
-    draw_minimap(data);
     mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
     return 0;
 }
