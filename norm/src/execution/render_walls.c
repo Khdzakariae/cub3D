@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:09:39 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/27 11:30:12 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/28 11:06:25 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,21 @@
 
 void	init_daya_walls(t_wall *wall, t_data *data, int i)
 {
-	wall->perpDistance = data->rays[i].distance * cos(data->rays[i].rayangle
-			- data->game.player.rotationAngle);
-	wall->wallHeight = get_wall_height(wall->perpDistance);
-	wall->wallTop = get_wall_top(wall->wallHeight);
-	wall->wallBottom = get_wall_bottom(wall->wallHeight);
+	wall->perpdistance = data->rays[i].distance * cos(data->rays[i].rayangle
+			- data->game.player.rotationangle);
+	wall->wallheight = get_wall_height(wall->perpdistance);
+	wall->walltop = get_wall_top(wall->wallheight);
+	wall->wallbottom = get_wall_bottom(wall->wallheight);
 	wall->texture_id = get_texture_id(data, i);
-	if (data->rays[i].wasHitVertical)
+	if (data->rays[i].washitvertical)
 	{
-		wall->wallX = fmod(data->game.player.y + data->rays[i].distance
+		wall->wallx = fmod(data->game.player.y + data->rays[i].distance
 				* sin(data->rays[i].rayangle), data->game.map.title_size)
 			/ data->game.map.title_size;
 	}
 	else
 	{
-		wall->wallX = fmod(data->game.player.x + data->rays[i].distance
+		wall->wallx = fmod(data->game.player.x + data->rays[i].distance
 				* cos(data->rays[i].rayangle), data->game.map.title_size)
 			/ data->game.map.title_size;
 	}
@@ -64,12 +64,12 @@ void	render_vertical_wall_slice(t_data *data, t_wall *wall, int ray_x)
 	int		g;
 	int		b;
 
-	y = wall->wallTop;
-	while (y <= wall->wallBottom)
+	y = wall->walltop;
+	while (y <= wall->wallbottom)
 	{
-		wall->texcolor = my_mlx_pixel_get(wall->texture_id, data, wall->wallX, y
-				- wall->wallTop, wall->wallHeight);
-		wall->darkness = 1.0f + (wall->perpDistance / DARKNESS);
+		wall->texcolor = my_mlx_pixel_get(wall->texture_id, data, wall->wallx, y
+				- wall->walltop);
+		wall->darkness = 1.0f + (wall->perpdistance / DARKNESS);
 		calculate_wall_color(wall->texcolor, wall->darkness, &r, &g);
 		calculate_blue_component(wall->texcolor, wall->darkness, &b);
 		wall->finalcolor = create_trgb(0, r, g, b);

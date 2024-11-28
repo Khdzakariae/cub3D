@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:13:52 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/26 19:13:43 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/28 11:06:25 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ float	get_h_inter(t_data *data, float angle)
 	x_step = data->game.map.title_size / tan(angle);
 	h_y = floor(data->game.player.y / data->game.map.title_size)
 		* data->game.map.title_size;
-	pixel = inter_check(data, angle, &h_y, &y_step, 1);
+	data->is_horizon = 1;
+	pixel = inter_check(data, angle, &h_y, &y_step);
 	h_x = data->game.player.x + (h_y - data->game.player.y) / tan(angle);
 	if ((unit_circle(angle, 'y') && x_step > 0) || (!unit_circle(angle, 'y')
 			&& x_step < 0))
@@ -50,7 +51,8 @@ float	get_v_inter(t_data *data, float angle)
 	y_step = data->game.map.title_size * tan(angle);
 	v_x = floor(data->game.player.x / data->game.map.title_size)
 		* data->game.map.title_size;
-	pixel = inter_check(data, angle, &v_x, &x_step, 0);
+	data->is_horizon = 0;
+	pixel = inter_check(data, angle, &v_x, &x_step);
 	v_y = data->game.player.y + (v_x - data->game.player.x) * tan(angle);
 	if ((unit_circle(angle, 'x') && y_step < 0) || (!unit_circle(angle, 'x')
 			&& y_step > 0))
@@ -75,13 +77,13 @@ void	castray(t_data *data, float rayangle, int stripId)
 	if (v_inter <= h_inter)
 	{
 		data->rays[stripId].distance = v_inter;
-		data->rays[stripId].wasHitVertical = TRUE;
+		data->rays[stripId].washitvertical = TRUE;
 		data->rays[stripId].rayangle = rayangle;
 	}
 	else
 	{
 		data->rays[stripId].distance = h_inter;
-		data->rays[stripId].wasHitVertical = FALSE;
+		data->rays[stripId].washitvertical = FALSE;
 		data->rays[stripId].rayangle = rayangle;
 	}
 }
@@ -91,7 +93,7 @@ void	castallrays(t_data *data)
 	int		stripid;
 	float	rayangle;
 
-	rayangle = data->game.player.rotationAngle - (FOV_ANGLE / 2);
+	rayangle = data->game.player.rotationangle - (FOV_ANGLE / 2);
 	while (stripid < NUM_RAYS)
 	{
 		castray(data, rayangle, stripid);

@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:20:30 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/27 11:23:22 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/28 10:54:45 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,25 @@ static int	check_point_collision(t_map *map, double x, double y, int *point)
 	return (0);
 }
 
+int	cheack(int points[4][2], t_map *map, double x, double y)
+{
+	int	i;
+	int	checkx;
+	int	checky;
+
+	i = 0;
+	while (i < 4)
+	{
+		checkx = (int)((x + points[i][0]) / TILE_SIZE);
+		checky = (int)((y + points[i][1]) / TILE_SIZE);
+		if (checkx >= 0 && checkx < map->width && checky >= 0
+			&& checky < map->height && map->map[checky][checkx] == '1')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 int	is_wall_at(t_map *map, double x, double y)
 {
 	int	mapx;
@@ -54,9 +73,7 @@ int	is_wall_at(t_map *map, double x, double y)
 	points[2][1] = -radius;
 	points[3][0] = radius;
 	points[3][1] = radius;
-	i = 0;
-	while (i++ < 4)
-		if (check_point_collision(map, x, y, points[i]))
-			return (1);
+	if (cheack(points, map, x, y) == 1)
+		return (1);
 	return (0);
 }

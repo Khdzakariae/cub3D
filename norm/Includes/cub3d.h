@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 19:29:17 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/27 10:16:19 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/28 11:04:42 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,11 @@
 # define NUM_RAYS WINDOW_WIDTH
 # define WINDOW_WIDTH 1080
 # define WINDOW_HEIGHT 780
-# define FOV_ANGLE (60 * (M_PI / 180))
+# define FOV_ANGLE 1.0466 // (60 * (M_PI / 180))
 
 // #define TILE_SIZE 256
 
-# define CIEL_IMAGE TRUE
+# define CIEL_IMAGE FALSE
 # define DARKNESS 500
 # define RADIUS 30
 # define COLLISION_MARGIN 50
@@ -71,27 +71,28 @@
 
 # define CIEL "texters/9078_1.xpm"
 
-typedef struct s_color_params {
-    int tex_color;
-    double darkness_factor;
-    int wall_height;
-    int wall_x;
-} t_color_params;
+typedef struct s_color_params
+{
+	int		tex_color;
+	double	darkness_factor;
+	int		wall_height;
+	int		wall_x;
+}			t_color_params;
 
 typedef struct s_wall
 {
 	int		finalcolor;
 	int		texcolor;
 	double	darkness;
-	double	wallX;
+	double	wallx;
 	int		texture_id;
-	int		wallTop;
-	int		wallBottom;
-	int		wallHeight;
-	float	perpDistance;
-	int 	tex_x;
-	int 	tex_y;
-	int y;
+	int		walltop;
+	int		wallbottom;
+	int		wallheight;
+	float	perpdistance;
+	int		tex_x;
+	int		tex_y;
+	int		y;
 }			t_wall;
 
 typedef struct s_img
@@ -107,21 +108,15 @@ typedef struct s_ray
 {
 	char	c;
 	float	rayangle;
-	float	wallHitX;
-	float	wallHitY;
 	float	distance;
-	int		wasHitVertical;
-	int		isRayFacingUp;
-	int		isRayFacingDown;
-	int		isRayFacingLeft;
-	int		isRayFacingRight;
-	int		wallHitContent;
+	int		washitvertical;
 }			t_ray;
 
 typedef struct s_data
 {
-	t_wall	*wall;
 	int		flage_mousse;
+	int		is_horizon;
+	t_wall	*wall;
 	t_cub3d	game;
 	void	*mlx;
 	void	*win;
@@ -157,8 +152,7 @@ int			is_wall_at(t_map *map, double x, double y);
 int			is_within_bounds(t_map *map, double x, double y);
 int			has_wall_at(t_map *map, double x, double y);
 int			unit_circle(float angle, char c);
-int			inter_check(t_data *data, float angle, float *inter, float *step,
-				int is_horizon);
+int			inter_check(t_data *data, float angle, float *inter, float *step);
 int			wall_hit(float x, float y, t_data *data);
 
 float		get_h_inter(t_data *data, float angle);
@@ -173,14 +167,13 @@ void		drawing_east(t_data *data);
 void		drawing_floor(t_data *data);
 
 int			create_trgb(int t, int r, int g, int b);
-int			my_mlx_pixel_get(int flag, t_data *data, double wallX, int y,
-				int wallHeight);
-double		get_wallx(t_data *data, int i, float perpDistance);
+int			my_mlx_pixel_get(int flag, t_data *data, double wallx, int y);
+double		get_wallx(t_data *data, int i, float perpdistance);
 void		render_wall_texture(t_data *data, int i);
 
-int			get_wall_top(int wallHeight);
-int			get_wall_bottom(int wallHeight);
-int			get_wall_height(float perpDistance);
+int			get_wall_top(int wallheight);
+int			get_wall_bottom(int wallheight);
+int			get_wall_height(float perpdistance);
 int			get_texture_id(t_data *data, int i);
 void		render_walls(t_data *data);
 

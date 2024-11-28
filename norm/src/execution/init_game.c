@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:06:03 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/27 11:24:32 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/28 11:07:02 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,25 @@
 void	set_player_orientation(t_player *player, char orientation)
 {
 	if (orientation == 'N')
-		player->rotationAngle = 3 * M_PI / 2;
+		player->rotationangle = 3 * M_PI / 2;
 	else if (orientation == 'S')
-		player->rotationAngle = M_PI / 2;
+		player->rotationangle = M_PI / 2;
 	else if (orientation == 'E')
-		player->rotationAngle = 0;
+		player->rotationangle = 0;
 	else if (orientation == 'W')
-		player->rotationAngle = M_PI;
+		player->rotationangle = M_PI;
 }
 
 void	init_player(t_data *data)
 {
 	data->game.player.radius = 3;
-	data->game.player.turnDirection = 0;
-	data->game.player.walkDirection = 0;
-	data->game.player.rotationAngle = M_PI / 2;
-	data->game.player.moveSpeed = 6.0;
+	data->game.player.turndirection = 0;
+	data->game.player.walkdirection = 0;
+	data->game.player.rotationangle = M_PI / 2;
+	data->game.player.movespeed = 6.0;
 	set_player_orientation(&data->game.player,
 		data->game.player.player_direction);
-	data->game.player.rotationSpeed = 3 * (M_PI / 180);
+	data->game.player.rotationspeed = 3 * (M_PI / 180);
 }
 
 void	init_textures_2(t_data *data)

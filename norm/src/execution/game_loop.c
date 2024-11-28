@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:30:26 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/26 19:13:43 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/28 11:07:02 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 void	init_movement(t_player *player, double *movestep, double *newplayerx,
 		double *newplayery)
 {
-	player->rotationAngle = normalizeangle(player->rotationAngle
-			+ player->turnDirection * player->rotationSpeed);
-	*(movestep) = player->walkDirection * player->moveSpeed;
-	*(newplayerx) = player->x + cos(player->rotationAngle) * *(movestep);
-	*(newplayery) = player->y + sin(player->rotationAngle) * *(movestep);
+	player->rotationangle = normalizeangle(player->rotationangle
+			+ player->turndirection * player->rotationspeed);
+	*(movestep) = player->walkdirection * player->movespeed;
+	*(newplayerx) = player->x + cos(player->rotationangle) * *(movestep);
+	*(newplayery) = player->y + sin(player->rotationangle) * *(movestep);
 }
 
 int	update_player(t_player *player, t_map *map)

@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:09:53 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/27 10:20:14 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/28 11:02:46 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ void	ciel(t_data *data)
 		y = 0;
 		while (y < WINDOW_HEIGHT / 2)
 		{
-			texcolor = my_mlx_pixel_get(4, data, x, y, 0);
+			texters->ciel.wallheight = 0;
+			texcolor = my_mlx_pixel_get(4, data, x, y);
 			my_pixel_put(&data->img, x, y, texcolor);
 			y++;
 		}

@@ -15,10 +15,10 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif /* BUFFER_SIZE */
+# include "../libft/libft.h"
 # include <stdlib.h>
 # include <unistd.h>
-# include "../libft/libft.h"
 
-int     get_next_line(int fd, char **line);
+int	get_next_line(int fd, char **line);
 
 #endif /* GET_NEXT_LINE_H */

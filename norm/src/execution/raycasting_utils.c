@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:16:36 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/26 18:26:41 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/28 09:26:17 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,9 @@ int	unit_circle(float angle, char c)
 	return (0);
 }
 
-int	inter_check(t_data *data, float angle, float *inter, float *step,
-		int is_horizon)
+int	inter_check(t_data *data, float angle, float *inter, float *step)
 {
-	if (is_horizon)
+	if (data->is_horizon)
 	{
 		if (angle > 0 && angle < M_PI)
 		{

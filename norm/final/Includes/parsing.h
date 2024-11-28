@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achahid- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 08:11:25 by achahid-          #+#    #+#             */
-/*   Updated: 2024/11/26 08:11:26 by achahid-         ###   ########.fr       */
+/*   Updated: 2024/11/28 11:07:02 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,11 @@ typedef struct s_player
 	double	y;
 	char	player_direction;
 	double	radius;
-	double	turnDirection;
-	double	walkDirection;
-	double	rotationAngle;
-	double	moveSpeed;
-	double	rotationSpeed;
+	double	turndirection;
+	double	walkdirection;
+	double	rotationangle;
+	double	movespeed;
+	double	rotationspeed;
 }	t_player;
 
 typedef struct s_dir_texture
