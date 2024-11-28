@@ -29,7 +29,24 @@ int key_press(int keycode, t_data *data)
     else if (keycode == KEY_ESC)
         cleanup(data);
     else if (keycode == KEY_ACTIVE_MOUSSE)
-        data->flage_mousse *= -1; 
+        data->flage_mousse *= -1;
+/*     else if(keycode == 32)
+    {
+        // clear the shotgun already loaded
+        data->game.player.first_frame = false;
+        render_player(data, 1);
+        //mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
+        //usleep(100000); // Sleep for 100 milliseconds
+        render_player(data, 2);
+        //mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
+        //usleep(100000); // Sleep for 100 milliseconds
+        render_player(data, 3);
+        //mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
+        //usleep(100000); // Sleep for 100 milliseconds
+        render_player(data, 4);
+        //mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
+       
+    } */
     return 0;
 }
 
@@ -44,6 +61,7 @@ int key_release(int keycode, t_data *data)
     else if (keycode == KEY_LEFT || keycode == KEY_RIGHT || 
              keycode == KEY_A || keycode == KEY_D)
         data->game.player.turnDirection = 0;
+    data->game.player.first_frame = true;
     return 0;
 }
 

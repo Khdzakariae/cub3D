@@ -29,6 +29,18 @@ typedef enum e_bool
 	true
 }	t_bool;
 
+typedef	struct s_frame
+{
+	char	*path;
+	int		frame_h;
+	int		frame_w;
+	void	*img_ptr;
+	char	*image_pixel_ptr;
+	int		bits_per_pixel;
+	int		endian;
+	int		line_len;
+}	t_frame;
+
 typedef struct s_player
 {
 	double	x;
@@ -40,6 +52,10 @@ typedef struct s_player
 	double	rotationAngle;
 	double	moveSpeed;
 	double	rotationSpeed;
+	t_frame frames; // includes frames
+	int		player_w;
+	int		player_h;
+	t_bool	first_frame;
 }	t_player;
 
 typedef struct s_dir_texture

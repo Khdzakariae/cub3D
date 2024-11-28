@@ -32,7 +32,17 @@ void init_player(t_data *data)
     data->game.player.rotationAngle = M_PI / 2;
     data->game.player.moveSpeed = 6.0;  
     set_player_orientation(&data->game.player ,data->game.player.player_direction);
-    data->game.player.rotationSpeed = 3 * (M_PI / 180); 
+    data->game.player.rotationSpeed = 3 * (M_PI / 180);
+    t_player *player = &data->game.player;
+/*     for (int i = 0; i < 5; i++)
+    {
+        player->frames[i].img_ptr = mlx_xpm_file_to_image(data->mlx, player->frames[i].path, &player->player_w, &player->player_h);
+    if (player->frames[i].img_ptr)
+        player->frames[i].image_pixel_ptr = mlx_get_data_addr(player->frames[i].img_ptr,
+                                                        &player->frames[i].bits_per_pixel,
+                                                        &player->frames[i].line_len,
+                                                        &player->frames[i].endian);    
+    } */
 }
 
 
