@@ -44,26 +44,6 @@ int update_player(t_player *player, t_map *map)
     return 0;
 }
 
-void    minimap_drawer(t_data *data, size_t x, size_t y, int color)
-{
-    size_t  i;
-    size_t  j;
-    int     minimap_tile_size;
-
-    i = 0;
-    minimap_tile_size = data->game.map.title_size * MINIMAP_SCALE_FACTOR;
-    while (i < minimap_tile_size)
-    {
-        j = 0;
-        while (j < minimap_tile_size)
-        {
-            my_pixel_put(&data->img, x * minimap_tile_size + j, y * minimap_tile_size + i, color);
-            j++;
-        }
-        i++;
-    }
-}
-
 int game_loop(t_data *data)
 {
     update_player(&data->game.player, &data->game.map);
