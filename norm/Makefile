@@ -7,7 +7,7 @@ INCLUDES = -I "Includes/"
 
 SRC	 = 	$(addprefix lib/get_next_line/, get_next_line.c get_next_line_utils.c) \
 		$(addprefix src/execution/, main.c game_loop.c key_events.c init_game.c raycasting.c raycasting_utils_1.c raycasting_utils.c render_floor_ciel.c render_textures.c render_walls.c render_walls_utils.c  cleanup.c )  \
-	    $(addprefix parsing/, parse_errors.c parse_utils.c load_cub3d_map.c load_cub_file.c general_utils.c \
+	    $(addprefix src/parsing/, parse_errors.c parse_utils.c load_cub3d_map.c load_cub_file.c general_utils.c \
 		  					 	parse_utils2.c parse_utils3.c load_cub3d_map_helper.c )
 
 LIBFT = lib/libft/libft.a
