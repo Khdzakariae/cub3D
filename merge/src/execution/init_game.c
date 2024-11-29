@@ -37,7 +37,7 @@ void	init_player(t_data *data)
 	t_player *player = &data->game.player;
     for (int i = 0; i < PLAYER_FRAMES; i++)
     {
-        update_frame(data); 
+        update_frame(data);
         player->frames[i].img_ptr = mlx_xpm_file_to_image(data->mlx, player->frames[i].path, &player->player_w, &player->player_h);
        
         if (player->frames[i].img_ptr)

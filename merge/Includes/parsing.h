@@ -22,7 +22,7 @@
 
 # define TILE_SIZE 64
 # define MAX_INT 2147483647
-# define PLAYER_FRAMES 35
+# define PLAYER_FRAMES 34
 
 typedef enum e_bool
 {

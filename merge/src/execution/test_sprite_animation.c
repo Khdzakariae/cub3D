@@ -41,7 +41,6 @@ char	*get_assets(int current_image)
 	char	*number;
 
 	current_image += 1;
-	printf("get path of %d\n", current_image);
 	assets = ft_calloc(20, sizeof(char));
 	number = ft_itoa(current_image);
 	strcat(assets, "knife_tmp/");
