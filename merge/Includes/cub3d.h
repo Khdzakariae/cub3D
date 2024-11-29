@@ -43,8 +43,8 @@
 # define COLOR_PINK 0xFFC0CB
 
 # define NUM_RAYS WINDOW_WIDTH
-# define WINDOW_WIDTH 1920
-# define WINDOW_HEIGHT 980
+# define WINDOW_WIDTH 1080
+# define WINDOW_HEIGHT 720
 # define FOV_ANGLE 1.0466 // (60 * (M_PI / 180))
 
 // #define TILE_SIZE 256
@@ -177,8 +177,9 @@ int			get_wall_height(float perpdistance);
 int			get_texture_id(t_data *data, int i);
 void		render_walls(t_data *data);
 
-int	update_frame(t_data *data);
-bool	timing(void);
-
+int			update_frame(t_data *data);
+bool		timing(void);
+void		render_player_helper(t_data *data, int frame, int start_x, int start_y);
+void		init_frames(t_data *data);
 
 #endif
