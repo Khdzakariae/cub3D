@@ -13,22 +13,19 @@
 #ifndef LIBFT_H
 # define LIBFT_H
 
-# include <stddef.h>
-# include <stdlib.h>
-# include <unistd.h>
+# include <fcntl.h>
 # include <limits.h>
 # include <stddef.h>
 # include <stdint.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include <fcntl.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 7
 # endif
 
 char	*ft_read(char *str, int fd);
-int     get_next_line(int fd, char **line);
+int		get_next_line(int fd, char **line);
 char	*ft_line(char *line);
 char	*ft_return(char *str);
 void	*ft_memcpy(void *dest, const void *src, size_t n);

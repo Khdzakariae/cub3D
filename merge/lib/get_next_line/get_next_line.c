@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achahid- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 08:45:45 by achahid-          #+#    #+#             */
-/*   Updated: 2023/12/01 08:45:50 by achahid-         ###   ########.fr       */
+/*   Updated: 2024/11/28 11:12:07 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ static char	*get_line(char *str, char *tmp)
 	{
 		new_line[count] = str[count];
 		count++;
-	}	
+	}
 	if (str[count] == '\n')
 	{
 		new_line[count] = str[count];

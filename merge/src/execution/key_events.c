@@ -6,13 +6,13 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:27:25 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/25 21:42:09 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/28 11:06:25 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cub3d.h>
 
-int key_press(int keycode, t_data *data)
+int	key_press(int keycode, t_data *data)
 {
 
     if (!data)
@@ -33,7 +33,7 @@ int key_press(int keycode, t_data *data)
     return 0;
 }
 
-int key_release(int keycode, t_data *data)
+int	key_release(int keycode, t_data *data)
 {
     if (!data)
         return -1;
@@ -48,26 +48,20 @@ int key_release(int keycode, t_data *data)
     return 0;
 }
 
-int mouse_move(int x, int y, t_data *data) 
+int	mouse_move(int x, int y, t_data *data)
 {
-    if (data->flage_mousse == -1)
-        return 0;
-    if (!data)
-        return -1;
+	int		delta_x;
+	double	rotationangle;
 
-    static int first_move = 1;
-    if (first_move) {
-        data->game.last_mouse_x = x;
-        first_move = 0;
-        return 0;
-    }
-
-    int delta_x = x - data->game.last_mouse_x;
-    
-    data->game.player.rotationAngle += delta_x * MOUSE_SENSITIVITY * (M_PI / 180);
-    data->game.player.rotationAngle = normalizeAngle(data->game.player.rotationAngle);
-    
-    data->game.last_mouse_x = x;
-    
-    return 0;
+	if (data->flage_mousse == -1)
+		return (0);
+	if (!data)
+		return (-1);
+	delta_x = x - data->game.last_mouse_x;
+	data->game.player.rotationangle += delta_x * MOUSE_SENSITIVITY * (M_PI
+			/ 180);
+	rotationangle = normalizeangle(data->game.player.rotationangle);
+	data->game.player.rotationangle = rotationangle;
+	data->game.last_mouse_x = x;
+	return (0);
 }

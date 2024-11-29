@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/07 11:16:05 by zel-khad          #+#    #+#             */
-/*   Updated: 2023/11/15 12:53:59 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/28 11:10:54 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ static int	is_set(char const *set, char ret)
 
 char	*ft_strtrim(char const *s1, char const *set)
 {
-	int	start;
-	int	end;
-	char *substr;
+	char	*substr;
+	int		start;
+	int		end;
 
 	if (!s1 || !set)
 		return (NULL);
