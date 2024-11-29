@@ -52,7 +52,7 @@ typedef struct s_player
 	double	rotationAngle;
 	double	moveSpeed;
 	double	rotationSpeed;
-	t_frame frames; // includes frames
+	t_frame frames[30]; // includes frames
 	int		player_w;
 	int		player_h;
 	t_bool	first_frame;

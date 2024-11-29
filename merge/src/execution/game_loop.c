@@ -44,7 +44,7 @@ int update_player(t_player *player, t_map *map)
     return 0;
 }
 
-void    render_player(t_data *data)
+void    render_player(t_data *data, int frame)
 {
     t_player *player = &data->game.player;
     int i = 0;
@@ -52,33 +52,49 @@ void    render_player(t_data *data)
     int *addr;
     int *addr2;
 
-    // Ensure the player frame image is loaded
-    if (!player->frames.image_pixel_ptr)
+    if (!player->frames[frame].image_pixel_ptr)
     {
         fprintf(stderr, "Error: Player frame image not loaded\n");
         return;
     }
-    // Calculate the starting position to center the weapon at the bottom of the screen
     int start_x = (WINDOW_WIDTH / 2) - (player->player_w / 2);
     int start_y = WINDOW_HEIGHT - player->player_h;
 
     while (i < player->player_h)
     {
-        addr = (int *)(player->frames.image_pixel_ptr + (i * player->frames.line_len));
+        addr = (int *)(player->frames[frame].image_pixel_ptr + (i * player->frames[frame].line_len));
         addr2 = (int *)(data->img.image_pixel_ptr + ((i + start_y) * data->img.line_len));
         j = 0;
         while (j < player->player_w)
         {
-            if (addr[j] != 0x29ff08 && (j + start_x) >= 0 && (j + start_x) < WINDOW_WIDTH && (i + start_y) >= 0 && (i + start_y) < WINDOW_HEIGHT)
+            if (addr[j] != 0xFF000000 && (j + start_x) >= 0 && (j + start_x) < WINDOW_WIDTH && (i + start_y) >= 0 && (i + start_y) < WINDOW_HEIGHT)
             {
                 addr2[j + start_x] = addr[j];
             }
             j++;
-
         }
-    
         i++;
     }
+}
+
+void    draw_player(t_data *data)
+{
+    static int i = 0;
+    if (timing() == true)
+    {
+        render_player(data, i);
+        i++;
+    }
+    else
+    {
+        if (i != 0)
+            render_player(data, i - 1);
+        else
+            render_player(data, i);
+    }
+    
+    if (i == 30)
+        i = 0;
 }
 
 int game_loop(t_data *data)
@@ -93,16 +109,10 @@ int game_loop(t_data *data)
         ciel(data);
     else
         drawing_east(data);
-    
     drawing_floor(data);
     castAllRays(data);
     render_walls(data);
-   /*  if (data->game.player.first_frame == true)
-    {
-        puts("heu hani dakhl");
-        render_player(data, 0);
-    } */
-   update_frame(data);
+    draw_player(data);
     mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
     return 0;
 }

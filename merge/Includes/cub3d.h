@@ -61,8 +61,6 @@
 #define KEY_A 97
 #define KEY_D 100
 
-
-
 #define TRUE 1
 #define FALSE 0
 
@@ -166,7 +164,8 @@ int get_wall_height(float perpDistance);
 int get_texture_id(t_data *data, int i);
 void render_walls(t_data *data);
 
-void    render_player(t_data *data);
+void    render_player(t_data *data, int frame);
 int	update_frame(t_data *data);
+bool	timing(void);
 
 # endif
