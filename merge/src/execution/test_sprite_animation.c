@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   animation.c                                        :+:      :+:    :+:   */
+/*   test_sprite_animation.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 18:42:55 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/02/26 14:03:14 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/29 12:51:15 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*get_assets(int current_image)
 	current_image += 1;
 	assets = ft_calloc(20, sizeof(char));
 	number = ft_itoa(current_image);
-	strcat(assets, "player_frames/");
+	strcat(assets, "knife/");
 	strcat(assets, number);
 	strcat(assets, ".xpm");
 	free(number);

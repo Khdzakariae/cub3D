@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 08:11:25 by achahid-          #+#    #+#             */
-/*   Updated: 2024/11/28 11:07:02 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/29 12:41:35 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,20 +43,20 @@ typedef	struct s_frame
 
 typedef struct s_player
 {
-	double	x;
-	double	y;
-	char	player_direction;
-	double	radius;
-	double	turnDirection;
-	double	walkDirection;
-	double	rotationAngle;
-	double	moveSpeed;
-	double	rotationSpeed;
-	t_frame frames[30]; // includes frames
+	double			x;
+	double			y;
+	char			player_direction;
+	double			radius;
+	double			turndirection;
+	double			walkdirection;
+	double			rotationangle;
+	double			movespeed;
+	double			rotationspeed;
+	t_frame frames[30];
 	int		player_w;
 	int		player_h;
 	t_bool	first_frame;
-}	t_player;
+}					t_player;
 
 typedef struct s_dir_texture
 {

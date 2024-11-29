@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 19:29:17 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/28 11:04:42 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/29 12:54:18 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@
 # define COLOR_PINK 0xFFC0CB
 
 # define NUM_RAYS WINDOW_WIDTH
-# define WINDOW_WIDTH 1080
-# define WINDOW_HEIGHT 780
+# define WINDOW_WIDTH 1920
+# define WINDOW_HEIGHT 980
 # define FOV_ANGLE 1.0466 // (60 * (M_PI / 180))
 
 // #define TILE_SIZE 256
@@ -66,12 +66,6 @@
 # define KEY_A 97
 # define KEY_D 100
 
-<<<<<<< HEAD
-#define TRUE 1
-#define FALSE 0
-
-#define CIEL "texters/9078_1.xpm"
-=======
 # define TRUE 1
 # define FALSE 0
 
@@ -84,7 +78,6 @@ typedef struct s_color_params
 	int		wall_height;
 	int		wall_x;
 }			t_color_params;
->>>>>>> main
 
 typedef struct s_wall
 {
@@ -184,18 +177,8 @@ int			get_wall_height(float perpdistance);
 int			get_texture_id(t_data *data, int i);
 void		render_walls(t_data *data);
 
-<<<<<<< HEAD
-int get_wall_top(int wallHeight);
-int get_wall_bottom(int wallHeight);
-int get_wall_height(float perpDistance);
-int get_texture_id(t_data *data, int i);
-void render_walls(t_data *data);
-
-void    render_player(t_data *data, int frame);
 int	update_frame(t_data *data);
 bool	timing(void);
 
-# endif
-=======
+
 #endif
->>>>>>> main
