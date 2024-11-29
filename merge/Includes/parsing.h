@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 08:11:25 by achahid-          #+#    #+#             */
-/*   Updated: 2024/11/28 11:07:02 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/29 12:41:35 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,18 @@ typedef enum e_bool
 	true
 }					t_bool;
 
+typedef	struct s_frame
+{
+	char	*path;
+	int		frame_h;
+	int		frame_w;
+	void	*img_ptr;
+	char	*image_pixel_ptr;
+	int		bits_per_pixel;
+	int		endian;
+	int		line_len;
+}	t_frame;
+
 typedef struct s_player
 {
 	double			x;
@@ -40,6 +52,10 @@ typedef struct s_player
 	double			rotationangle;
 	double			movespeed;
 	double			rotationspeed;
+	t_frame frames[30];
+	int		player_w;
+	int		player_h;
+	t_bool	first_frame;
 }					t_player;
 
 typedef struct s_dir_texture

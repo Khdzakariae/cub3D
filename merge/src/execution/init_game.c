@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:06:03 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/28 11:07:02 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/29 12:40:39 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,18 @@ void	init_player(t_data *data)
 	set_player_orientation(&data->game.player,
 		data->game.player.player_direction);
 	data->game.player.rotationspeed = 3 * (M_PI / 180);
+	t_player *player = &data->game.player;
+    for (int i = 0; i < 30; i++)
+    {
+        update_frame(data); 
+        player->frames[i].img_ptr = mlx_xpm_file_to_image(data->mlx, player->frames[i].path, &player->player_w, &player->player_h);
+       
+        if (player->frames[i].img_ptr)
+             player->frames[i].image_pixel_ptr = mlx_get_data_addr(player->frames[i].img_ptr,
+                                                        &player->frames[i].bits_per_pixel,
+                                                        &player->frames[i].line_len,
+                                                        &player->frames[i].endian);    
+    }
 }
 
 void	init_textures_2(t_data *data)

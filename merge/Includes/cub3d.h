@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 19:29:17 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/28 11:04:42 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/29 12:54:18 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@
 # define COLOR_PINK 0xFFC0CB
 
 # define NUM_RAYS WINDOW_WIDTH
-# define WINDOW_WIDTH 1080
-# define WINDOW_HEIGHT 780
+# define WINDOW_WIDTH 1920
+# define WINDOW_HEIGHT 980
 # define FOV_ANGLE 1.0466 // (60 * (M_PI / 180))
 
 // #define TILE_SIZE 256
@@ -176,5 +176,9 @@ int			get_wall_bottom(int wallheight);
 int			get_wall_height(float perpdistance);
 int			get_texture_id(t_data *data, int i);
 void		render_walls(t_data *data);
+
+int	update_frame(t_data *data);
+bool	timing(void);
+
 
 #endif
