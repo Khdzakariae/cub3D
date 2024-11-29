@@ -56,7 +56,6 @@ typedef struct s_player
 	t_frame frames[PLAYER_FRAMES];
 	int		player_w;
 	int		player_h;
-	t_bool	first_frame;
 }					t_player;
 
 typedef struct s_dir_texture

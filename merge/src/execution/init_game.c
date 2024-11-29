@@ -24,6 +24,28 @@ void	set_player_orientation(t_player *player, char orientation)
 		player->rotationangle = M_PI;
 }
 
+void	init_frames(t_data *data)
+{
+	size_t		i;
+	t_player	*player;
+
+	i = 0;
+	player = &data->game.player;
+	while (i < PLAYER_FRAMES)
+	{
+		update_frame(data);
+		player->frames[i].img_ptr = mlx_xpm_file_to_image(data->mlx,
+				player->frames[i].path, &player->player_w, &player->player_h);
+		if (player->frames[i].img_ptr)
+			player->frames[i].image_pixel_ptr
+				= mlx_get_data_addr(player->frames[i].img_ptr,
+					&player->frames[i].bits_per_pixel,
+					&player->frames[i].line_len,
+					&player->frames[i].endian);
+		i++;
+	}
+}
+
 void	init_player(t_data *data)
 {
 	data->game.player.radius = 3;
@@ -34,18 +56,6 @@ void	init_player(t_data *data)
 	set_player_orientation(&data->game.player,
 		data->game.player.player_direction);
 	data->game.player.rotationspeed = 3 * (M_PI / 180);
-	t_player *player = &data->game.player;
-    for (int i = 0; i < PLAYER_FRAMES; i++)
-    {
-        update_frame(data);
-        player->frames[i].img_ptr = mlx_xpm_file_to_image(data->mlx, player->frames[i].path, &player->player_w, &player->player_h);
-       
-        if (player->frames[i].img_ptr)
-             player->frames[i].image_pixel_ptr = mlx_get_data_addr(player->frames[i].img_ptr,
-                                                        &player->frames[i].bits_per_pixel,
-                                                        &player->frames[i].line_len,
-                                                        &player->frames[i].endian);    
-    }
 }
 
 void	init_textures_2(t_data *data)

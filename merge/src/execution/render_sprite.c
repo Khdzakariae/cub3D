@@ -41,9 +41,9 @@ char	*get_assets(int current_image)
 	char	*number;
 
 	current_image += 1;
-	assets = ft_calloc(20, sizeof(char));
+	assets = ft_calloc(30, sizeof(char));
 	number = ft_itoa(current_image);
-	strcat(assets, "knife_tmp/");
+	strcat(assets, "sprite_frames/");
 	strcat(assets, number);
 	strcat(assets, ".xpm");
 	free(number);
@@ -52,7 +52,7 @@ char	*get_assets(int current_image)
 
 int	update_frame(t_data *data)
 {
-	static int	n_img = 0;
+	static int	n_img;
 	char		*assets;
 
 	if (n_img == PLAYER_FRAMES)
@@ -60,4 +60,33 @@ int	update_frame(t_data *data)
 	assets = get_assets(n_img);
 	data->game.player.frames[n_img++].path = assets;
 	return (1);
+}
+
+void	render_player_helper(t_data *data, int frame, int start_x, int start_y)
+{
+	size_t		i;
+	size_t		j;
+	int			*addr;
+	int			*addr2;
+	t_player	*player;
+
+	i = 0;
+	player = &data->game.player;
+	while (i < player->player_h)
+	{
+		addr = (int *)(player->frames[frame].image_pixel_ptr
+				+ (i * player->frames[frame].line_len));
+		addr2 = (int *)(data->img.image_pixel_ptr
+				+ ((i + start_y) * data->img.line_len));
+		j = 0;
+		while (j < player->player_w)
+		{
+			if (addr[j] != 0xFF000000 && (j + start_x) >= 0
+				&& (j + start_x) < WINDOW_WIDTH && (i + start_y) >= 0
+				&& (i + start_y) < WINDOW_HEIGHT)
+				addr2[j + start_x] = addr[j];
+			j++;
+		}
+		i++;
+	}
 }

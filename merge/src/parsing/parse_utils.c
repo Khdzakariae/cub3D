@@ -52,13 +52,6 @@ void	init_cub3d_data(t_cub3d **cub3d, int fd)
 	(*cub3d)->map.player_y = -1;
 	(*cub3d)->fd = fd;
 	(*cub3d)->cube_file = NULL;
-	/* (*cub3d)->player.frames[0].path = ft_strdup("player_frames/shotgun1.xpm");
-	(*cub3d)->player.frames[1].path = ft_strdup("player_frames/shotgun2.xpm");
-	(*cub3d)->player.frames[2].path = ft_strdup("player_frames/shotgun3.xpm");
-	(*cub3d)->player.frames[3].path = ft_strdup("player_frames/shotgun4.xpm");
-	(*cub3d)->player.frames[4].path = ft_strdup("player_frames/shotgun5.xpm");
-	(*cub3d)->player.first_frame = true; */
-	(*cub3d)->player.first_frame = true;
 }
 
 void	fetch_min_map_width(char **map, size_t *min_width)

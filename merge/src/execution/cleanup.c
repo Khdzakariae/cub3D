@@ -21,6 +21,22 @@ void	cleanup_textures(t_cub3d *game)
 	free(game->textures.so.path);
 }
 
+void	clean_frames(t_data *data)
+{
+	t_player	*player;
+	size_t		i;
+
+	player = &data->game.player;
+	i = 0;
+	while (i < PLAYER_FRAMES)
+	{
+		if (player->frames[i].img_ptr)
+			mlx_destroy_image(data->mlx, player->frames[i].img_ptr);
+		free(player->frames[i].path);
+		i++;
+	}
+}
+
 int	cleanup(t_data *data)
 {
 	t_texture	*texters;
@@ -38,6 +54,7 @@ int	cleanup(t_data *data)
 		mlx_destroy_image(data->mlx, texters->ciel.img_ptr);
 	if (data->img.img_ptr)
 		mlx_destroy_image(data->mlx, data->img.img_ptr);
+	clean_frames(data);
 	if (data->win)
 		mlx_destroy_window(data->mlx, data->win);
 	if (data->mlx)

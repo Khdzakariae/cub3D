@@ -48,49 +48,38 @@ int	update_player(t_player *player, t_map *map)
 	return (0);
 }
 
-void    render_player(t_data *data, int frame)
+void	render_player(t_data *data, int frame)
 {
-    t_player *player = &data->game.player;
-    int i = 0;
-    int j = 0;
-    int *addr;
-    int *addr2;
+	t_player	*player;
+	int			start_x;
+	int			start_y;
 
-    if (!player->frames[frame].image_pixel_ptr)
-    {
-        fprintf(stderr, "Error: Player frame image not loaded\n");
-        return;
-    }
-    int start_x = (WINDOW_WIDTH / 2) - (player->player_w / 2);
-    int start_y = WINDOW_HEIGHT - player->player_h;
-
-    while (i < player->player_h)
-    {
-        addr = (int *)(player->frames[frame].image_pixel_ptr + (i * player->frames[frame].line_len));
-        addr2 = (int *)(data->img.image_pixel_ptr + ((i + start_y) * data->img.line_len));
-        j = 0;
-        while (j < player->player_w)
-        {
-            if (addr[j] != 0xFF000000 && (j + start_x) >= 0 && (j + start_x) < WINDOW_WIDTH && (i + start_y) >= 0 && (i + start_y) < WINDOW_HEIGHT)
-            {
-                addr2[j + start_x] = addr[j];
-            }
-            j++;
-        }
-        i++;
-    }
+	player = &data->game.player;
+	if (!player->frames[frame].image_pixel_ptr)
+	{
+		fprintf(stderr, "Error: Player frame image not loaded\n");
+		return ;
+	}
+	start_x = (WINDOW_WIDTH / 2) - (player->player_w / 2);
+	start_y = WINDOW_HEIGHT - player->player_h;
+	render_player_helper(data, frame, start_x, start_y);
 }
 
-void    draw_player(t_data *data)
+void	draw_player(t_data *data)
 {
-    static int i;
+	static int	i;
 
-    if (timing() == true)
-        render_player(data, i++);
-    else
-        i != 0 ? render_player(data, i - 1) : render_player(data, i);
-    if (i == PLAYER_FRAMES)
-        i = 0;
+	if (timing() == true)
+		render_player(data, i++);
+	else
+	{
+		if (i != 0)
+			render_player(data, i - 1);
+		else
+			render_player(data, i);
+	}
+	if (i == PLAYER_FRAMES)
+		i = 0;
 }
 
 int	game_loop(t_data *data)
@@ -106,7 +95,7 @@ int	game_loop(t_data *data)
 	drawing_floor(data);
 	castallrays(data);
 	render_walls(data);
-    draw_player(data);
+	draw_player(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
 	return (0);
 }
