@@ -35,7 +35,7 @@ void	init_player(t_data *data)
 		data->game.player.player_direction);
 	data->game.player.rotationspeed = 3 * (M_PI / 180);
 	t_player *player = &data->game.player;
-    for (int i = 0; i < 30; i++)
+    for (int i = 0; i < PLAYER_FRAMES; i++)
     {
         update_frame(data); 
         player->frames[i].img_ptr = mlx_xpm_file_to_image(data->mlx, player->frames[i].path, &player->player_w, &player->player_h);

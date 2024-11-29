@@ -22,6 +22,7 @@
 
 # define TILE_SIZE 64
 # define MAX_INT 2147483647
+# define PLAYER_FRAMES 35
 
 typedef enum e_bool
 {
@@ -52,7 +53,7 @@ typedef struct s_player
 	double			rotationangle;
 	double			movespeed;
 	double			rotationspeed;
-	t_frame frames[30];
+	t_frame frames[PLAYER_FRAMES];
 	int		player_w;
 	int		player_h;
 	t_bool	first_frame;

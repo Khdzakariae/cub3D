@@ -43,8 +43,8 @@
 # define COLOR_PINK 0xFFC0CB
 
 # define NUM_RAYS WINDOW_WIDTH
-# define WINDOW_WIDTH 1920
-# define WINDOW_HEIGHT 980
+# define WINDOW_WIDTH 1080
+# define WINDOW_HEIGHT 720
 # define FOV_ANGLE 1.0466 // (60 * (M_PI / 180))
 
 // #define TILE_SIZE 256

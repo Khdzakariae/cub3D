@@ -83,21 +83,13 @@ void    render_player(t_data *data, int frame)
 
 void    draw_player(t_data *data)
 {
-    static int i = 0;
+    static int i;
+
     if (timing() == true)
-    {
-        render_player(data, i);
-        i++;
-    }
+        render_player(data, i++);
     else
-    {
-        if (i != 0)
-            render_player(data, i - 1);
-        else
-            render_player(data, i);
-    }
-    
-    if (i == 30)
+        i != 0 ? render_player(data, i - 1) : render_player(data, i);
+    if (i == PLAYER_FRAMES)
         i = 0;
 }
 
@@ -114,7 +106,7 @@ int	game_loop(t_data *data)
 	drawing_floor(data);
 	castallrays(data);
 	render_walls(data);
-	draw_player(data);
+    draw_player(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
 	return (0);
 }

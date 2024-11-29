@@ -29,7 +29,7 @@ bool	timing(void)
 	current_time = the_time();
 	if (start_time == 0)
 		return (start_time = current_time, true);
-	else if ((current_time - start_time) <= 70)
+	else if ((current_time - start_time) <= 120)
 		return (false);
 	start_time = 0;
 	return (true);
@@ -41,9 +41,10 @@ char	*get_assets(int current_image)
 	char	*number;
 
 	current_image += 1;
+	printf("get path of %d\n", current_image);
 	assets = ft_calloc(20, sizeof(char));
 	number = ft_itoa(current_image);
-	strcat(assets, "knife/");
+	strcat(assets, "knife_tmp/");
 	strcat(assets, number);
 	strcat(assets, ".xpm");
 	free(number);
@@ -55,7 +56,7 @@ int	update_frame(t_data *data)
 	static int	n_img = 0;
 	char		*assets;
 
-	if (n_img == 30)
+	if (n_img == PLAYER_FRAMES)
 		n_img = 0;
 	assets = get_assets(n_img);
 	data->game.player.frames[n_img++].path = assets;
