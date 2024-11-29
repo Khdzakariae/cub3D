@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 19:29:17 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/29 12:54:18 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/29 15:43:53 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,13 @@
 # define COLOR_PINK 0xFFC0CB
 
 # define NUM_RAYS WINDOW_WIDTH
-# define WINDOW_WIDTH 1920
-# define WINDOW_HEIGHT 980
+# define WINDOW_WIDTH 1080
+# define WINDOW_HEIGHT 720
 # define FOV_ANGLE 1.0466 // (60 * (M_PI / 180))
 
 // #define TILE_SIZE 256
 
-# define CIEL_IMAGE FALSE
+# define CIEL_IMAGE TRUE
 # define DARKNESS 500
 # define RADIUS 30
 # define COLLISION_MARGIN 50
@@ -69,7 +69,7 @@
 # define TRUE 1
 # define FALSE 0
 
-# define CIEL "texters/9078_1.xpm"
+# define CIEL "loading/loaing.xpm"
 
 typedef struct s_color_params
 {
@@ -130,6 +130,7 @@ typedef struct s_data
 # define KEY_RIGHT 65363
 # define KEY_ESC 65307
 
+void    render_player_1(t_data *data);
 void		cleanup_textures(t_cub3d *game);
 int			cleanup(t_data *data);
 
