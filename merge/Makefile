@@ -1,4 +1,4 @@
-FLAGS =-Wall -Wextra -Werror #-fsanitize=address -g3  
+FLAGS = #-Wall -Wextra -Werror #-fsanitize=address -g3  
 
 NAME = cub3D
 mlx = lib/mlx/libmlx.a
@@ -13,7 +13,9 @@ SRC	 = 	$(addprefix lib/get_next_line/, get_next_line.c get_next_line_utils.c) \
 
 LIBFT = lib/libft/libft.a
 
-OBJ = $(SRC:.c=.o)
+OBJ_DIR = .garbage_objs
+
+OBJ = $(addprefix $(OBJ_DIR)/, $(notdir $(SRC:.c=.o)))
 
 all: $(LIBFT) $(NAME)
 
@@ -35,6 +37,19 @@ $(LIBFT) : $(SRC)
 	@$(CC) $(FLAGS) $(OBJ) $(LIBFT)   -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME)
 	@echo "CUB3D DONE [🤡]"
 
+$(OBJ_DIR)/%.o: lib/get_next_line/%.c | $(OBJ_DIR)
+	@$(CC) $(FLAGS) $(INCLUDES) -I/usr/include -Imlx_linux -O3 -c $< -o $@
+
+$(OBJ_DIR)/%.o: src/execution/%.c | $(OBJ_DIR)
+	@$(CC) $(FLAGS) $(INCLUDES) -I/usr/include -Imlx_linux -O3 -c $< -o $@
+
+$(OBJ_DIR)/%.o: src/parsing/%.c | $(OBJ_DIR)
+	@$(CC) $(FLAGS) $(INCLUDES) -I/usr/include -Imlx_linux -O3 -c $< -o $@
+
+$(OBJ_DIR):
+	@mkdir -p $(OBJ_DIR)
+
+
 clean:
 	@echo "CLEAN DONE [✅]"
 	@rm -f $(OBJ) 
@@ -42,7 +57,7 @@ clean:
 
 fclean: clean
 	@echo "FCLEAN DONE [✅]"
-	@rm -f $(NAME)
+	@rm -rf $(NAME) $(OBJ_DIR)
 	@make fclean -C lib/libft --silent
 	
 re: fclean all
