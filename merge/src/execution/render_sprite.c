@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_sprite_animation.c                            :+:      :+:    :+:   */
+/*   render_sprite.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 18:42:55 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/29 12:51:15 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/29 19:31:56 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ int	update_frame(t_data *data)
 
 void	render_player_helper(t_data *data, int frame, int start_x, int start_y)
 {
-	size_t		i;
-	size_t		j;
+	int		i;
+	int		j;
 	int			*addr;
 	int			*addr2;
 	t_player	*player;
@@ -81,7 +81,7 @@ void	render_player_helper(t_data *data, int frame, int start_x, int start_y)
 		j = 0;
 		while (j < player->player_w)
 		{
-			if (addr[j] != 0xFF000000 && (j + start_x) >= 0
+			if ((unsigned int)addr[j] != 0xFF000000 && (j + start_x) >= 0
 				&& (j + start_x) < WINDOW_WIDTH && (i + start_y) >= 0
 				&& (i + start_y) < WINDOW_HEIGHT)
 				addr2[j + start_x] = addr[j];

@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:20:30 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/28 10:54:45 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/29 19:29:16 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,6 @@ double	normalizeangle(double angle)
 	if (angle < 0)
 		angle += 2 * M_PI;
 	return (angle);
-}
-
-static int	check_point_collision(t_map *map, double x, double y, int *point)
-{
-	int	checkx;
-	int	checky;
-
-	checkx = (int)((x + point[0]) / TILE_SIZE);
-	checky = (int)((y + point[1]) / TILE_SIZE);
-	if (checkx >= 0 && checkx < map->width && checky >= 0
-		&& checky < map->height && map->map[checky][checkx] == '1')
-		return (1);
-	return (0);
 }
 
 int	cheack(int points[4][2], t_map *map, double x, double y)
@@ -57,7 +44,6 @@ int	is_wall_at(t_map *map, double x, double y)
 	int	mapx;
 	int	mapy;
 	int	radius;
-	int	i;
 	int	points[4][2];
 
 	mapx = (int)(x / TILE_SIZE);

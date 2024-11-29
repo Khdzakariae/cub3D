@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:44:09 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/27 11:24:20 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/29 15:44:07 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,9 @@ int	main(int argc, char **argv)
 		cleanup(&data);
 		return (1);
 	}
+	render_player_1(&data);
+		mlx_put_image_to_window(data.mlx, data.win, data.img.img_ptr, 0, 0);
+	sleep(2);
 	mlx_loop_hook(data.mlx, game_loop, &data);
 	mlx_hook(data.win, 2, 1L << 0, key_press, &data);
 	mlx_hook(data.win, 3, 1L << 1, key_release, &data);

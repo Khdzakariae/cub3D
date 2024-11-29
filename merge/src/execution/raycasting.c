@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:13:52 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/28 11:06:25 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/29 19:28:09 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ void	castallrays(t_data *data)
 	int		stripid;
 	float	rayangle;
 
+	stripid = 0;
 	rayangle = data->game.player.rotationangle - (FOV_ANGLE / 2);
 	while (stripid < NUM_RAYS)
 	{

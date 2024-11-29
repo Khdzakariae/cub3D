@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 08:11:25 by achahid-          #+#    #+#             */
-/*   Updated: 2024/11/29 12:41:35 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/29 18:56:27 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <string.h>
 # include <unistd.h>
 
-# define TILE_SIZE 64
+# define TILE_SIZE 128
 # define MAX_INT 2147483647
 # define PLAYER_FRAMES 34
 

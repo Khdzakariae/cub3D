@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:06:03 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/29 12:40:39 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/29 19:38:43 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	init_player(t_data *data)
 	set_player_orientation(&data->game.player,
 		data->game.player.player_direction);
 	data->game.player.rotationspeed = 3 * (M_PI / 180);
+	data->game.last_mouse_x = 0;
 }
 
 void	init_textures_2(t_data *data)

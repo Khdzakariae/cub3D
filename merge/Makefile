@@ -1,4 +1,4 @@
-FLAGS = #-Wall -Wextra -Werror #-fsanitize=address -g3  
+FLAGS = -Wall -Wextra -Werror #-fsanitize=address -g3  
 
 NAME = cub3D
 mlx = lib/mlx/libmlx.a

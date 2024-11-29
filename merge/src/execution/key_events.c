@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:27:25 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/28 11:06:25 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/29 19:27:21 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ int	mouse_move(int x, int y, t_data *data)
 	int		delta_x;
 	double	rotationangle;
 
+	(void)y;
 	if (data->flage_mousse == -1)
 		return (0);
 	if (!data)
