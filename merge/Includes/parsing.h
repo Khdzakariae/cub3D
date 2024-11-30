@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 08:11:25 by achahid-          #+#    #+#             */
-/*   Updated: 2024/11/29 21:48:55 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/30 09:21:36 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_player
 	double			rotationangle;
 	double			movespeed;
 	double			rotationspeed;
+	double			sidedirection;
 	t_frame frames[PLAYER_FRAMES];
 	int		player_w;
 	int		player_h;
@@ -78,6 +79,7 @@ typedef struct s_texture
 	t_dir_texture	so;
 	t_dir_texture	we;
 	t_dir_texture	ea;
+	t_dir_texture	menu;
 	t_dir_texture	ciel;
 }					t_texture;
 
