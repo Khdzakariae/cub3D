@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 19:29:17 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/29 15:43:53 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/30 09:48:29 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,9 @@
 # define TRUE 1
 # define FALSE 0
 
-# define CIEL "loading/loaing.xpm"
+# define MENU "loading/loaing.xpm"
+# define CIEL "texters/9078_1.xpm"
+
 
 typedef struct s_color_params
 {
@@ -130,6 +132,7 @@ typedef struct s_data
 # define KEY_RIGHT 65363
 # define KEY_ESC 65307
 
+void    render_ciel(t_data *data);
 void    render_player_1(t_data *data);
 void		cleanup_textures(t_cub3d *game);
 int			cleanup(t_data *data);
@@ -163,7 +166,7 @@ void		castallrays(t_data *data);
 
 void		my_pixel_put(t_img *img, int x, int y, int color);
 int			apply_darkness(int texColor, float darkness);
-void		ciel(t_data *data);
+void		menu(t_data *data);
 void		drawing_east(t_data *data);
 void		drawing_floor(t_data *data);
 
