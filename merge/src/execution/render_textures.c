@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:11:51 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/29 15:26:14 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/30 09:17:29 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	init_tab(t_dir_texture *texter, t_data *data)
 	texter[1] = data->game.textures.no;
 	texter[2] = data->game.textures.so;
 	texter[3] = data->game.textures.we;
-	texter[4] = data->game.textures.ciel;
+	texter[4] = data->game.textures.menu;
 }
 
 int	my_mlx_pixel_get(int flag, t_data *data, double wallx, int y)
