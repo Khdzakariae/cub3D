@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:27:25 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/30 09:11:08 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/30 20:35:26 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,27 +15,22 @@
 int key_press(int keycode, t_data *data) {
     if (!data) 
         return (-1);
-    if (keycode == KEY_UP || keycode == KEY_W) {
+    if (keycode == KEY_UP || keycode == KEY_W)
         data->game.player.walkdirection = 1;
-    }
-    else if (keycode == KEY_DOWN || keycode == KEY_S) {
+    else if (keycode == KEY_DOWN || keycode == KEY_S)
         data->game.player.walkdirection = -1;
-    }
-    else if (keycode == KEY_LEFT) {
+    else if (keycode == KEY_LEFT)
         data->game.player.turndirection = -1;
-    }
-    else if (keycode == KEY_RIGHT) {
+    else if (keycode == KEY_RIGHT)
         data->game.player.turndirection = 1;
-    }
-    else if (keycode == KEY_A) {
+    else if (keycode == KEY_A)
         data->game.player.sidedirection = -1;
-    }
-    else if (keycode == KEY_D) {
+    else if (keycode == KEY_D)
         data->game.player.sidedirection = 1;
-    }
-    else if (keycode == KEY_ESC) {
+    else if (keycode == KEY_ACTIVE_MOUSSE)
+		data->flage_mousse *= -1;
+    else if (keycode == KEY_ESC)
         cleanup(data);
-    }
     return (0);
 }
 
