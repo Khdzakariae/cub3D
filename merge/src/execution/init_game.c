@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:06:03 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/29 19:38:43 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/30 09:23:42 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	init_player(t_data *data)
 		data->game.player.player_direction);
 	data->game.player.rotationspeed = 3 * (M_PI / 180);
 	data->game.last_mouse_x = 0;
+	data->game.player.sidedirection = 0;
 }
 
 void	init_textures_2(t_data *data)
@@ -76,6 +77,12 @@ void	init_textures_2(t_data *data)
 		texters->we.image_pixel_ptr = mlx_get_data_addr(texters->we.img_ptr,
 				&texters->we.bits_per_pixel, &texters->we.line_len,
 				&texters->we.endian);
+	texters->menu.img_ptr = mlx_xpm_file_to_image(data->mlx, MENU,
+			&texters->menu.texter_with, &texters->menu.texter_height);
+	if (texters->menu.img_ptr)
+		texters->menu.image_pixel_ptr = mlx_get_data_addr(texters->menu.img_ptr,
+				&texters->menu.bits_per_pixel, &texters->menu.line_len,
+				&texters->menu.endian);
 	texters->ciel.img_ptr = mlx_xpm_file_to_image(data->mlx, CIEL,
 			&texters->ciel.texter_with, &texters->ciel.texter_height);
 	if (texters->ciel.img_ptr)
