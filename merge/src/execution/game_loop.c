@@ -6,21 +6,22 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:30:26 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/29 19:26:44 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/30 09:47:25 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cub3d.h>
 
-void	init_movement(t_player *player, double *movestep, double *newplayerx,
-		double *newplayery)
-{
-	player->rotationangle = normalizeangle(player->rotationangle
-			+ player->turndirection * player->rotationspeed);
-	*(movestep) = player->walkdirection * player->movespeed;
-	*(newplayerx) = player->x + cos(player->rotationangle) * *(movestep);
-	*(newplayery) = player->y + sin(player->rotationangle) * *(movestep);
+void init_movement(t_player *player, double *movestep, double *newplayerx, double *newplayery) {
+    double sideangle = player->rotationangle + M_PI/2;
+    player->rotationangle = normalizeangle(player->rotationangle + player->turndirection * player->rotationspeed);
+    *(movestep) = player->walkdirection * player->movespeed;
+    *(newplayerx) = player->x + cos(player->rotationangle) * *(movestep);
+    *(newplayery) = player->y + sin(player->rotationangle) * *(movestep);
+    *newplayerx += cos(sideangle) * player->sidedirection * player->movespeed;
+    *newplayery += sin(sideangle) * player->sidedirection * player->movespeed;
 }
+
 
 int	update_player(t_player *player, t_map *map)
 {
@@ -73,7 +74,7 @@ void    render_player_1(t_data *data)
     int *addr;
     int *addr2;
 
-    if (!player->ciel.image_pixel_ptr)
+    if (!player->menu.image_pixel_ptr)
     {
         fprintf(stderr, "Error: Player frame image not loaded\n");
         return;
@@ -81,16 +82,47 @@ void    render_player_1(t_data *data)
     int start_x = 0;
     int start_y = 0;
 
-    while (i < player->ciel.texter_height)
+    while (i < player->menu.texter_height)
     {
-        addr = (int *)(player->ciel.image_pixel_ptr + (i *player->ciel.line_len));
+        addr = (int *)(player->menu.image_pixel_ptr + (i *player->menu.line_len));
         addr2 = (int *)(data->img.image_pixel_ptr + ((i + start_y) * data->img.line_len));
         j = 0;
-        while (j < player->ciel.texter_with)
+        while (j < player->menu.texter_with)
         {
             if ((unsigned int)addr[j] != 0xFF000000 && (j + start_x) >= 0 && (j + start_x) < WINDOW_WIDTH && (i + start_y) >= 0 && (i + start_y) < WINDOW_HEIGHT)
             {
                 addr2[j + start_x] = addr[j];
+            }
+            j++;
+        }
+        i++;
+    }
+}
+
+void    render_ciel(t_data *data)
+{
+    t_texture *player = &data->game.textures;
+    int i = 0;
+    int j = 0;
+    int *addr;
+    int *addr2;
+
+    if (!player->ciel.image_pixel_ptr)
+    {
+        fprintf(stderr, "Error: Player frame image not loaded\n");
+        return;
+    }
+
+    while (i < WINDOW_HEIGHT)
+    {
+        addr = ((int *)(player->ciel.image_pixel_ptr + (i *player->ciel.line_len)) );
+        addr2 = (int *)(data->img.image_pixel_ptr + ((i ) * data->img.line_len));
+        j = 0;
+        while (j  < WINDOW_WIDTH)
+        {
+            if ((j) >= 0 && (j) < WINDOW_WIDTH && (i) >= 0 && (i) < WINDOW_HEIGHT)
+            {
+                addr2[j] = addr[j];
             }
             j++;
         }
@@ -121,7 +153,10 @@ int	game_loop(t_data *data)
 	mlx_clear_window(data->mlx, data->win);
 	ft_memset(data->img.image_pixel_ptr, 0, WINDOW_WIDTH * WINDOW_HEIGHT
 		* (data->img.bits_per_pixel / 8));
-	drawing_east(data);
+	if (CIEL_IMAGE)
+		render_ciel(data);
+	else
+		drawing_east(data);
 	drawing_floor(data);
 	castallrays(data);
 	render_walls(data);
