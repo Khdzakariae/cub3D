@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:28:59 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/30 09:17:29 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/30 20:33:26 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,10 @@ int	cleanup(t_data *data)
 		mlx_destroy_image(data->mlx, texters->so.img_ptr);
 	if (texters->we.img_ptr)
 		mlx_destroy_image(data->mlx, texters->we.img_ptr);
-	if (texters->we.img_ptr)
+	if (texters->menu.img_ptr)
 		mlx_destroy_image(data->mlx, texters->menu.img_ptr);
+	if (texters->ciel.img_ptr)
+		mlx_destroy_image(data->mlx, texters->ciel.img_ptr);
 	if (data->img.img_ptr)
 		mlx_destroy_image(data->mlx, data->img.img_ptr);
 	clean_frames(data);
