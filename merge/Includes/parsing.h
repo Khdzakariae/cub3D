@@ -167,4 +167,6 @@ void				free_incomplete_map(t_cub3d **cub3d_data, size_t map_i,
 void				free_arrays_exit(char **arr1, char **arr2, char *err_msg,
 						t_cub3d **cub3d);
 
+void				print_tmc(t_cub3d *cub3d);
+
 #endif /* PARSING_H */
