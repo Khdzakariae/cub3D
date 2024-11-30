@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:06:03 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/30 09:23:42 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/30 21:07:57 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,25 @@ void	init_player(t_data *data)
 	data->game.player.sidedirection = 0;
 }
 
+void	init_textures_3(t_data *data)
+{
+	t_texture	*texters;
+
+	texters = &data->game.textures;
+	texters->menu.img_ptr = mlx_xpm_file_to_image(data->mlx, MENU,
+			&texters->menu.texter_with, &texters->menu.texter_height);
+	if (texters->menu.img_ptr)
+		texters->menu.image_pixel_ptr = mlx_get_data_addr(texters->menu.img_ptr,
+				&texters->menu.bits_per_pixel, &texters->menu.line_len,
+				&texters->menu.endian);
+	texters->ciel.img_ptr = mlx_xpm_file_to_image(data->mlx, CIEL,
+			&texters->ciel.texter_with, &texters->ciel.texter_height);
+	if (texters->ciel.img_ptr)
+		texters->ciel.image_pixel_ptr = mlx_get_data_addr(texters->ciel.img_ptr,
+				&texters->ciel.bits_per_pixel, &texters->ciel.line_len,
+				&texters->ciel.endian);
+}
+
 void	init_textures_2(t_data *data)
 {
 	t_texture	*texters;
@@ -77,18 +96,6 @@ void	init_textures_2(t_data *data)
 		texters->we.image_pixel_ptr = mlx_get_data_addr(texters->we.img_ptr,
 				&texters->we.bits_per_pixel, &texters->we.line_len,
 				&texters->we.endian);
-	texters->menu.img_ptr = mlx_xpm_file_to_image(data->mlx, MENU,
-			&texters->menu.texter_with, &texters->menu.texter_height);
-	if (texters->menu.img_ptr)
-		texters->menu.image_pixel_ptr = mlx_get_data_addr(texters->menu.img_ptr,
-				&texters->menu.bits_per_pixel, &texters->menu.line_len,
-				&texters->menu.endian);
-	texters->ciel.img_ptr = mlx_xpm_file_to_image(data->mlx, CIEL,
-			&texters->ciel.texter_with, &texters->ciel.texter_height);
-	if (texters->ciel.img_ptr)
-		texters->ciel.image_pixel_ptr = mlx_get_data_addr(texters->ciel.img_ptr,
-				&texters->ciel.bits_per_pixel, &texters->ciel.line_len,
-				&texters->ciel.endian);
 }
 
 void	init_textures(t_data *data)
@@ -109,6 +116,13 @@ void	init_textures(t_data *data)
 				&texters->no.bits_per_pixel, &texters->no.line_len,
 				&texters->no.endian);
 	init_textures_2(data);
+	init_textures_3(data);
+	if ( !texters->ciel.img_ptr || !texters->ea.img_ptr || !texters->menu.img_ptr || !texters->no.img_ptr
+		|| !texters->so.img_ptr || !texters->we.img_ptr)
+	{
+		printf("ERROR : FAILED TO GET TEXTURES");
+		cleanup(data);
+	}
 }
 
 void	init_game(t_data *data)
