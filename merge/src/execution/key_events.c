@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:27:25 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/30 20:35:26 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/12/01 09:40:59 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int key_press(int keycode, t_data *data) {
     else if (keycode == KEY_ACTIVE_MOUSSE)
 		data->flage_mousse *= -1;
     else if (keycode == KEY_ESC)
-        cleanup(data);
+        cleanup(data, 0);
     return (0);
 }
 
