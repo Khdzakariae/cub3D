@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:28:59 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/30 20:33:26 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/12/01 09:47:21 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,19 @@ void	clean_frames(t_data *data)
 	}
 }
 
-int	cleanup(t_data *data)
+void	destroy_window(t_data *data, int flage)
+{
+	if (data->win)
+		mlx_destroy_window(data->mlx, data->win);
+	if (data->mlx)
+	{
+		mlx_destroy_display(data->mlx);
+		free(data->mlx);
+	}
+	exit(flage);
+}
+
+void	cleanup(t_data *data, int flage)
 {
 	t_texture	*texters;
 
@@ -56,14 +68,7 @@ int	cleanup(t_data *data)
 		mlx_destroy_image(data->mlx, texters->ciel.img_ptr);
 	if (data->img.img_ptr)
 		mlx_destroy_image(data->mlx, data->img.img_ptr);
-	clean_frames(data);
-	if (data->win)
-		mlx_destroy_window(data->mlx, data->win);
-	if (data->mlx)
-	{
-		mlx_destroy_display(data->mlx);
-		free(data->mlx);
-	}
 	cleanup_textures(&data->game);
-	exit(0);
+	clean_frames(data);
+	destroy_window(data, flage);
 }
