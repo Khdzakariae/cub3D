@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 19:29:17 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/30 09:48:29 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/12/01 09:44:02 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ typedef struct s_data
 void    render_ciel(t_data *data);
 void    render_player_1(t_data *data);
 void		cleanup_textures(t_cub3d *game);
-int			cleanup(t_data *data);
+void			cleanup(t_data *data, int flage);
 
 int			update_player(t_player *player, t_map *map);
 int			game_loop(t_data *data);
