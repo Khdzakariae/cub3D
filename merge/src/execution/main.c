@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:44:09 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/30 09:35:04 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/12/01 09:40:48 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	main(int argc, char **argv)
 	if (!init(&data))
 	{
 		fprintf(stderr, "Error: Failed to initialize game\n");
-		cleanup(&data);
+		cleanup(&data, 2);
 		return (1);
 	}
 	render_player_1(&data);
@@ -50,7 +50,7 @@ int	main(int argc, char **argv)
 	mlx_hook(data.win, 2, 1L << 0, key_press, &data);
 	mlx_hook(data.win, 3, 1L << 1, key_release, &data);
 	mlx_hook(data.win, 6, 1L << 6, mouse_move, &data);
-	mlx_hook(data.win, 17, 0, cleanup, &data);
+	// mlx_hook(data.win, 17, 0, cleanup, &data);
 	mlx_loop(data.mlx);
 	return (0);
 }
