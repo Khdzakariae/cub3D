@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:30:26 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/12/01 15:16:45 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/12/01 20:52:13 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	render_player(t_data *data, int frame)
 	player = &data->game.player;
 	if (!player->frames[frame].image_pixel_ptr)
 	{
-		fprintf(stderr, "Error: Player frame image not loaded\n");
+		ft_putstr_fd("Error: Player frame image not loaded\n",2);
 		return ;
 	}
 	start_x = (WINDOW_WIDTH / 2) - (player->player_w / 2);
