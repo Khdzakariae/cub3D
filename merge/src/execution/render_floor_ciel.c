@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:09:53 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/30 09:17:29 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/12/01 15:03:56 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,26 +47,32 @@ int	apply_darkness(int texcolor, float darkness)
 	return (create_trgb(0, r, g, b));
 }
 
-void	menu(t_data *data)
+void	render_ciel(t_data *data)
 {
-	int			texcolor;
-	t_texture	*texters;
-	int			x;
-	int			y;
+	t_texture	*player;
+	int			i;
+	int			j;
+	int			*addr;
+	int			*addr2;
 
-	x = 0;
-	texters = &data->game.textures;
-	while (x < WINDOW_WIDTH)
+	player = &data->game.textures;
+	i = 0;
+	j = 0;
+	while (i < WINDOW_HEIGHT)
 	{
-		y = 0;
-		while (y < WINDOW_HEIGHT / 2)
+		addr = ((int *)(player->ciel.image_pixel_ptr + (i
+						* player->ciel.line_len)));
+		addr2 = (int *)(data->img.image_pixel_ptr + (i * data->img.line_len));
+		j = 0;
+		while (j < WINDOW_WIDTH)
 		{
-			texters->menu.wallheight = 0;
-			texcolor = my_mlx_pixel_get(4, data, x, y);
-			my_pixel_put(&data->img, x, y, texcolor);
-			y++;
+			if (j >= 0 && (j) < WINDOW_WIDTH && i >= 0 && i < WINDOW_HEIGHT)
+			{
+				addr2[j] = addr[j];
+			}
+			j++;
 		}
-		x++;
+		i++;
 	}
 }
 
