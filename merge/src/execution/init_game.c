@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:06:03 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/30 21:07:57 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/12/01 09:41:07 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void	init_textures(t_data *data)
 		|| !texters->so.img_ptr || !texters->we.img_ptr)
 	{
 		printf("ERROR : FAILED TO GET TEXTURES");
-		cleanup(data);
+		cleanup(data, 2);
 	}
 }
 
