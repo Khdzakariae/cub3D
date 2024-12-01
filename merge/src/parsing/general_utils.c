@@ -22,7 +22,7 @@ t_bool	space_checker(char *line)
 	{
 		if (*line == '\n')
 			return (true);
-		if (*line != ' ')
+		if (ft_isspace(*line) == false)
 			return (false);
 		line++;
 	}
@@ -43,7 +43,7 @@ int	get_next_line_len(int fd, char **line, int *len)
 /* void	print_tmc(t_cub3d *cub3d)
 {
 	// check paths
-	 printf("NO: %s\n", cub3d->textures.no.path);
+	printf("NO: %s\n", cub3d->textures.no.path);
 	printf("SO: %s\n", cub3d->textures.so.path);
 	printf("WE: %s\n", cub3d->textures.we.path);
 	printf("EA: %s\n", cub3d->textures.ea.path);

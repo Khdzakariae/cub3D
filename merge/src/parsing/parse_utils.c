@@ -109,6 +109,9 @@ void	retrieve_color(char **split_colors, int *color, t_cub3d **cub3d_data)
 	else if (!split_rgb[0] || !split_rgb[1] || !split_rgb[2])
 		free_arrays_exit(split_colors, split_rgb,
 			"Error\nInvalid color\n", cub3d_data);
+	if (split_rgb[3])
+		free_arrays_exit(split_colors, split_rgb,
+			"Error\nInvalid color\n", cub3d_data);
 	r = ft_atoi(split_rgb[0]);
 	g = ft_atoi(split_rgb[1]);
 	b = ft_atoi(split_rgb[2]);
