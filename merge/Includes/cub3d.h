@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 19:29:17 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/12/01 09:44:02 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/12/01 15:16:45 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@
 # define MENU "loading/loaing.xpm"
 # define CIEL "texters/9078_1.xpm"
 
-
 typedef struct s_color_params
 {
 	int		tex_color;
@@ -132,10 +131,12 @@ typedef struct s_data
 # define KEY_RIGHT 65363
 # define KEY_ESC 65307
 
-void    render_ciel(t_data *data);
-void    render_player_1(t_data *data);
+void		init_movement(t_player *player, double *movestep,
+				double *newplayerx, double *newplayery);
+void		render_ciel(t_data *data);
+void		menu(t_data *data);
 void		cleanup_textures(t_cub3d *game);
-void			cleanup(t_data *data, int flage);
+void		cleanup(t_data *data, int flage);
 
 int			update_player(t_player *player, t_map *map);
 int			game_loop(t_data *data);
@@ -183,7 +184,8 @@ void		render_walls(t_data *data);
 
 int			update_frame(t_data *data);
 bool		timing(void);
-void		render_player_helper(t_data *data, int frame, int start_x, int start_y);
+void		render_player_helper(t_data *data, int frame, int start_x,
+				int start_y);
 void		init_frames(t_data *data);
 
 #endif
