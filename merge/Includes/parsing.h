@@ -30,7 +30,7 @@ typedef enum e_bool
 	true
 }					t_bool;
 
-typedef	struct s_frame
+typedef struct s_frame
 {
 	char	*path;
 	int		frame_h;
@@ -53,9 +53,9 @@ typedef struct s_player
 	double			rotationangle;
 	double			movespeed;
 	double			rotationspeed;
-	t_frame frames[PLAYER_FRAMES];
-	int		player_w;
-	int		player_h;
+	t_frame			frames[PLAYER_FRAMES];
+	int				player_w;
+	int				player_h;
 }					t_player;
 
 typedef struct s_dir_texture
@@ -101,6 +101,7 @@ typedef struct s_map
 	int				title_size;
 	int				player_x;
 	int				player_y;
+	size_t			map_filei;
 }					t_map;
 
 typedef struct s_cub3d
@@ -167,6 +168,13 @@ void				free_incomplete_map(t_cub3d **cub3d_data, size_t map_i,
 void				free_arrays_exit(char **arr1, char **arr2, char *err_msg,
 						t_cub3d **cub3d);
 
-void				print_tmc(t_cub3d *cub3d);
+/* void				print_tmc(t_cub3d *cub3d); */
+
+/* map_utils.c */
+void				check_spaces_validity(char **map, t_cub3d **cub3d_data);
+t_bool				check_for_wall(char *line);
+void				check_char(char c, t_cub3d **cub3d);
+t_bool				invalid_char_file(char *line);
+t_bool				valid_map_char(char c);
 
 #endif /* PARSING_H */

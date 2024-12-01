@@ -18,23 +18,39 @@ static void	content_is_valid(t_cub3d **cub3d_data);
 static void	check_content(t_cub3d **cub3d_data, t_bool *player,
 				t_bool *spaces, size_t i);
 
+t_bool	check_side_right_w(char *line)
+{
+	while (*line && line)
+		line++;
+	line--;
+	if (*(line) == '1')
+		return (true);
+	if (ft_isspace(*(line)) == true)
+	{
+		while (ft_isspace(*line) == true)
+			line--;
+		if (*line == '1')
+			return (true);
+		printf("char is: %d\n", *line);
+	}
+	return (false);
+}
+
 void	map_is_valid(t_cub3d **cub3d_data)
 {
 	size_t	i;
-	int		len_line;
 
 	i = 0;
 	check_player_escapes(cub3d_data);
 	while ((*cub3d_data)->map.map[i] != NULL)
 	{
-		len_line = ft_strlen((*cub3d_data)->map.map[i]);
 		if (i == 0 || i == (size_t)(*cub3d_data)->map.height - 1)
 		{
 			if (check_if_all_walls((*cub3d_data)->map.map[i]) == false)
 				err_exit("Error\nMap is not surrounded by walls\n", cub3d_data);
 		}
-		else if ((*cub3d_data)->map.map[i][0] != '1'
-				|| (*cub3d_data)->map.map[i][len_line - 1] != '1')
+		else if (check_for_wall((*cub3d_data)->map.map[i]) == false
+			|| check_side_right_w((*cub3d_data)->map.map[i]) == false)
 			err_exit("Error\nMap is not surrounded by walls\n", cub3d_data);
 		i++;
 	}
@@ -56,6 +72,7 @@ static void	check_player_escapes(t_cub3d **cub3d_data)
 		while ((*cub3d_data)->map.map[i][j])
 		{
 			if (j >= min_width && (*cub3d_data)->map.map[i][j] != '1'
+				&& ft_isspace((*cub3d_data)->map.map[i][j]) == false
 				&& i != 0 && (int)i < (*cub3d_data)->map.height - 1)
 			{
 				if ((*cub3d_data)->map.map[i - 1][j] == '\0'

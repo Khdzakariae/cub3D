@@ -34,6 +34,8 @@ void	get_lines(int *line_count, t_cub3d **cub3d)
 	(*cub3d)->cube_file = ft_split(lines, '\n');
 	while ((*cub3d)->cube_file[i])
 	{
+		if (check_for_wall((*cub3d)->cube_file[i]) == true)
+			break ;
 		(*cub3d)->cube_file[i] = ft_strtrim((*cub3d)->cube_file[i], " ");
 		i++;
 	}
@@ -90,9 +92,9 @@ void	check_file_lines(char **cube_file, t_cub3d **cub3d, size_t i)
 	else if (!ft_strncmp("C ", cube_file[i], 2)
 		&& (*cub3d)->colors.ceiling.is_set == false)
 		(*cub3d)->colors.ceiling.is_set = true;
-	else if (cube_file[i][0] != '1' && cube_file[i][0] != '\0')
+	else if (invalid_char_file(cube_file[i]) == true)
 		err_exit("Error\nInvalid line, texture or color\n", cub3d);
-	else if (cube_file[i][0] == '1')
+	else if (check_for_wall(cube_file[i]) == true)
 	{
 		if (all_cub3d_data_set(cub3d) == false)
 			err_exit("Error\nTexture's missing or map not last\n", cub3d);
@@ -132,6 +134,11 @@ t_bool	check_if_all_walls(char *line)
 {
 	while (*line)
 	{
+		if (ft_isspace(*line) == true)
+		{
+			line++;
+			continue ;
+		}
 		if (*line != '1')
 			return (false);
 		line++;

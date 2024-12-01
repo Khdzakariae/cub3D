@@ -28,8 +28,14 @@ void	get_map_dimensions(char **cube_file, size_t map_starting_i,
 
 	i = map_starting_i;
 	max_map_width = 0;
-	while (cube_file[i] != NULL && cube_file[i][0] == '1' && cube_file[i][0])
+	while (cube_file[i] != NULL)
 	{
+		if (check_for_wall(cube_file[i]) == false)
+		{
+			*map_height = i - map_starting_i;
+			*map_width = max_map_width;
+			return ;
+		}
 		j = 0;
 		while (cube_file[i][j])
 			j++;
@@ -52,12 +58,6 @@ void	get_map_line_len(char *line, size_t *line_map_len)
 			*line_map_len += 1;
 		i++;
 	}
-}
-
-t_bool	valid_map_char(char c)
-{
-	return (c == '0' || c == '1' || c == 'N' || c == 'S'
-		|| c == 'W' || c == 'E' || c == ' ');
 }
 
 void	free_2d_array(char **array)
@@ -83,4 +83,18 @@ t_bool	all_cub3d_data_set(t_cub3d **cub3d)
 		&& (*cub3d)->textures.ea.is_set == true
 		&& (*cub3d)->colors.floor.is_set == true
 		&& (*cub3d)->colors.ceiling.is_set == true);
+}
+
+t_bool	check_for_wall(char *line)
+{
+	while (*line && line)
+	{
+		if (*line == '1')
+			return (true);
+		if (ft_isspace(*line) == true)
+			line++;
+		else
+			return (false);
+	}
+	return (false);
 }
