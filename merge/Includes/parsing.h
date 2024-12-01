@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 08:11:25 by achahid-          #+#    #+#             */
-/*   Updated: 2024/11/30 09:21:36 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/12/01 15:20:07 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ typedef struct s_player
 	double			x;
 	double			y;
 	char			player_direction;
-	double			radius;
 	double			turndirection;
 	double			walkdirection;
 	double			rotationangle;
