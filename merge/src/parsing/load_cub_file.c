@@ -12,7 +12,7 @@
 
 #include <parsing.h>
 // notes:: strcat on getassets.
-// title_size -> tile_size
+// tile_size -> tile_size
 // replace fprintf.
 // textures, path set but not correct; to be test.
 void		load_cub3d_file(char *file, t_cub3d *cub3d);

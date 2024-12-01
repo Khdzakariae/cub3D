@@ -52,7 +52,7 @@ int	inter_check(t_data *data, float angle, float *inter, float *step)
 	{
 		if (angle > 0 && angle < M_PI)
 		{
-			*inter += data->game.map.title_size;
+			*inter += data->game.map.tile_size;
 			return (-1);
 		}
 		*step *= -1;
@@ -61,7 +61,7 @@ int	inter_check(t_data *data, float angle, float *inter, float *step)
 	{
 		if (!(angle > M_PI / 2 && angle < 3 * M_PI / 2))
 		{
-			*inter += data->game.map.title_size;
+			*inter += data->game.map.tile_size;
 			return (-1);
 		}
 		*step *= -1;
@@ -77,8 +77,8 @@ int	wall_hit(float x, float y, t_data *data)
 	if (x < 0 || x >= data->game.map.width * TILE_SIZE || y < 0
 		|| y >= data->game.map.height * TILE_SIZE)
 		return (0);
-	x_m = floor(x / data->game.map.title_size);
-	y_m = floor(y / data->game.map.title_size);
+	x_m = floor(x / data->game.map.tile_size);
+	y_m = floor(y / data->game.map.tile_size);
 	if (y_m >= data->game.map.height || x_m >= data->game.map.width)
 		return (0);
 	if (data->game.map.map[y_m]

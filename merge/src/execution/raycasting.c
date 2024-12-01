@@ -20,10 +20,10 @@ float	get_h_inter(t_data *data, float angle)
 	float	x_step;
 	float	y_step;
 
-	y_step = data->game.map.title_size;
-	x_step = data->game.map.title_size / tan(angle);
-	h_y = floor(data->game.player.y / data->game.map.title_size)
-		* data->game.map.title_size;
+	y_step = data->game.map.tile_size;
+	x_step = data->game.map.tile_size / tan(angle);
+	h_y = floor(data->game.player.y / data->game.map.tile_size)
+		* data->game.map.tile_size;
 	data->is_horizon = 1;
 	pixel = inter_check(data, angle, &h_y, &y_step);
 	h_x = data->game.player.x + (h_y - data->game.player.y) / tan(angle);
@@ -47,10 +47,10 @@ float	get_v_inter(t_data *data, float angle)
 	float	x_step;
 	float	y_step;
 
-	x_step = data->game.map.title_size;
-	y_step = data->game.map.title_size * tan(angle);
-	v_x = floor(data->game.player.x / data->game.map.title_size)
-		* data->game.map.title_size;
+	x_step = data->game.map.tile_size;
+	y_step = data->game.map.tile_size * tan(angle);
+	v_x = floor(data->game.player.x / data->game.map.tile_size)
+		* data->game.map.tile_size;
 	data->is_horizon = 0;
 	pixel = inter_check(data, angle, &v_x, &x_step);
 	v_y = data->game.player.y + (v_x - data->game.player.x) * tan(angle);

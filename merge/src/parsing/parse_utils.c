@@ -47,7 +47,7 @@ void	init_cub3d_data(t_cub3d **cub3d, int fd)
 	(*cub3d)->map.map = NULL;
 	(*cub3d)->map.width = 0;
 	(*cub3d)->map.height = 0;
-	(*cub3d)->map.title_size = TILE_SIZE;
+	(*cub3d)->map.tile_size = TILE_SIZE;
 	(*cub3d)->map.player_x = -1;
 	(*cub3d)->map.player_y = -1;
 	(*cub3d)->fd = fd;

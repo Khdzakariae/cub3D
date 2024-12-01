@@ -99,10 +99,9 @@ typedef struct s_map
 	char			**map;
 	int				width;
 	int				height;
-	int				title_size;
+	int				tile_size;
 	int				player_x;
 	int				player_y;
-	size_t			map_filei;
 }					t_map;
 
 typedef struct s_cub3d

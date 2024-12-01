@@ -69,11 +69,10 @@ static void	copy_map_content(char **cube_file,
 
 	map_i = 0;
 	map_height_scaled = (*cub3d_data)->map.height + map_starting_i;
-	(*cub3d_data)->map.map_filei = map_starting_i;
 	while (map_starting_i < map_height_scaled)
 	{
 		(*cub3d_data)->map.map[map_i]
-			= (char *)calloc((*cub3d_data)->map.width + 1, sizeof(char));
+			= (char *)ft_calloc((*cub3d_data)->map.width + 1, sizeof(char));
 		if ((*cub3d_data)->map.map[map_i] == NULL)
 			free_incomplete_map(cub3d_data, map_i,
 				"Error\nMap[i] allocation failed\n");

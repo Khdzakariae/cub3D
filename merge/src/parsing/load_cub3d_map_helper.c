@@ -31,7 +31,6 @@ t_bool	check_side_right_w(char *line)
 			line--;
 		if (*line == '1')
 			return (true);
-		printf("char is: %d\n", *line);
 	}
 	return (false);
 }

@@ -23,14 +23,14 @@ void	init_daya_walls(t_wall *wall, t_data *data, int i)
 	if (data->rays[i].washitvertical)
 	{
 		wall->wallx = fmod(data->game.player.y + data->rays[i].distance
-				* sin(data->rays[i].rayangle), data->game.map.title_size)
-			/ data->game.map.title_size;
+				* sin(data->rays[i].rayangle), data->game.map.tile_size)
+			/ data->game.map.tile_size;
 	}
 	else
 	{
 		wall->wallx = fmod(data->game.player.x + data->rays[i].distance
-				* cos(data->rays[i].rayangle), data->game.map.title_size)
-			/ data->game.map.title_size;
+				* cos(data->rays[i].rayangle), data->game.map.tile_size)
+			/ data->game.map.tile_size;
 	}
 }
 
