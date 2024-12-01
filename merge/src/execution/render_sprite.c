@@ -64,8 +64,8 @@ int	update_frame(t_data *data)
 
 void	render_player_helper(t_data *data, int frame, int start_x, int start_y)
 {
-	int		i;
-	int		j;
+	int			i;
+	int			j;
 	int			*addr;
 	int			*addr2;
 	t_player	*player;
@@ -74,16 +74,16 @@ void	render_player_helper(t_data *data, int frame, int start_x, int start_y)
 	player = &data->game.player;
 	while (i < player->player_h)
 	{
-		addr = (int *)(player->frames[frame].image_pixel_ptr
-				+ (i * player->frames[frame].line_len));
-		addr2 = (int *)(data->img.image_pixel_ptr
-				+ ((i + start_y) * data->img.line_len));
+		addr = (int *)(player->frames[frame].image_pixel_ptr + (i
+					* player->frames[frame].line_len));
+		addr2 = (int *)(data->img.image_pixel_ptr + ((i + start_y)
+					* data->img.line_len));
 		j = 0;
 		while (j < player->player_w)
 		{
-			if ((unsigned int)addr[j] != 0xFF000000 && (j + start_x) >= 0
-				&& (j + start_x) < WINDOW_WIDTH && (i + start_y) >= 0
-				&& (i + start_y) < WINDOW_HEIGHT)
+			if ((unsigned int)addr[j] != 0xFF000000 && (j + start_x) >= 0 && (j
+					+ start_x) < WINDOW_WIDTH && (i + start_y) >= 0 && (i
+					+ start_y) < WINDOW_HEIGHT)
 				addr2[j + start_x] = addr[j];
 			j++;
 		}
