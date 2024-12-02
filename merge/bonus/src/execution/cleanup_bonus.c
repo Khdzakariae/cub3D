@@ -54,6 +54,7 @@ void	cleanup(t_data *data, int flage)
 	t_texture	*texters;
 
 	texters = &data->game.textures;
+	stop_menu_music();
 	if (texters->ea.img_ptr)
 		mlx_destroy_image(data->mlx, texters->ea.img_ptr);
 	if (texters->no.img_ptr)

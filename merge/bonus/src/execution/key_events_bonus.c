@@ -29,8 +29,6 @@ void	init_movement(t_player *player, double *movestep, double *newplayerx,
 
 int	key_press(int keycode, t_data *data)
 {
-	if (data->flage_menue == 0)
-		stop_menu_music();
 	data->flage_menue = 1;
 	if (!data)
 		return (-1);
