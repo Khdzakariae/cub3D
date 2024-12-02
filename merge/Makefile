@@ -2,6 +2,8 @@ FLAGS = -Wall -Wextra -Werror #-fsanitize=address -g3
 
 NAME = cub3D
 
+NAME_BONUS = cub3D_BONUS
+
 mlx = lib/mlx/libmlx.a
 
 INCLUDES = -I "mandatory/Includes/"
@@ -41,10 +43,6 @@ $(LIBFT) :
 	@make -C lib/libft --silent
 	@echo "libft DONE [✅]"
 
-# $(NAME): $(OBJ)
-# 	@$(CC) $(FLAGS) $(mlx) $(OBJ) $(LIBFT) $(PRINTF) -Lmlx -lmlx -framework OpenGL -framework AppKit -o $(NAME)
-# 	@echo "SO_LONG DONE [🤡]"
-
 $(NAME): $(OBJ) $(LIBFT) $(HEADERS)
 	@$(CC) $(FLAGS) $(INCLUDES) $(OBJ) $(LIBFT) -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME)
 	@echo "CUB3D DONE [🤡]"
@@ -74,7 +72,7 @@ $(OBJ_DIR_BONUS):
 	@mkdir -p $(OBJ_DIR_BONUS)
 
 bonus: $(OBJ_BONUS) $(LIBFT) $(HEADERS_BONUS)
-	@$(CC) $(FLAGS) $(OBJ_BONUS) $(INCLUDES_BONUS) $(LIBFT) -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME)
+	@$(CC) $(FLAGS) $(OBJ_BONUS) $(INCLUDES_BONUS) $(LIBFT) -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME_BONUS)
 	@echo "CUB3D BONUS DONE [🤡]"
 	
 clean:
@@ -84,7 +82,7 @@ clean:
 
 fclean: clean
 	@echo "FCLEAN DONE [✅]"
-	@rm -rf $(NAME) $(OBJ_DIR) $(OBJ_DIR_BONUS)
+	@rm -rf $(NAME) $(NAME_BONUS) $(OBJ_DIR) $(OBJ_DIR_BONUS)
 	@make fclean -C lib/libft --silent
 	
 re: fclean all
