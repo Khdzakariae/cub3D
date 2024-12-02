@@ -100,7 +100,7 @@ static void	content_is_valid(t_cub3d **cub3d_data)
 		i++;
 	}
 	if (player == false)
-		err_exit("Error\nNo player position or no spaces\n", cub3d_data);
+		err_exit("Error\nNo player position\n", cub3d_data);
 }
 
 static void	check_content(t_cub3d **cub3d_data, t_bool *player,
