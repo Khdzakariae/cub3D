@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:27:25 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/12/01 15:04:39 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/12/02 11:36:26 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	init_movement(t_player *player, double *movestep, double *newplayerx,
 
 int	key_press(int keycode, t_data *data)
 {
+	data->flage_menue = 1;
 	if (!data)
 		return (-1);
 	if (keycode == KEY_UP || keycode == KEY_W)

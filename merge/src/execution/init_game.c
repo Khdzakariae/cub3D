@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:06:03 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/12/01 15:20:29 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/12/02 11:36:13 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	init_player(t_data *data)
 	data->game.player.rotationspeed = 3 * (M_PI / 180);
 	data->game.last_mouse_x = 0;
 	data->game.player.sidedirection = 0;
+	data->flage_menue = 0;
 }
 
 void	init_game(t_data *data)

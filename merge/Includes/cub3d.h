@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 19:29:17 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/12/01 21:41:17 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/12/02 11:52:04 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@
 # define TRUE 1
 # define FALSE 0
 
-# define MENU "loading/loaing.xpm"
+# define MENU "loading/loading.xpm"
 # define CIEL "texters/9078_1.xpm"
 
 typedef struct s_color_params
@@ -115,6 +115,7 @@ typedef struct s_ray
 
 typedef struct s_data
 {
+	int 	flage_menue;
 	int		flage_mousse;
 	int		is_horizon;
 	t_wall	*wall;
