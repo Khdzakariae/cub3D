@@ -4,11 +4,11 @@ NAME = cub3D
 
 mlx = lib/mlx/libmlx.a
 
-INCLUDES = -I "Includes/"
+INCLUDES = -I "mandatory/Includes/"
 
 INCLUDES_BONUS = -I "bonus/Includes/"
 
-HEADERS = $(addprefix Includes/, parsing.h cub3d.h)
+HEADERS = $(addprefix mandatory/Includes/, parsing.h cub3d.h)
 
 HEADERS_BONUS = $(addprefix bonus/Includes/, parsing_bonus.h cub3d_bonus.h)
 
@@ -52,10 +52,10 @@ $(NAME): $(OBJ) $(LIBFT) $(HEADERS)
 $(OBJ_DIR)/%.o: lib/get_next_line/%.c | $(OBJ_DIR)
 	@$(CC) $(FLAGS) $(INCLUDES) -I/usr/include -Imlx_linux -O3 -c $< -o $@
 
-$(OBJ_DIR)/%.o: src/execution/%.c | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: mandatory/src/execution/%.c | $(OBJ_DIR)
 	@$(CC) $(FLAGS) $(INCLUDES) -I/usr/include -Imlx_linux -O3 -c $< -o $@
 
-$(OBJ_DIR)/%.o: src/parsing/%.c | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: mandatory/src/parsing/%.c | $(OBJ_DIR)
 	@$(CC) $(FLAGS) $(INCLUDES) -I/usr/include -Imlx_linux -O3 -c $< -o $@
 
 $(OBJ_DIR_BONUS)/%.o: lib/get_next_line/%.c | $(OBJ_DIR_BONUS)
