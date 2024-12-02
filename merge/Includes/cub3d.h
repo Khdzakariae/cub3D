@@ -115,7 +115,7 @@ typedef struct s_ray
 
 typedef struct s_data
 {
-	int 	flage_menue;
+	int		flage_menue;
 	int		flage_mousse;
 	int		is_horizon;
 	t_wall	*wall;

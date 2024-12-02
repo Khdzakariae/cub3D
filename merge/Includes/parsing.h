@@ -53,9 +53,9 @@ typedef struct s_player
 	double			movespeed;
 	double			rotationspeed;
 	double			sidedirection;
-	t_frame frames[PLAYER_FRAMES];
-	int		player_w;
-	int		player_h;
+	t_frame			frames[PLAYER_FRAMES];
+	int				player_w;
+	int				player_h;
 }					t_player;
 
 typedef struct s_dir_texture
