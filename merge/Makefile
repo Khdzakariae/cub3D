@@ -19,7 +19,7 @@ OBJ = $(addprefix $(OBJ_DIR)/, $(notdir $(SRC:.c=.o)))
 
 all: $(LIBFT) $(NAME)
 
-$(LIBFT) : $(SRC)
+$(LIBFT) : $(OBJ)
 	@make -C lib/libft --silent
 	@echo "libft DONE [✅]"
 
@@ -33,7 +33,7 @@ $(LIBFT) : $(SRC)
  %.o: %.c
 	@$(CC) $(INCLUDES) -I/usr/include -Imlx_linux -O3 -c $< -o $@
 
- $(NAME): $(OBJ)
+ $(NAME): $(OBJ) $(LIBFT)
 	@$(CC) $(FLAGS) $(OBJ) $(LIBFT)   -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME)
 	@echo "CUB3D DONE [🤡]"
 

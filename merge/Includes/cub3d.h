@@ -188,5 +188,6 @@ bool		timing(void);
 void		render_player_helper(t_data *data, int frame, int start_x,
 				int start_y);
 void		init_frames(t_data *data);
+void		stop_menu_music(void);
 
 #endif
