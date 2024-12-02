@@ -58,7 +58,7 @@ t_bool	invalid_char_file(char *line)
 			break ;
 		line++;
 	}
-	return (*line != '1' && *line != '\0' && *line != ' ');
+	return (*line != '1' && *line != '\0');
 }
 
 t_bool	valid_map_char(char c)

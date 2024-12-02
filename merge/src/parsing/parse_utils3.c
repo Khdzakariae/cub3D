@@ -91,7 +91,7 @@ t_bool	check_for_wall(char *line)
 	{
 		if (*line == '1')
 			return (true);
-		if (ft_isspace(*line) == true)
+		else if (ft_isspace(*line) == true)
 			line++;
 		else
 			return (false);

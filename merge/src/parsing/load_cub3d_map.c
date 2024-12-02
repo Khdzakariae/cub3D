@@ -36,7 +36,7 @@ void	load_cub3d_map(char **cube_file, t_cub3d **cub3d_data)
 			if (cube_file[i] == NULL)
 				break ;
 		}
-		else if (check_for_wall(cube_file[i]) && map == true)
+		else if (check_for_wall(cube_file[i]) == true && map == true)
 			err_exit("Error\nOnly one map is valid\n", cub3d_data);
 		i++;
 	}
