@@ -176,5 +176,7 @@ t_bool				check_for_wall(char *line);
 void				check_char(char c, t_cub3d **cub3d);
 t_bool				invalid_char_file(char *line);
 t_bool				valid_map_char(char c);
+int					ft_atoi_mod(const char *str, t_cub3d **cub3d_data,
+						char **split_colors, char **split_rgb);
 
 #endif /* PARSING_H */

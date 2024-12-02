@@ -66,3 +66,31 @@ t_bool	valid_map_char(char c)
 	return (c == '0' || c == '1' || c == 'N' || c == 'S'
 		|| c == 'W' || c == 'E' || c == ' ');
 }
+
+int	ft_atoi_mod(const char *str, t_cub3d **cub3d_data,
+		char **split_colors, char **split_rgb)
+{
+	int	r;
+	int	sign;
+	int	i;
+
+	r = 0;
+	sign = 1;
+	i = 0;
+	while (ft_isspace(str[i]) == true)
+		i++;
+	if (str[i] == '-')
+	{
+		sign = -1;
+		i++;
+	}
+	else if (str[i] == '+')
+		i++;
+	while (str[i] >= '0' && str[i] <= '9')
+		r = r * 10 + (str[i++] - '0');
+	if (str[i])
+		free_arrays_exit(split_colors, split_rgb,
+			"Error\nInvalid color\n", cub3d_data);
+	r *= sign;
+	return (r);
+}
