@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSING_H
-# define PARSING_H
+#ifndef PARSING_BONUS_H
+# define PARSING_BONUS_H
 
 # include "../../lib/get_next_line/get_next_line.h"
 # include <fcntl.h>
@@ -179,4 +179,4 @@ t_bool				valid_map_char(char c);
 int					ft_atoi_mod(const char *str, t_cub3d **cub3d_data,
 						char **split_colors, char **split_rgb);
 
-#endif /* PARSING_H */
+#endif /* PARSING_BONUS_H */

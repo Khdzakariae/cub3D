@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CUB3D_H
-# define CUB3D_H
+#ifndef CUB3D_BONUS_H
+# define CUB3D_BONUS_H
 
 # include "../../lib/libft/libft.h"
 # include "../../lib/mlx/mlx.h"
@@ -189,5 +189,6 @@ void		render_player_helper(t_data *data, int frame, int start_x,
 				int start_y);
 void		init_frames(t_data *data);
 void		stop_menu_music(void);
+void		play_menu_music(void);
 
-#endif
+#endif /* CUB3D_BONUS_H */

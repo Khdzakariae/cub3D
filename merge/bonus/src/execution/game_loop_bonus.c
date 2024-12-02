@@ -55,14 +55,6 @@ void	render_player(t_data *data, int frame)
 	render_player_helper(data, frame, start_x, start_y);
 }
 
-void	play_menu_music(void)
-{
-	int	r;
-
-	r = system("cvlc ~/Downloads/rai_remix.mp3 &");
-	(void)r;
-}
-
 void	menu(t_data *data)
 {
 	t_texture	*player;
@@ -74,7 +66,6 @@ void	menu(t_data *data)
 	play_menu_music();
 	player = &data->game.textures;
 	i = 0;
-	j = 0;
 	while (i < player->menu.texter_height)
 	{
 		addr = (int *)(player->menu.image_pixel_ptr + (i
@@ -91,14 +82,6 @@ void	menu(t_data *data)
 		i++;
 	}
 	mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
-}
-
-void	stop_menu_music(void)
-{
-	int	r;
-
-	r = system("pkill -f rai_remix.mp3");
-	(void)r;
 }
 
 void	draw_player(t_data *data)

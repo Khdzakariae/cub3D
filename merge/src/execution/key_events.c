@@ -44,8 +44,6 @@ int	key_press(int keycode, t_data *data)
 		data->game.player.sidedirection = -1;
 	else if (keycode == KEY_D)
 		data->game.player.sidedirection = 1;
-	else if (keycode == KEY_ACTIVE_MOUSSE)
-		data->flage_mousse *= -1;
 	else if (keycode == KEY_ESC)
 		cleanup(data, 0);
 	return (0);
@@ -68,24 +66,5 @@ int	key_release(int keycode, t_data *data)
 	{
 		data->game.player.sidedirection = 0;
 	}
-	return (0);
-}
-
-int	mouse_move(int x, int y, t_data *data)
-{
-	int		delta_x;
-	double	rotationangle;
-
-	(void)y;
-	if (data->flage_mousse == -1)
-		return (0);
-	if (!data)
-		return (-1);
-	delta_x = x - data->game.last_mouse_x;
-	data->game.player.rotationangle += delta_x * MOUSE_SENSITIVITY * (M_PI
-			/ 180);
-	rotationangle = normalizeangle(data->game.player.rotationangle);
-	data->game.player.rotationangle = rotationangle;
-	data->game.last_mouse_x = x;
 	return (0);
 }
