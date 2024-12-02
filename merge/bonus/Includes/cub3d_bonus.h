@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
+/*   cub3d_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 19:29:17 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/12/02 11:52:04 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/12/02 22:46:49 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,19 +47,11 @@
 # define WINDOW_HEIGHT 720
 # define FOV_ANGLE 1.0466 // (60 * (M_PI / 180))
 
-// #define TILE_SIZE 256
-
 # define CIEL_IMAGE FALSE
 # define DARKNESS 500
 # define RADIUS 30
 # define COLLISION_MARGIN 50
 # define KEY_ACTIVE_MOUSSE 65436
-
-//  #define KEY_UP 126
-// #define KEY_DOWN 125
-// #define KEY_LEFT 123
-// #define KEY_RIGHT 124
-// #define KEY_ESC 53
 
 # define KEY_W 119
 # define KEY_S 115
@@ -191,4 +183,4 @@ void		init_frames(t_data *data);
 void		stop_menu_music(void);
 void		play_menu_music(void);
 
-#endif /* CUB3D_BONUS_H */
+#endif
