@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:44:09 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/12/01 15:16:45 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/12/01 20:52:10 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	main(int argc, char **argv)
 
 	if (argc != 2)
 	{
-		fprintf(stderr, "Usage: %s <map_file>\n", argv[0]);
+		ft_putstr_fd("Usage: ./cub3D <map_file>\n",2 );
 		return (1);
 	}
 	ft_memset(&data, 0, sizeof(t_data));
@@ -39,7 +39,7 @@ int	main(int argc, char **argv)
 	data.game = cub3d;
 	if (!init(&data))
 	{
-		fprintf(stderr, "Error: Failed to initialize game\n");
+		ft_putstr_fd("Error: Failed to initialize game\n", 2);
 		cleanup(&data, 2);
 		return (1);
 	}

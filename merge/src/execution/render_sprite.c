@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 18:42:55 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/29 19:31:56 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/12/02 10:02:49 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ char	*get_assets(int current_image)
 	current_image += 1;
 	assets = ft_calloc(30, sizeof(char));
 	number = ft_itoa(current_image);
-	strcat(assets, "sprite_frames/");
-	strcat(assets, number);
-	strcat(assets, ".xpm");
+	ft_strcat(assets, "sprite_frames/");
+	ft_strcat(assets, number);
+	ft_strcat(assets, ".xpm");
 	free(number);
 	return (assets);
 }

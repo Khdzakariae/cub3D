@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 12:29:02 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/02/11 17:53:54 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/12/02 10:02:12 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #  define BUFFER_SIZE 7
 # endif
 
+char	*ft_strcat(char *dest, char *src);
 char	*ft_read(char *str, int fd);
 int		get_next_line(int fd, char **line);
 char	*ft_line(char *line);
