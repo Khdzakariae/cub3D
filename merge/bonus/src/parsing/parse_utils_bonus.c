@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <parsing.h>
+#include <parsing_bonus.h>
 
 t_bool	check_cub_extension(char *file);
 void	init_cub3d_data(t_cub3d **cub3d);

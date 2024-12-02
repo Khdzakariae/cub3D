@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <cub3d.h>
+#include <cub3d_bonus.h>
 
 int	update_player(t_player *player, t_map *map)
 {
@@ -38,6 +38,31 @@ int	update_player(t_player *player, t_map *map)
 	return (0);
 }
 
+void	render_player(t_data *data, int frame)
+{
+	t_player	*player;
+	int			start_x;
+	int			start_y;
+
+	player = &data->game.player;
+	if (!player->frames[frame].image_pixel_ptr)
+	{
+		ft_putstr_fd("Error: Player frame image not loaded\n", 2);
+		return ;
+	}
+	start_x = (WINDOW_WIDTH / 2) - (player->player_w / 2);
+	start_y = WINDOW_HEIGHT - player->player_h;
+	render_player_helper(data, frame, start_x, start_y);
+}
+
+void	play_menu_music(void)
+{
+	int	r;
+
+	r = system("cvlc ~/Downloads/rai_remix.mp3 &");
+	(void)r;
+}
+
 void	menu(t_data *data)
 {
 	t_texture	*player;
@@ -46,6 +71,7 @@ void	menu(t_data *data)
 	int			*addr;
 	int			*addr2;
 
+	play_menu_music();
 	player = &data->game.textures;
 	i = 0;
 	j = 0;
@@ -67,6 +93,31 @@ void	menu(t_data *data)
 	mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
 }
 
+void	stop_menu_music(void)
+{
+	int	r;
+
+	r = system("pkill -f rai_remix.mp3");
+	(void)r;
+}
+
+void	draw_player(t_data *data)
+{
+	static int	i;
+
+	if (timing() == true)
+		render_player(data, i++);
+	else
+	{
+		if (i != 0)
+			render_player(data, i - 1);
+		else
+			render_player(data, i);
+	}
+	if (i == PLAYER_FRAMES)
+		i = 0;
+}
+
 int	game_loop(t_data *data)
 {
 	if (data->flage_menue == 0)
@@ -82,6 +133,7 @@ int	game_loop(t_data *data)
 	drawing_floor(data);
 	castallrays(data);
 	render_walls(data);
+	draw_player(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->img.img_ptr, 0, 0);
 	return (0);
 }

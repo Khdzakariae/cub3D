@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <cub3d.h>
+#include <cub3d_bonus.h>
 
 void	cleanup_textures(t_cub3d *game)
 {
@@ -19,6 +19,22 @@ void	cleanup_textures(t_cub3d *game)
 	free(game->textures.we.path);
 	free(game->textures.no.path);
 	free(game->textures.so.path);
+}
+
+void	clean_frames(t_data *data)
+{
+	t_player	*player;
+	size_t		i;
+
+	player = &data->game.player;
+	i = 0;
+	while (i < PLAYER_FRAMES)
+	{
+		if (player->frames[i].img_ptr)
+			mlx_destroy_image(data->mlx, player->frames[i].img_ptr);
+		free(player->frames[i].path);
+		i++;
+	}
 }
 
 void	destroy_window(t_data *data, int flage)
@@ -53,5 +69,6 @@ void	cleanup(t_data *data, int flage)
 	if (data->img.img_ptr)
 		mlx_destroy_image(data->mlx, data->img.img_ptr);
 	cleanup_textures(&data->game);
+	clean_frames(data);
 	destroy_window(data, flage);
 }

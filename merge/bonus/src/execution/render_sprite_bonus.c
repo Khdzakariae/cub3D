@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <cub3d.h>
-#include <string.h>
+#include <cub3d_bonus.h>
 
 long long	the_time(void)
 {

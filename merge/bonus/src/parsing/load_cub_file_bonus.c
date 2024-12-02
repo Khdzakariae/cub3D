@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <parsing.h>
+#include <parsing_bonus.h>
 
 void		load_cub3d_file(char *file, t_cub3d *cub3d);
 static void	file_is_valid(char **cube_file, t_cub3d **cub3d);

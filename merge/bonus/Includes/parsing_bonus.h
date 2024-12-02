@@ -13,7 +13,7 @@
 #ifndef PARSING_H
 # define PARSING_H
 
-# include "../lib/get_next_line/get_next_line.h"
+# include "../../lib/get_next_line/get_next_line.h"
 # include <fcntl.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -30,6 +30,18 @@ typedef enum e_bool
 	true
 }					t_bool;
 
+typedef struct s_frame
+{
+	char	*path;
+	int		frame_h;
+	int		frame_w;
+	void	*img_ptr;
+	char	*image_pixel_ptr;
+	int		bits_per_pixel;
+	int		endian;
+	int		line_len;
+}	t_frame;
+
 typedef struct s_player
 {
 	double			x;
@@ -41,6 +53,7 @@ typedef struct s_player
 	double			movespeed;
 	double			rotationspeed;
 	double			sidedirection;
+	t_frame			frames[PLAYER_FRAMES];
 	int				player_w;
 	int				player_h;
 }					t_player;

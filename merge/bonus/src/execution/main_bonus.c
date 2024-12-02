@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <cub3d.h>
+#include <cub3d_bonus.h>
 
 bool	init(t_data *data)
 {
@@ -18,6 +18,7 @@ bool	init(t_data *data)
 	if (!data->mlx || !data->win || !data->img.img_ptr)
 		return (false);
 	init_player(data);
+	init_frames(data);
 	init_textures(data);
 	data->flage_mousse = -1;
 	return (true);

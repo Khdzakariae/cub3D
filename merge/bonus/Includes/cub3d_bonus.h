@@ -13,9 +13,9 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include "../lib/libft/libft.h"
-# include "../lib/mlx/mlx.h"
-# include "parsing.h"
+# include "../../lib/libft/libft.h"
+# include "../../lib/mlx/mlx.h"
+# include "parsing_bonus.h"
 # include <errno.h>
 # include <fcntl.h>
 # include <math.h>
@@ -182,5 +182,12 @@ int			get_wall_bottom(int wallheight);
 int			get_wall_height(float perpdistance);
 int			get_texture_id(t_data *data, int i);
 void		render_walls(t_data *data);
+
+int			update_frame(t_data *data);
+bool		timing(void);
+void		render_player_helper(t_data *data, int frame, int start_x,
+				int start_y);
+void		init_frames(t_data *data);
+void		stop_menu_music(void);
 
 #endif
