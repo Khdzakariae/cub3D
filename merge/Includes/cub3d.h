@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 19:29:17 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/12/01 15:16:45 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/12/01 21:41:17 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@
 
 // #define TILE_SIZE 256
 
-# define CIEL_IMAGE TRUE
+# define CIEL_IMAGE FALSE
 # define DARKNESS 500
 # define RADIUS 30
 # define COLLISION_MARGIN 50
