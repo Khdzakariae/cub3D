@@ -6,7 +6,7 @@
 /*   By: zel-khad <zel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 11:26:44 by zel-khad          #+#    #+#             */
-/*   Updated: 2024/11/28 11:04:42 by zel-khad         ###   ########.fr       */
+/*   Updated: 2024/12/02 22:23:46 by zel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ int	get_texture_id(t_data *data, int i)
 	if (data->rays[i].washitvertical)
 	{
 		if (cos(rayangle) > 0)
-			return (3);
+			return (0);
 		else
-			return (2);
+			return (3);
 	}
 	else
 	{
 		if (sin(rayangle) > 0)
-			return (0);
+			return (2);
 		else
 			return (1);
 	}
