@@ -47,7 +47,6 @@ int	main(int argc, char **argv)
 	mlx_loop_hook(data.mlx, game_loop, &data);
 	mlx_hook(data.win, 2, 1L << 0, key_press, &data);
 	mlx_hook(data.win, 3, 1L << 1, key_release, &data);
-	mlx_mouse_hide();
 	mlx_hook(data.win, 6, 1L << 6, mouse_move, &data);
 	mlx_loop(data.mlx);
 	return (0);
