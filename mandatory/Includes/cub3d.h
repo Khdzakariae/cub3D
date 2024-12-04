@@ -14,7 +14,12 @@
 # define CUB3D_H
 
 # include "../../lib/libft/libft.h"
-# include "../../lib/mlx/mlx.h"
+#ifdef __APPLE__
+ # include "../../lib/mlx_macos/mlx.h"
+#endif
+# ifdef __linux
+ # include "../../lib/mlx/mlx.h"
+#endif
 # include "parsing.h"
 # include <errno.h>
 # include <fcntl.h>
@@ -53,10 +58,19 @@
 # define COLLISION_MARGIN 50
 # define KEY_ACTIVE_MOUSSE 65436
 
+# ifdef __linux
 # define KEY_W 119
 # define KEY_S 115
 # define KEY_A 97
 # define KEY_D 100
+# endif
+
+# ifdef __APPLE__
+#  define KEY_D 2
+#  define KEY_A 0
+#  define KEY_S 1
+#  define KEY_W 13
+# endif
 
 # define TRUE 1
 # define FALSE 0
@@ -117,11 +131,21 @@ typedef struct s_data
 	t_ray	rays[NUM_RAYS];
 }			t_data;
 
+# ifdef __linux
 # define KEY_UP 65362
 # define KEY_DOWN 65364
 # define KEY_LEFT 65361
 # define KEY_RIGHT 65363
 # define KEY_ESC 65307
+# endif
+
+# ifdef __APPLE__
+#  define KEY_UP 126
+#  define KEY_DOWN 125
+#  define KEY_LEFT 123
+#  define KEY_RIGHT 124
+# define KEY_ESC 53
+# endif
 
 void		init_movement(t_player *player, double *movestep,
 				double *newplayerx, double *newplayery);

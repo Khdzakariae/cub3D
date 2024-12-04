@@ -27,7 +27,9 @@ void	destroy_window(t_data *data, int flage)
 		mlx_destroy_window(data->mlx, data->win);
 	if (data->mlx)
 	{
-		mlx_destroy_display(data->mlx);
+		#ifdef __linux
+			mlx_destroy_display(data->mlx);
+		#endif
 		free(data->mlx);
 	}
 	exit(flage);

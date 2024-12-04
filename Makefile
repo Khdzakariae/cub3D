@@ -6,6 +6,10 @@ NAME_BONUS = cub3D_BONUS
 
 mlx = lib/mlx/libmlx.a
 
+OS = $(shell uname)
+
+mlx_macos = lib/mlx_macos/libmlx.a
+
 INCLUDES = -I "mandatory/Includes/"
 
 INCLUDES_BONUS = -I "bonus/Includes/"
@@ -43,9 +47,19 @@ $(LIBFT) :
 	@make -C lib/libft --silent
 	@echo "libft DONE [✅]"
 
+ifeq ($(OS), Linux)
 $(NAME): $(OBJ) $(LIBFT) $(HEADERS)
+	@echo "Linux detected [🐧]"
 	@$(CC) $(FLAGS) $(INCLUDES) $(OBJ) $(LIBFT) -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME)
 	@echo "CUB3D DONE [🤡]"
+else ifeq ($(OS), Darwin)
+$(NAME): $(OBJ) $(LIBFT) $(HEADERS)
+	@echo "MacOS detected [🍏]"
+	@$(CC) $(FLAGS) $(INCLUDES) $(mlx_macos) $(OBJ) $(LIBFT) -Llib/mlx_macos -lmlx -framework OpenGL -framework AppKit -o $(NAME)
+	@echo "CUB3D DONE [🤡]"
+else
+	@echo "Unsupported OS"
+endif
 
 $(OBJ_DIR)/%.o: lib/get_next_line/%.c | $(OBJ_DIR)
 	@$(CC) $(FLAGS) $(INCLUDES) -I/usr/include -Imlx_linux -O3 -c $< -o $@
@@ -71,10 +85,21 @@ $(OBJ_DIR):
 $(OBJ_DIR_BONUS):
 	@mkdir -p $(OBJ_DIR_BONUS)
 
+ifeq ($(OS), Linux)
 bonus: $(OBJ_BONUS) $(LIBFT) $(HEADERS_BONUS)
+#check if vlc is installed
+	@vlc --version || sudo apt-get install vlc
 	@$(CC) $(FLAGS) $(OBJ_BONUS) $(INCLUDES_BONUS) $(LIBFT) -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME_BONUS)
 	@echo "CUB3D BONUS DONE [🤡]"
-	
+else ifeq ($(OS), Darwin)
+bonus: $(OBJ_BONUS) $(LIBFT) $(HEADERS_BONUS)
+#check if vlc is installed
+	@which afplay || sudo apt-get install afplay
+	@$(CC) $(FLAGS) $(OBJ_BONUS) $(INCLUDES_BONUS) $(mlx_macos) $(LIBFT) -Llib/mlx_macos -lmlx -framework OpenGL -framework AppKit -o $(NAME_BONUS)
+	@echo "CUB3D BONUS DONE [🤡]"
+else
+	@echo "Unsupported OS"
+endif
 clean:
 	@echo "CLEAN DONE [✅]"
 	@rm -f $(OBJ) $(OBJ_BONUS)

@@ -19,7 +19,12 @@ void	play_menu_music(void)
 {
 	int		r;
 
+	#ifdef __linux
 	r = system("cvlc loading/rai_remix.mp3 &");
+	#endif
+	#ifdef __APPLE__
+	r = system("afplay loading/rai_remix.mp3 &");
+	#endif
 	(void)r;
 }
 
@@ -27,6 +32,11 @@ void	stop_menu_music(void)
 {
 	int	r;
 
+	#ifdef __linux
 	r = system("pkill -f loading/rai_remix.mp3");
+	#endif
+	#ifdef __APPLE__
+	r = system("pkill -f loading/rai_remix.mp3");
+	#endif
 	(void)r;
 }
