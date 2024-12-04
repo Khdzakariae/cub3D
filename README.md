@@ -216,7 +216,7 @@ cd cub3d
 ```
 make                        compiles cub3D executable
 
-make bonus                  compiles cub3D executable (again)
+make bonus                  compiles cub3D executable for bonus part
 
 ./cub3d map/cub3d.cub #Run mandatory part
 
