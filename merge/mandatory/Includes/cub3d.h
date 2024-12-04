@@ -27,7 +27,7 @@
 # include <time.h>
 # include <unistd.h>
 
-# define MOUSE_SENSITIVITY 1
+# define MOUSE_SENSITIVITY 0.5
 
 # define COLOR_RED 0xFF0000
 # define COLOR_GREEN 0x00FF00
