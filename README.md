@@ -201,7 +201,7 @@ We implemented a few things that we were not asked to implement, but we thought 
 
 - Added darkening effect to the game. The farther a wall is hit, the darker it is drawn. This gives the game a cave-like feel
 - Game works both in Linux and MacOS
-- A music running in the background (famous and well known smati instrument remix).
+- A music running in the background (famous and well known smati hicham instrument remix).
 
 ## Installation
 
