@@ -207,7 +207,7 @@ We implemented a few things that we were not asked to implement, but we thought 
 
 ### Cloning the repositories
 ```shell
-git clone https://gitlab.com/madebypixel02/cub3d.git
+git clone https://github.com/Khdzakariae/cub3D.git
 cd cub3d
 ```
 
@@ -215,10 +215,12 @@ cd cub3d
 
 ```
 make                        compiles cub3D executable
+
 make bonus                  compiles cub3D executable (again)
 
 ./cub3d map/cub3d.cub #Run mandatory part
+
 ./cub3d_BONUS map/cub3d.cub #Run bonus part
 ```
 
-February 03th, 2024
+@Khdzakariae | @achahid19 February 03th, 2024
