@@ -69,7 +69,9 @@ void	init_game(t_data *data)
 	data->win = mlx_new_window(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "Cub3D");
 	if (!data->win)
 	{
-		mlx_destroy_display(data->mlx);
+		#ifdef __linux
+			mlx_destroy_display(data->mlx);
+		#endif
 		free(data->mlx);
 		return ;
 	}
@@ -77,7 +79,9 @@ void	init_game(t_data *data)
 	if (!data->img.img_ptr)
 	{
 		mlx_destroy_window(data->mlx, data->win);
-		mlx_destroy_display(data->mlx);
+		#ifdef __linux
+			mlx_destroy_display(data->mlx);
+		#endif
 		free(data->mlx);
 		return ;
 	}
