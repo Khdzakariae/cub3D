@@ -179,25 +179,19 @@ Note: these are the basic mandatory controls, but we added a few more keys to ha
 
 ## Bonus
 
-For this project there were several bonuses, and we did all of them:
+For this project there were several bonuses, and we did 3 of them:
 
-* Wall Collisions
+* Wall Collisions (DONE)
 
 When walking to a wall, instead of stopping in front of it we split the movement into the ``x`` and ``y`` vectors and try to move in either of them, making wall collisions possible
 
 * Minimap
 
-Being entirely honest, we did this bonus out of necessity, because we had some issues with our raycasting algorithm in the beginning and the best way to solve those issues was to visualize what we were doing in 2D. We decided to center the player on the minimap and only draw a part of it to prevent UI inconsistencies. Sometimes very large maps would cover a large part of the screen
-
 * Doors
 
-This bonus was qucick to implement. We added two new characters to the map: ``c`` for **c**losed doors and ``o`` for **o**pen doors. We launch a ray that looks for doors and walls in the direction of the player and if a door is hit we open/close that particular door. Press the ``E`` key to trigger nearby doors
+* Animations (DONE)
 
-* Animations
-
-A simple way to animate sprites was to animate the walls themselves. When we read multiple lines with ``NO`` (for example) we add it to a new node in a linked list. Then we just iterate over the linked list changing the sprite to the next one on the list
-
-* Rotation with mouse
+* Rotation with mouse (Press 1 key for activation) (DONE)
 
 This one was very straightforward. There is an event on the ``minilibX`` library that tells the user the position of the mouse. When the position changes, we increment/decrement the player's view direction accordingly
 
@@ -206,11 +200,8 @@ This one was very straightforward. There is an event on the ``minilibX`` library
 We implemented a few things that we were not asked to implement, but we thought would give the project a cooler vibe:
 
 - Added darkening effect to the game. The farther a wall is hit, the darker it is drawn. This gives the game a cave-like feel
-- Add some sample animations to test in maps (valront hands animated)
 - Game works both in Linux and MacOS
-- Wall collisions for enhanced game experience
 - A music running in the background (famous and well known smati instrument remix).
-- Point of view rotation with mouse (Press on key '1' to be activated).
 
 ## Installation
 
