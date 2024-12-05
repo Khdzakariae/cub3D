@@ -11,8 +11,6 @@
 - [Introduction](#introduction)
 - [Map Parsing](#map-parsing)
 - [Raycasting](#raycasting)
-    - [Walls](#walls)
-    - [Textures](#textures)
 - [Controls](#controls)
 - [Bonus Features](#bonus-features)
 - [Extras](#extras)
