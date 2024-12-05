@@ -104,7 +104,7 @@ When walking to a wall, instead of stopping in front of it we split the movement
 
 * Animations (DONE)
 
-* Rotation with mouse (Press 1 key for activation) (DONE)
+* Rotation with mouse (Press key "1" for activation) (DONE)
 
 This one was very straightforward. There is an event on the ``minilibX`` library that tells the user the position of the mouse. When the position changes, we increment/decrement the player's view direction accordingly
 
