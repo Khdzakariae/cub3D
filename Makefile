@@ -87,14 +87,14 @@ $(OBJ_DIR_BONUS):
 
 ifeq ($(OS), Linux)
 bonus: $(OBJ_BONUS) $(LIBFT) $(HEADERS_BONUS)
-#check if vlc is installed
-	@vlc --version > /dev/null || sudo apt-get install vlc /dev/null
+#check if vlc is installed linux
+	@which vlc > /dev/null || sudo apt-get install vlc > /dev/null
 	@echo "Linux detected [🐧]"
 	@$(CC) $(FLAGS) $(OBJ_BONUS) $(INCLUDES_BONUS) $(LIBFT) -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME_BONUS)
 	@echo "CUB3D BONUS DONE [🤡]"
 else ifeq ($(OS), Darwin)
 bonus: $(OBJ_BONUS) $(LIBFT) $(HEADERS_BONUS)
-#check if vlc is installed
+#check if afplay is installed for mac
 	@which afplay > /dev/null || sudo apt-get install afplay > /dev/null
 	@echo "MacOS detected [🍏]"
 	@$(CC) $(FLAGS) $(OBJ_BONUS) $(INCLUDES_BONUS) $(mlx_macos) $(LIBFT) -Llib/mlx_macos -lmlx -framework OpenGL -framework AppKit -o $(NAME_BONUS)
