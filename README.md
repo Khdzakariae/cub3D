@@ -41,10 +41,17 @@ The **cub3D** executable accepts a single argument: a `.cub` map file. This file
 
 **Example Map:**
 ```plaintext
-NO textures/wall_1.xpm
-SO textures/wall_2.xpm
-WE textures/wall_3.xpm
-EA textures/wall.xpm
+NO ./texters/1.xpm 
+
+SO ./texters/2.xpm
+
+
+WE ./texters/4.xpm 
+
+
+
+
+EA ./texters/3.xpm
 
       F  6,7,11    
       C 6,7,11
