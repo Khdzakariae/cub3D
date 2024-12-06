@@ -1,139 +1,143 @@
-# cub3d | 1337 BG
+# cub3D | 1337 BG
 
-**A Journey into Raycasting with miniLibX 💡**
+My first RayCaster with miniLibX 💡
 
 <div align="center">
     <img src="sprite_frames/Screenshot from 2024-12-04 15-58-52.png">
 </div>
 
 ## Table of Contents
-
-- [Introduction](#introduction)
-- [Map Parsing](#map-parsing)
-- [Raycasting](#raycasting)
-- [Controls](#controls)
-- [Bonus Features](#bonus-features)
-- [Extras](#extras)
-- [Installation](#installation)
-- [Usage](#usage)
-
----
+- [cub3D | 1337 BG](#cub3d--1337-bg)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Map Parsing](#map-parsing)
+  - [Raycasting](#raycasting)
+    - [Walls](#walls)
+    - [Textures](#textures)
+    - [Configuration File Format](#configuration-file-format)
+  - [Controls](#controls)
+  - [Bonus](#bonus)
+  - [Extras](#extras)
+  - [Installation](#installation)
 
 ## Introduction
-
-The **cub3d** project aims to develop a 3D game using the **raycasting** technique, the same method made famous by *Wolfenstein 3D*. This group project was a collaborative effort, and I was fortunate to work alongside [@Khdzakariae](https://github.com/Khdzakariae/).
-
----
+The aim of the `cub3d` project is to create a 3D game using the raycasting technique, implemented in the world-famous `Wolfenstein 3D` game.
 
 ## Map Parsing
-
-The **cub3D** executable accepts a single argument: a `.cub` map file. This file must adhere to the following structure:
-
-- **Header Lines:**  
-  Specify textures with `NO`, `SO`, `EA`, and `WE`, followed by valid `.xpm` paths. Define floor (`F`) and ceiling (`C`) colors in RGB format separated by commas.
-
-- **Map Body:**  
-  Acceptable characters include:
-  - `1`: Wall
-  - `0`: Floor
-  - `N`, `S`, `E`, `W`: Player starting positions  
-  The map must be enclosed by walls, with spaces allowed but non-walkable.
-
-**Example Map:**
-```plaintext
-NO ./texters/1.xpm 
-
-SO ./texters/2.xpm
-
-
-WE ./texters/4.xpm 
-
-
-
-
-EA ./texters/3.xpm
-
-      F  6,7,11    
-      C 6,7,11
-
-
-1111111111111111111111111111111111111111
-1E0000000000000001100000000000000000001            
-1111000000000000000000000000000000000001            
-1000000000000000000000000000000000000001            
-1000000000000000000000000000000000000001            
-1000000001000000000000000000000000000001            
-10000000000000000111100000000000000000001            
-1000000001000000000000000000000000000001            
-1000000000000000000000000000000000000001            
-10000000110000000011110000000000000000001            
-1000000000000000000000000000000000000001            
-1000000000000000000000000000000000000001            
-1000000000000000000000000000000000000001            
-1000000000000000000000000000000000000001            
-1111111111111111111111111111111111111111
-```
-
+The `cub3D` executable receives a single argument, the map file in `.cub` format. The file must follow these rules:
+- The map must be composed of only 6 possible characters: `0` for an empty space, `1` for a wall, and `N`, `S`, `E`, or `W` for the player's start position and spawning orientation.
+- The map must be closed/surrounded by walls, otherwise, the program returns an error.
+- Each type of element can be separated by one or more empty lines.
+- Each type of element can be set in any order in the file, except for the map which always has to be the last.
+- Each type of information from an element can be separated by one or more spaces.
+- Spaces are a valid part of the map and should be handled accordingly.
 
 ## Raycasting
+Raycasting creates a 3D perspective in a 2D map by throwing rays in the player's view direction to calculate the distance to the nearest wall.
 
-Raycasting is a rendering technique to create a 3D perspective in a 2D map. 
-The logic behind RayCasting is to throw rays in the direction of the player view. Basically, we need to check the distance between the player and the nearest wall (i.e. the point where the ray hits a wall) to caculate the height of the vertical lines we draw.
+### Walls
+Calculate the distance between the player and the nearest wall using steps such as initializing attributes, moving rays, and fixing fisheye effects.
 
+### Textures
+Choose the correct texture based on which side of the wall was hit, and implement stretching if necessary.
+
+![Raycasting Example](https://i.sstatic.net/2DdYw.gif)
+
+Here are some images explaining the raycasting process:
+
+![Raycasting Image 1](https://permadi.com/tutorial/raycast/images/figure33.gif)
+![Raycasting Image 2](https://permadi.com/tutorial/raycast/images/figure34.gif)
+![Raycasting Image 3](https://permadi.com/tutorial/raycast/images/figure35.gif)
+
+### Configuration File Format
+Your program must take as a first argument a scene description file with the `.cub` extension. The file must follow these rules:
+
+- The map must be composed of only 6 possible characters: `0` for an empty space, `1` for a wall, and `N`, `S`, `E`, or `W` for the player's start position and spawning orientation.
+- The map must be closed/surrounded by walls, if not the program must return an error.
+- Except for the map content, each type of element can be separated by one or more empty line(s).
+- Except for the map content which always has to be the last, each type of element can be set in any order in the file.
+- Except for the map, each type of information from an element can be separated by one or more space(s).
+- The map must be parsed as it looks in the file. Spaces are a valid part of the map and are up to you to handle. You must be able to parse any kind of map, as long as it respects the rules of the map.
+
+Each element (except the map) first information is the type identifier (composed by one or two character(s)), followed by all specific information for each object in a strict order such as:
+
+- North texture:
+  - Identifier: `NO`
+  - Path to the north texture
+- South texture:
+  - Identifier: `SO`
+  - Path to the south texture
+- West texture:
+  - Identifier: `WE`
+  - Path to the west texture
+- East texture:
+  - Identifier: `EA`
+  - Path to the east texture
+- Floor color:
+  - Identifier: `F`
+  - R,G,B colors in range [0,255]: 0, 255, 255
+- Ceiling color:
+  - Identifier: `C`
+  - R,G,B colors in range [0,255]: 0, 255, 255
+
+Example of the mandatory part with a minimalist `.cub` scene:
+```
+NO ./path_to_the_north_texture
+SO ./path_to_the_south_texture
+WE ./path_to_the_west_texture
+EA ./path_to_the_east_texture
+F 220,100,0
+C 225,30,0
+1111111111111111111111111
+1000000000110000000000001
+1011000001110000000000001
+1001000000000000000000001
+111111111011000001110000000000001
+100000000011000001110111111111111
+11110111111111011100000010001
+11110111111111011101010010001
+11000000110101011100000010001
+10000000000000001100000010001
+10000000000000001101010010001
+11000001110101011111011110N0111
+11110111 1110101 101111010001
+11111111 1111111 111111111111
+```
+
+If any misconfiguration of any kind is encountered in the file, the program must exit properly and return "Error\n" followed by an explicit error message of your choice.
 ## Controls
-
-Here is a summary of the various controls in the game:
-
-- The ``WASD`` keys move the player up, down, left and right relative to the player's viewing angle
-- The ``left`` and ``right`` arrow keys rotate the viewing angle of the player
-- Press the ``ESC`` key or the ``X`` button on the window to exit the game
-
-Note: these are the basic mandatory controls, but we added a few more keys to handle other things. See below for such controls
+The program displays the image in a window and respects the following rules:
+- The left and right arrow keys of the keyboard must allow you to look left and right in the maze.
+- The W, A, S, and D keys must allow you to move the point of view through the maze.
+- Pressing ESC must close the window and quit the program cleanly.
+- Clicking on the red cross on the window’s frame must close the window and quit the program cleanly.
+- The use of images of the minilibX is strongly recommended.
 
 ## Bonus
-
-For this project there were several bonuses, and we did 3 of them:
-
-* Wall Collisions (DONE)
-
-When walking to a wall, instead of stopping in front of it we split the movement into the ``x`` and ``y`` vectors and try to move in either of them, making wall collisions possible
-
-* Minimap
-
-* Doors
-
-* Animations (DONE)
-
-* Rotation with mouse (Press key "1" for activation) (DONE)
-
-This one was very straightforward. There is an event on the ``minilibX`` library that tells the user the position of the mouse. When the position changes, we increment/decrement the player's view direction accordingly
+Implemented bonuses include wall collisions, minimap, doors, animations, and rotation with the mouse.
 
 ## Extras
-
-We implemented a few things that we were not asked to implement, but we thought would give the project a cooler vibe:
-
-- Added darkening effect to the game. The farther a wall is hit, the darker it is drawn. This gives the game a cave-like feel
-- Game works both in Linux and MacOS
-- A music running in the background (famous and well known smati hicham instrument remix).
+Additional features include darkening effects, support for Linux and MacOS, and background music.
 
 ## Installation
+To clone the repository and compile the `cub3D` executable, follow these steps:
 
-### Cloning the repositories
+1. Clone the repository:
 ```shell
 git clone https://github.com/Khdzakariae/cub3D.git
 cd cub3d
 ```
 
-### Usage
-
-```
-make                        compiles cub3D executable
-
-make bonus                  compiles cub3D executable for bonus part
-
-./cub3d map/cub3d.cub #Run mandatory part
-
-./cub3d_BONUS map/cub3d.cub #Run bonus part
+2. Compile the `cub3D` executable:
+```shell
+make
 ```
 
-[@Khdzakariae](https://github.com/Khdzakariae/) | [@achahid19](https://github.com/achahid19/) February 04th, 2024
+3. Run the `cub3D` executable:
+```shell
+./cub3d map/cub3d.cub
+```
+
+@Khdzakariae | @achahid19 February 04th, 2024
+
+
